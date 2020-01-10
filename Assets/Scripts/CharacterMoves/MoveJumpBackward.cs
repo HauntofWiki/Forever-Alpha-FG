@@ -1,13 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
+using CharacterMoves;
 using UnityEngine;
 
-public class MoveWalkForward : ICharacterMove
+public class MoveJumpBackward : ICharacterMove
 {
     public bool DetectMoveInput(InputClass inputClass)
     {
-        return inputClass.DPadNumPad == 6;
+        return inputClass.DPadNumPad == 7;
+    }
+
+    public bool DetectHoldInput(InputClass inputClass)
+    {
+        return false;
     }
 
     public Vector3 PerformAction(ref Character.CharacterState characterState)

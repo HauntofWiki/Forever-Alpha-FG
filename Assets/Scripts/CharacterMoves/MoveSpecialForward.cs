@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using CharacterMoves;
 using UnityEngine;
 
 public class MoveSpecialForward : ICharacterMove
@@ -46,6 +47,11 @@ public class MoveSpecialForward : ICharacterMove
 
         
         _lastMove = inputClass.DPadNumPad;
+        return false;
+    }
+
+    public bool DetectHoldInput(InputClass inputClass)
+    {
         return false;
     }
 

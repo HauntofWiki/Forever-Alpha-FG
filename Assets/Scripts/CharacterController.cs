@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,8 +11,7 @@ using UnityEngine.EventSystems;
  */
 public class CharacterController : MonoBehaviour
 {
-    [SerializeField]
-    private UnityEngine.CharacterController player;
+    [SerializeField] private UnityEngine.CharacterController player;
     private Character _character;
     private InputManager _inputManager;
     private InputClass _currentInput;
@@ -40,7 +40,15 @@ public class CharacterController : MonoBehaviour
     private void Update()
     {
         _currentInput = _inputManager.Update(_characterOrientation);
-          
-        _character.Update(_currentInput);
+        //Debug.Log(_currentInput.DPadX);
+        _character.CharacterIdle(_currentInput);
+        _character.WalkForward(_currentInput);
+        _character.WalkBackward(_currentInput);
+        _character.JumpForward(_currentInput);
+        _character.JumpBackward(_currentInput);
+        _character.JumpNeutral(_currentInput);
+        _character.DashForward(_currentInput);
+        _character.SpecialForward(_currentInput);
+        _character.ApplyMovement(_moveDirection);
     }
 }
