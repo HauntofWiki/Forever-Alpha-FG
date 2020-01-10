@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using CharacterMoves;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.Experimental.PlayerLoop;
@@ -11,18 +13,26 @@ using UnityEngine.Experimental.PlayerLoop;
  */
 public class Character
 {
-    //Define Character Stats
+    //Define Character Stats.
     public int HealthPoints {get; set;}
     public int MeterPoints { get; set; }
-    public float WalkForwardXSpeed { get; }
-    public float WalkBackwardXSpeed{ get; }
-    public float DashForwardXSpeed{ get; }
-    public float JumpYSpeed{ get; }
-    public float JumpForwardXSpeed{ get; }
-    public float JumpBackXSpeed{ get; }
-    public float PersonalGravity{ get; }
+    private const float WalkForwardXSpeed = 4.0f;
+    private const float WalkBackwardXSpeed = 4.0f;
+    private readonly float[] DashForwardXSpeed = {10.0f, 5.0f, 1.0f};
+    private const float JumpYSpeed = 12.0f;
+    private const float JumpForwardXSpeed = 5.0f;
+    private const float JumpBackXSpeed = 5.0f;
+    private const float PersonalGravity = 24.0f;
+
+    private const int DashBrakeDuration = 20;
+    
+    //Define tracking variables.
+    private int _inputFrameCounter;
+    private int _actionFrameCounter;
+    
+    //Define Game related Values.
     private UnityEngine.CharacterController _characterController;
-    private CharacterState _characterState;
+    //private CharacterState _characterState;
     private Vector3 _moveDirection;
     private float _minX;
     private float _maxX;
@@ -35,6 +45,7 @@ public class Character
         Crouch,
         Jump,
         Dash,
+        CancellableAnimation,
         AirDash,
         BlockStun,
         HitStun,
@@ -68,13 +79,7 @@ public class Character
         _moveDirection = new Vector3(0,0,0);
         HealthPoints = 100;
         MeterPoints = 0;
-        WalkForwardXSpeed = 6.0f;
-        WalkBackwardXSpeed = 6.0f;
-        DashForwardXSpeed = 25.0f;
-        JumpYSpeed = 80.0f;
-        JumpForwardXSpeed = 9.0f;
-        JumpBackXSpeed = 9.0f;
-        PersonalGravity = 150.0f;
+        _actionFrameCounter = 0;
 
         _moveStandIdle = new MoveStandIdle();
         _moveWalkForward = new MoveWalkForward();
@@ -91,115 +96,111 @@ public class Character
 
     public int Update(InputClass inputClass)
     {
-        
-        _moveDirection = ReadInputQueue(inputClass);
+        return 0;
+    }
+    
+    public void ApplyMovement(Vector3 moveDirection)
+    {
 
         _moveDirection.y -= PersonalGravity * Time.deltaTime;
         _characterController.Move(_moveDirection * Time.deltaTime);
-        return 0;
     }
 
-    public Vector3 ReadInputQueue(InputClass inputClass)
+    public void CharacterIdle(InputClass inputClass)
     {
-        
-        //read single input commands ie. Walk forward/back/neutral-jump/crouch
-        if (_moveStandIdle.DetectMoveInput(inputClass))
-            if (_characterController.isGrounded &&
-                (_currentState == CharacterState.Crouch || _currentState == CharacterState.Stand))
-                _moveDirection = _moveStandIdle.PerformAction(ref _characterState);
-        if (_moveWalkForward.DetectMoveInput(inputClass))
-            if (_characterController.isGrounded &&
-            (_currentState == CharacterState.Crouch || _currentState == CharacterState.Stand))
-                _moveDirection = WalkForward();
-        if (_moveWalkBackward.DetectMoveInput(inputClass))
-            if (_characterController.isGrounded)
-                _moveDirection = WalkBackward();
-        if (_moveJumpForward.DetectMoveInput(inputClass))
-            if (_characterController.isGrounded)
-                _moveDirection = JumpForward();
-        if (_moveJumpBackward.DetectMoveInput(inputClass))
-            if (_characterController.isGrounded)
-                _moveDirection = JumpBackward();
-        if (_moveJumpNeutral.DetectMoveInput(inputClass))
-            if (_characterController.isGrounded)
-                _moveDirection = JumpNeutral();
-        
-        //read multi-input commands
-        if (_moveDashForward.DetectMoveInput(inputClass))
-        {
-            return DashForward();
-        }
-        else
-        {
-            _currentState = CharacterState.Stand;
-        }
-        if (_moveSpecialForward.DetectMoveInput(inputClass))
-        {
-            _animator.Play("Punch", -1, 0f);
-            Debug.Log("Hadoken");
-        }
-
-        return _moveDirection;
-    }
-
-    private Vector3 CharacterIdle()
-    {
+        if (!_moveStandIdle.DetectMoveInput(inputClass)) return;
+        if (_currentState != CharacterState.Crouch && _currentState != CharacterState.Stand) return;
+        _actionFrameCounter = 0;
         _currentState = CharacterState.Stand;
         _moveDirection = new Vector3(0, 0, 0);
-
-        return _moveDirection;
     }
     
-    private Vector3 WalkForward()
+    public void WalkForward(InputClass inputClass)
     {
-
-        _currentState = CharacterState.Stand;
-        var xVelocity = WalkForwardXSpeed;
-        var moveDirection = new Vector3(xVelocity, 0, 0);
-            
-        return moveDirection;
-    }
-    
-    private Vector3 WalkBackward()
-    {
-        _currentState = CharacterState.Stand;
-        var xVelocity = -WalkBackwardXSpeed;
-        var moveDirection = new Vector3(xVelocity,0,0);
+        if (!_moveWalkForward.DetectMoveInput(inputClass)) return;
+        if (_currentState != CharacterState.Crouch && _currentState != CharacterState.Stand) return;
         
-        return moveDirection;
-    }
-
-    private Vector3 JumpNeutral()
-    {
-        _currentState = CharacterState.Jump;
-        var yVelocity = JumpYSpeed;
-        var moveDirection = new Vector3(0,yVelocity,0);
-        return moveDirection;
-    }
-
-    private Vector3 JumpForward()
-    {
-        _currentState = CharacterState.Jump;
-        var xVelocity = JumpForwardXSpeed;
-        var yVelocity = JumpYSpeed;
-        var moveDirection = new Vector3(xVelocity,yVelocity,0);
-        return moveDirection;
+        _currentState = CharacterState.Stand;
+        _moveDirection = new Vector3(WalkForwardXSpeed, 0, 0);
     }
     
-    private Vector3 JumpBackward()
+    public void WalkBackward(InputClass inputClass)
     {
+        if (!_moveWalkBackward.DetectMoveInput(inputClass)) return;
+        if (_currentState != CharacterState.Crouch && _currentState != CharacterState.Stand) return;
+        
+
+        _currentState = CharacterState.Stand;
+        _moveDirection = new Vector3(-WalkBackwardXSpeed,0,0);
+    }
+    
+    public void JumpForward(InputClass inputClass)
+    {
+        if (!_moveJumpForward.DetectMoveInput(inputClass)) return;
+        if (_currentState != CharacterState.Crouch && _currentState != CharacterState.Stand && _currentState != CharacterState.CancellableAnimation) return;
+
         _currentState = CharacterState.Jump;
-        var xVelocity = -JumpBackXSpeed;
-        var yVelocity = JumpYSpeed;
-        var moveDirection = new Vector3(xVelocity,yVelocity,0);
-        return moveDirection;
+        _moveDirection = new Vector3(JumpForwardXSpeed,JumpYSpeed,0);
+    }
+    
+    public void JumpBackward(InputClass inputClass)
+    {
+        if (!_moveJumpBackward.DetectMoveInput(inputClass)) return;
+        if (_currentState != CharacterState.Crouch && _currentState != CharacterState.Stand && _currentState != CharacterState.CancellableAnimation) return;
+
+        _currentState = CharacterState.Jump;
+        _moveDirection = new Vector3(-JumpBackXSpeed,JumpYSpeed,0);
+    }
+    
+    public void JumpNeutral(InputClass inputClass)
+    {
+        if (!_moveJumpNeutral.DetectMoveInput(inputClass)) return;
+        if (_currentState != CharacterState.Crouch && _currentState != CharacterState.Stand && _currentState != CharacterState.CancellableAnimation) return;
+
+        _currentState = CharacterState.Jump;
+        _moveDirection = new Vector3(0,JumpYSpeed,0);
     }
 
-    private Vector3 DashForward()
+    public void DashForward(InputClass inputClass)
     {
+        //Detect whether the Forward is held for a long dash
+        if (_currentState == CharacterState.Dash && _moveDashForward.DetectHoldInput(inputClass))
+            return;
+
+        //Detect if the dash has ended
+        if (_currentState == CharacterState.Dash && inputClass.DPadX == 0)
+        {
+            _currentState = CharacterState.CancellableAnimation;
+            return;
+        }
+        
+        //Brake animation when a Dash ends
+        if (_currentState == CharacterState.CancellableAnimation && _actionFrameCounter < DashBrakeDuration)
+        {
+            _actionFrameCounter++;
+            if (DashBrakeDuration - _actionFrameCounter > DashBrakeDuration / 2)
+                _moveDirection.x = DashForwardXSpeed[1];
+            else if (DashBrakeDuration - _actionFrameCounter > DashBrakeDuration / 4)
+                _moveDirection.x = DashForwardXSpeed[2];
+            else
+                _moveDirection.x = 0;
+        }
+        
+        //Exit dash animation
+        if (_currentState == CharacterState.CancellableAnimation && _actionFrameCounter == DashBrakeDuration)
+            _currentState = CharacterState.Stand;
+        
+        //Begin Dash Detection
+        if (!_moveDashForward.DetectMoveInput(inputClass)) return;
         _currentState = CharacterState.Dash;
-        var xVelocity = DashForwardXSpeed;
-        var moveDirection = new Vector3(xVelocity,0,0);
-        return moveDirection;
+        _moveDirection = new Vector3(DashForwardXSpeed[0], 0, 0);
+    }
+    
+    public void SpecialForward(InputClass inputClass)
+    {
+        if (!_moveSpecialForward.DetectMoveInput(inputClass)) return;
+        
+        _animator.Play("Punch", -1, 0f);
+        Debug.Log("Hadoken");
     }
 }
