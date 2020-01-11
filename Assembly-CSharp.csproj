@@ -60,11 +60,13 @@
      <Compile Include="Assets\Scripts\Character.cs" />
      <Compile Include="Assets\Scripts\CharacterController.cs" />
      <Compile Include="Assets\Scripts\CharacterMoves\ICharacterMove.cs" />
+     <Compile Include="Assets\Scripts\CharacterMoves\MoveAirDashForward.cs" />
      <Compile Include="Assets\Scripts\CharacterMoves\MoveDashBackward.cs" />
      <Compile Include="Assets\Scripts\CharacterMoves\MoveDashForward.cs" />
      <Compile Include="Assets\Scripts\CharacterMoves\MoveJumpBackward.cs" />
      <Compile Include="Assets\Scripts\CharacterMoves\MoveJumpForward.cs" />
      <Compile Include="Assets\Scripts\CharacterMoves\MoveJumpNeutral.cs" />
+     <Compile Include="Assets\Scripts\CharacterMoves\MoveShoryuken.cs" />
      <Compile Include="Assets\Scripts\CharacterMoves\MoveSpecialForward.cs" />
      <Compile Include="Assets\Scripts\CharacterMoves\MoveStandIdle.cs" />
      <Compile Include="Assets\Scripts\CharacterMoves\MoveWalkBackward.cs" />
