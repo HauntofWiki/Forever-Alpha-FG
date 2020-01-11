@@ -40,7 +40,7 @@ public class CharacterController : MonoBehaviour
     private void Update()
     {
         _currentInput = _inputManager.Update(_characterOrientation);
-        //Debug.Log(_currentInput.DPadX);
+        
         _character.CharacterIdle(_currentInput);
         _character.WalkForward(_currentInput);
         _character.WalkBackward(_currentInput);
@@ -48,7 +48,10 @@ public class CharacterController : MonoBehaviour
         _character.JumpBackward(_currentInput);
         _character.JumpNeutral(_currentInput);
         _character.DashForward(_currentInput);
+        _character.DashBackward(_currentInput);
+        _character.AirDashForward(_currentInput);
         _character.SpecialForward(_currentInput);
         _character.ApplyMovement(_moveDirection);
+        
     }
 }

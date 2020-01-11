@@ -1,23 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using CharacterMoves;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class MoveWalkForward : ICharacterMove
+namespace CharacterMoves
 {
-    public bool DetectMoveInput(InputClass inputClass)
+    public class MoveWalkForward : ICharacterMove
     {
-        return inputClass.DPadNumPad == 6;
-    }
+        public bool DetectMoveInput(InputClass inputClass)
+        {
+            return inputClass.DPadNumPad == 6;
+        }
 
-    public bool DetectHoldInput(InputClass inputClass)
-    {
-        return false;
-    }
+        public bool DetectHoldInput(InputClass inputClass)
+        {
+            return false;
+        }
 
-    public Vector3 PerformAction(ref Character.CharacterState characterState)
-    {
-        return new Vector3(0,0,0);
+        public Vector3 PerformAction(ref Character.CharacterState characterState)
+        {
+            return new Vector3(0,0,0);
+        }
     }
 }

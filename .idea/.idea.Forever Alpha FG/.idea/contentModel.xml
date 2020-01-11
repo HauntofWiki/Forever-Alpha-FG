@@ -12,11 +12,13 @@
           <e p="CharacterController.cs" t="Include" />
           <e p="CharacterMoves" t="Include">
             <e p="ICharacterMove.cs" t="Include" />
+            <e p="MoveAirDashForward.cs" t="Include" />
             <e p="MoveDashBackward.cs" t="Include" />
             <e p="MoveDashForward.cs" t="Include" />
             <e p="MoveJumpBackward.cs" t="Include" />
             <e p="MoveJumpForward.cs" t="Include" />
             <e p="MoveJumpNeutral.cs" t="Include" />
+            <e p="MoveShoryuken.cs" t="Include" />
             <e p="MoveSpecialForward.cs" t="Include" />
             <e p="MoveStandIdle.cs" t="Include" />
             <e p="MoveWalkBackward.cs" t="Include" />
