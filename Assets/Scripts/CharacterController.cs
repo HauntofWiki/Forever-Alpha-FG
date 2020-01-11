@@ -15,10 +15,14 @@ public class CharacterController : MonoBehaviour
     private Character _character;
     private InputManager _inputManager;
     private InputClass _currentInput;
+    private GameObject _opponentCharacter;
+    private GameObject _gameCamera;
     private Vector3 _moveDirection = Vector3.zero;
     private int _characterNumber; //Defines Player 1 or Player 2
     private int _characterOrientation; // this defines whether player is on the left or right, should be 1 or -1
-
+    private float _currentCharacterDistance;
+    private float _maxCharacterDistance = 7;
+    
     public Animator animator;
     public Animation _animation;
 
@@ -33,12 +37,18 @@ public class CharacterController : MonoBehaviour
         _inputManager = new InputManager(_characterNumber);
         animator = GetComponent<Animator>();
         _animation = GetComponent<Animation>();
-
+        
+        //Find Camera
+        _gameCamera = GameObject.Find("Main Camera");
+        //Find Opposing Character GameObject
+        if (_characterNumber == 1)
+            _opponentCharacter = GameObject.Find("Player2");
     }
 
     // Update is called once per frame
     private void Update()
     {
+        _currentCharacterDistance = Math.Abs(transform.position.x - _opponentCharacter.transform.position.x);
         _currentInput = _inputManager.Update(_characterOrientation);
         
         _character.CharacterIdle(_currentInput);
@@ -49,9 +59,9 @@ public class CharacterController : MonoBehaviour
         _character.JumpNeutral(_currentInput);
         _character.DashForward(_currentInput);
         _character.DashBackward(_currentInput);
-        _character.AirDashForward(_currentInput);
+        //_character.AirDashForward(_currentInput);
         _character.SpecialForward(_currentInput);
-        _character.ApplyMovement(_moveDirection);
+        _character.ApplyMovement(_moveDirection,_currentCharacterDistance,_maxCharacterDistance,_characterOrientation);
         
     }
 }
