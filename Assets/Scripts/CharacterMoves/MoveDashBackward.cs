@@ -36,6 +36,7 @@ namespace CharacterMoves
                 _patternMatch[2] = true;
             if (_patternMatch[0] && _patternMatch[1] && _patternMatch[2])
             {
+                Debug.Log("d");
                 ResetInputDetect();
                 return true;
             }
