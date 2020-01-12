@@ -21,7 +21,7 @@ public class CharacterController : MonoBehaviour
     private int _characterNumber; //Defines Player 1 or Player 2
     private int _characterOrientation; // this defines whether player is on the left or right, should be 1 or -1
     private float _currentCharacterDistance;
-    private float _maxCharacterDistance = 7;
+    private float _maxCharacterDistance = 7.0f;
     
     public Animator animator;
     public Animation _animation;
