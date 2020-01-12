@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using CharacterMoves;
@@ -110,21 +111,14 @@ public class Character
         _animation = _characterController.GetComponent<Animation>();
         _animator = _characterController.GetComponent<Animator>();
     }
-
-    public int Update(InputClass inputClass)
-    {
-        return 0;
-    }
-
     
     public void ApplyMovement(Vector3 moveDirection, float characterDistance, float maxCharacterDistance, int orientation)
     {
         //Debug.Log(_moveDirection.x + "," + _dashFrameCounter + "," + _currentState + "," + _moveJumpNeutral.AttackStateFrames[_jumpFrameCounter]);
         if(!_isIgnoringGravity)
             _moveDirection.y -= PersonalGravity * Time.deltaTime;
+        
 
-        //if (characterDistance > maxCharacterDistance)
-            
         _characterController.Move(_moveDirection * Time.deltaTime);
     }
 

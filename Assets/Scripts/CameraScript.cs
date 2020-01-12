@@ -12,10 +12,9 @@ public class CameraScript : MonoBehaviour
     private float _cameraDefaultZ = -4;
     private float _heightOfCamera;
     private float _centerXBetweenCharacters;
-    public float maxDistanceBetweenCharacters;
     private Vector3 _moveCameraPosition;
-    private float _stageMaxX;
-    private float _stageMinX;
+    private float _stageMaxX = -18;
+    private float _stageMinX = 18;
     private float _stageMaxY;
     private float _stageMinY;
 
@@ -25,7 +24,6 @@ public class CameraScript : MonoBehaviour
         _player1 = GameObject.Find("Player1");
         _player2 = GameObject.Find("Player2");
         camera = GetComponent<Camera>();
-        maxDistanceBetweenCharacters = 7.0f;
     }
 
     // Update is called once per frame
@@ -37,7 +35,7 @@ public class CameraScript : MonoBehaviour
      
         
         _moveCameraPosition = new Vector3(_centerXBetweenCharacters,_heightOfCamera,_cameraDefaultZ);
-        Debug.Log(_player1.transform.position.x + ","+ _player2.transform.position.x+"," + camera.transform.position.x);
+        //Debug.Log(_player1.transform.position.x + ","+ _player2.transform.position.x+"," + camera.transform.position.x);
         transform.position = Vector3.Lerp(transform.position,_moveCameraPosition, 2.0f);
     }
 }
