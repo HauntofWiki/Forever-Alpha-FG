@@ -24,6 +24,7 @@ public class CameraScript : MonoBehaviour
         _player1 = GameObject.Find("Player1");
         _player2 = GameObject.Find("Player2");
         camera = GetComponent<Camera>();
+        
     }
 
     // Update is called once per frame
