@@ -53,36 +53,36 @@ public class InputManager
         
         //Read Direction inputs into Numpad Notation (1-9)
         if (Input.GetAxis(_playerPrefix + "DPadX") * characterOrientation > 0 &&
-            Input.GetAxis(_playerPrefix + "DPadY") * characterOrientation == 0)
+            Input.GetAxis(_playerPrefix + "DPadY") == 0)
             _currentInput.DPadNumPad = 6;
         else if (Input.GetAxis(_playerPrefix + "DPadX") * characterOrientation > 0 &&
-                 Input.GetAxis(_playerPrefix + "DPadY") * characterOrientation > 0)
+                 Input.GetAxis(_playerPrefix + "DPadY") > 0)
             _currentInput.DPadNumPad = 9;
         else if (Input.GetAxis(_playerPrefix + "DPadX") * characterOrientation == 0 &&
-                 Input.GetAxis(_playerPrefix + "DPadY") * characterOrientation > 0)
+                 Input.GetAxis(_playerPrefix + "DPadY") > 0)
             _currentInput.DPadNumPad = 8;
         else if (Input.GetAxis(_playerPrefix + "DPadX") * characterOrientation < 0 &&
-                 Input.GetAxis(_playerPrefix + "DPadY") * characterOrientation > 0)
+                 Input.GetAxis(_playerPrefix + "DPadY") > 0)
             _currentInput.DPadNumPad = 7;
         else if (Input.GetAxis(_playerPrefix + "DPadX") * characterOrientation < 0 &&
-                 Input.GetAxis(_playerPrefix + "DPadY") * characterOrientation == 0)
+                 Input.GetAxis(_playerPrefix + "DPadY") == 0)
             _currentInput.DPadNumPad = 4;
         else if (Input.GetAxis(_playerPrefix + "DPadX") * characterOrientation < 0 &&
-                 Input.GetAxis(_playerPrefix + "DPadY") * characterOrientation < 0)
+                 Input.GetAxis(_playerPrefix + "DPadY") < 0)
             _currentInput.DPadNumPad = 1;
         else if (Input.GetAxis(_playerPrefix + "DPadX") * characterOrientation == 0 &&
-                 Input.GetAxis(_playerPrefix + "DPadY") * characterOrientation < 0)
+                 Input.GetAxis(_playerPrefix + "DPadY") < 0)
             _currentInput.DPadNumPad = 2;
         else if (Input.GetAxis(_playerPrefix + "DPadX") * characterOrientation > 0 &&
-                 Input.GetAxis(_playerPrefix + "DPadY") * characterOrientation < 0)
+                 Input.GetAxis(_playerPrefix + "DPadY") < 0)
             _currentInput.DPadNumPad = 3;
         else if (Input.GetAxis(_playerPrefix + "DPadX") * characterOrientation == 0 &&
-                 Input.GetAxis(_playerPrefix + "DPadY") * characterOrientation == 0)
+                 Input.GetAxis(_playerPrefix + "DPadY") == 0)
             _currentInput.DPadNumPad = 5;
         else _currentInput.DPadNumPad = 5;
         
         //Read direction inputs into tradition X/Y Axes
-        _currentInput.DPadX = Input.GetAxis(_playerPrefix + "DPadX");
+        _currentInput.DPadX = Input.GetAxis(_playerPrefix + "DPadX") * characterOrientation;
         _currentInput.DPadY = Input.GetAxis(_playerPrefix + "DPadY");
         
         //Read ButtonDown commands
@@ -108,7 +108,7 @@ public class InputManager
         _currentInput.Auxiliary4ButtonUp = Input.GetAxis(_playerPrefix + "Auxiliary4Button");
         _currentInput.StartButtonUp = Input.GetButtonDown(_playerPrefix + "StartButton") ? 1 : 0;
         _currentInput.SelectButtonUp = Input.GetButtonDown(_playerPrefix + "SelectButton") ? 1 : 0;
-        
+        //Debug.Log("DPAD: " + _currentInput.DPadNumPad + "; DPADX: " + _currentInput.DPadX + "; DPADY: " + _currentInput.DPadY);
         return _currentInput;
     }
 }

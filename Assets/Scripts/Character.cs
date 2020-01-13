@@ -22,7 +22,7 @@ public class Character
     //Speed arrays follow the frames for Startup/Active/Recovery from the move class
     private readonly float[] DashForwardXSpeed = {7.0f, 10.0f, 3.0f};
     private readonly float[] AirDashForwardSpeed = {10.0f, 10.0f};
-    private readonly float[] DashBackwardXSpeed = {7.0f, 10.0f, 3.0f};
+    private readonly float[] DashBackwardXSpeed = {7.0f, 20.0f, 3.0f};
     private const float AirDashBackwardSpeed = 8.0f;
     private const float JumpYSpeed = 12.0f;
     private const float JumpForwardXSpeed = 5.0f;
@@ -50,6 +50,7 @@ public class Character
     
     //Define Character State
     private CharacterState _currentState;
+    private CharacterState _lastState;
     public enum CharacterState
     {
         Stand,
@@ -68,7 +69,8 @@ public class Character
         DoubleJump,
         BlockStun,
         HitStun,
-        Cinematic
+        Cinematic,
+        Empty
     }     
     
     //Define Character Moves
@@ -94,6 +96,7 @@ public class Character
         HealthPoints = 100;
         MeterPoints = 0;
         _currentState = CharacterState.Stand;
+        _lastState = CharacterState.Empty;
 
         _moveStandIdle = new MoveStandIdle();
         _moveWalkForward = new MoveWalkForward();
@@ -111,14 +114,22 @@ public class Character
         _animation = _characterController.GetComponent<Animation>();
         _animator = _characterController.GetComponent<Animator>();
     }
-    
-    public void ApplyMovement(Vector3 moveDirection, float characterDistance, float maxCharacterDistance, int orientation)
+
+    public bool canSwitchOrientation()
     {
-        //Debug.Log(_moveDirection.x + "," + _dashFrameCounter + "," + _currentState + "," + _moveJumpNeutral.AttackStateFrames[_jumpFrameCounter]);
+        return _currentState != _lastState;
+    }
+    
+    public void ApplyMovement(Vector3 moveDirection, int currentOrientation, int lastOrientation)
+    {
+        Debug.Log("CurrentState: " + _currentState + "; LastState: " + _lastState);
+
         if(!_isIgnoringGravity)
             _moveDirection.y -= PersonalGravity * Time.deltaTime;
-        
 
+
+        _moveDirection.x *= currentOrientation;
+        Debug.Log(_moveDirection.x);
         _characterController.Move(_moveDirection * Time.deltaTime);
     }
 
@@ -127,6 +138,8 @@ public class Character
         if (!_moveStandIdle.DetectMoveInput(inputClass)) return;
         if (_currentState != CharacterState.Crouch && _currentState != CharacterState.Stand) return;
         _dashFrameCounter = 0;
+
+        _lastState = _currentState;
         _currentState = CharacterState.Stand;
         _moveDirection = new Vector3(0, 0, 0);
     }
@@ -136,6 +149,7 @@ public class Character
         if (!_moveWalkForward.DetectMoveInput(inputClass)) return;
         if (_currentState != CharacterState.Crouch && _currentState != CharacterState.Stand) return;
         
+        _lastState = _currentState;
         _currentState = CharacterState.Stand;
         _moveDirection = new Vector3(WalkForwardXSpeed, 0, 0);
     }
@@ -145,7 +159,7 @@ public class Character
         if (!_moveWalkBackward.DetectMoveInput(inputClass)) return;
         if (_currentState != CharacterState.Crouch && _currentState != CharacterState.Stand) return;
         
-
+        _lastState = _currentState;
         _currentState = CharacterState.Stand;
         _moveDirection = new Vector3(-WalkBackwardXSpeed,0,0);
     }
@@ -156,6 +170,7 @@ public class Character
         if (_currentState == CharacterState.JumpForward && _characterController.isGrounded && _moveJumpForward.AttackStateFrames[_jumpFrameCounter] != 0)
         {
             _jumpFrameCounter++;
+            _lastState = _currentState;
             _currentState = CharacterState.LandingJumpForward; 
         }
             
@@ -164,17 +179,25 @@ public class Character
         {
             _jumpFrameCounter++;
             if (_moveJumpForward.AttackStateFrames[_jumpFrameCounter] == 0)
+            {
+                _lastState = _currentState;
                 return;
-            if (_moveJumpForward.AttackStateFrames[_jumpFrameCounter] == 1)
-                _moveDirection = new Vector3(JumpForwardXSpeed,JumpYSpeed,0);
-        }
+            }
 
+            if (_moveJumpForward.AttackStateFrames[_jumpFrameCounter] == 1)
+            {
+                _lastState = _currentState;
+                _moveDirection = new Vector3(JumpForwardXSpeed, JumpYSpeed, 0);
+            }
+        }
+        
         if (_currentState == CharacterState.LandingJumpForward)
         {
             _jumpFrameCounter++;
             if (_moveJumpForward.AttackStateFrames[_jumpFrameCounter] == 3)
             {
                 _jumpFrameCounter = 0;
+                _lastState = _currentState;
                 _currentState = CharacterState.Stand;
             }
         }
@@ -182,11 +205,16 @@ public class Character
 
         //Detect proper state and detect input
         if (_currentState == CharacterState.JumpForward && _moveJumpForward.AttackStateFrames[_jumpFrameCounter] == 1)
+        {
+            _moveDirection.x = JumpForwardXSpeed;
             return;
+        }
+
         if (!_moveJumpForward.DetectMoveInput(inputClass)) return;
         if (_currentState != CharacterState.Crouch && _currentState != CharacterState.Stand && _currentState != CharacterState.CancellableAnimation) return;
         
         _jumpFrameCounter = 0;
+        _lastState = _currentState;
         _currentState = CharacterState.JumpForward;
     }
     
@@ -196,6 +224,7 @@ public class Character
         if (_currentState == CharacterState.JumpBackward && _characterController.isGrounded && _moveJumpBackward.AttackStateFrames[_jumpFrameCounter] != 0)
         {
             _jumpFrameCounter++;
+            _lastState = _currentState;
             _currentState = CharacterState.LandingJumpBackward; 
         }
             
@@ -208,25 +237,31 @@ public class Character
             if (_moveJumpBackward.AttackStateFrames[_jumpFrameCounter] == 1)
                 _moveDirection = new Vector3(-JumpBackXSpeed,JumpYSpeed,0);
         }
-
+        
         if (_currentState == CharacterState.LandingJumpBackward)
         {
             _jumpFrameCounter++;
             if (_moveJumpBackward.AttackStateFrames[_jumpFrameCounter] == 3)
             {
                 _jumpFrameCounter = 0;
+                _lastState = _currentState;
                 _currentState = CharacterState.Stand;
             }
         }
 
 
         //Detect proper state and detect input
-        if (_currentState == CharacterState.JumpForward && _moveJumpForward.AttackStateFrames[_jumpFrameCounter] == 1)
+        if (_currentState == CharacterState.JumpBackward && _moveJumpBackward.AttackStateFrames[_jumpFrameCounter] == 1)
+        {
+            _moveDirection.x = -JumpBackXSpeed;
             return;
+        }
+
         if (!_moveJumpBackward.DetectMoveInput(inputClass)) return;
         if (_currentState != CharacterState.Crouch && _currentState != CharacterState.Stand && _currentState != CharacterState.CancellableAnimation) return;
         
         _jumpFrameCounter = 0;
+        _lastState = _currentState;
         _currentState = CharacterState.JumpBackward;
     }
     
@@ -236,6 +271,7 @@ public class Character
         if (_currentState == CharacterState.Jump && _characterController.isGrounded && _moveJumpNeutral.AttackStateFrames[_jumpFrameCounter] != 0)
         {
             _jumpFrameCounter++;
+            _lastState = _currentState;
             _currentState = CharacterState.Landing; 
         }
             
@@ -255,6 +291,7 @@ public class Character
             if (_moveJumpNeutral.AttackStateFrames[_jumpFrameCounter] == 3)
             {
                 _jumpFrameCounter = 0;
+                _lastState = _currentState;
                 _currentState = CharacterState.Stand;
             }
         }
@@ -267,6 +304,7 @@ public class Character
         if (_currentState != CharacterState.Crouch && _currentState != CharacterState.Stand && _currentState != CharacterState.CancellableAnimation) return;
 
         _jumpFrameCounter = 0;
+        _lastState = _currentState;
         _currentState = CharacterState.Jump;
     }
 
@@ -274,8 +312,13 @@ public class Character
     {
 
         //Detect whether the Forward is held for a long dash
-        if (_currentState == CharacterState.Dash && _moveDashForward.DetectHoldInput(inputClass) && _moveDashForward.AttackStateFrames[_dashFrameCounter] == 1)
-            return;
+        if (_currentState == CharacterState.Dash && _moveDashForward.DetectHoldInput(inputClass) &&
+            _moveDashForward.AttackStateFrames[_dashFrameCounter] == 1)
+        {
+            _moveDirection = new Vector3(DashForwardXSpeed[_moveDashForward.AttackStateFrames[_dashFrameCounter]],0,0);
+            return;            
+        }
+
 
         //Play out dash animation
         if (_currentState == CharacterState.Dash && _moveDashForward.AttackStateFrames[_dashFrameCounter] < 3)
@@ -283,8 +326,11 @@ public class Character
             _dashFrameCounter++;
             _moveDirection = new Vector3(DashForwardXSpeed[_moveDashForward.AttackStateFrames[_dashFrameCounter]],0,0);
             if (_moveDashForward.AttackStateFrames[_dashFrameCounter] >= 2)
+            {
+                _lastState = _currentState;
                 _currentState = CharacterState.CancellableAnimation;
-            
+            }
+
         }
 
         if (_currentState == CharacterState.CancellableAnimation &&_moveDashForward.AttackStateFrames[_dashFrameCounter] < 3)
@@ -295,6 +341,7 @@ public class Character
         //Exit dash animation
         if (_currentState == CharacterState.CancellableAnimation && _moveDashForward.AttackStateFrames[_dashFrameCounter] >= 3)
         {
+            _lastState = _currentState;
             _currentState = CharacterState.Stand;
             _dashFrameCounter = 0;
         }
@@ -303,6 +350,7 @@ public class Character
         if (!_moveDashForward.DetectMoveInput(inputClass)) return;
         if (_currentState != CharacterState.Stand && _currentState != CharacterState.Crouch) return;
         _dashFrameCounter = 0;
+        _lastState = _currentState;
         _currentState = CharacterState.Dash;
         _moveDirection = new Vector3(DashForwardXSpeed[0], 0, 0);
     }
@@ -327,6 +375,7 @@ public class Character
         if (!_moveDashBackward.DetectMoveInput(inputClass)) return;
         if (_currentState != CharacterState.Stand) return;
         _dashFrameCounter = 0;
+        _lastState = _currentState;
         _currentState = CharacterState.BackDash;
         _moveDirection = new Vector3(-DashBackwardXSpeed[0], 0, 0);
     }
@@ -344,6 +393,7 @@ public class Character
         //Exit dash animation
         if (_currentState == CharacterState.AirDash && _dashFrameCounter >= AirDashDuration)
         {
+            _lastState = _currentState;
             _currentState = CharacterState.JumpForward;
             _dashFrameCounter = 0;
             _isIgnoringGravity = false;
@@ -354,6 +404,7 @@ public class Character
         if (!_moveAirDashForward.DetectMoveInput(inputClass)) return;
         if (_currentState == CharacterState.Stand) return;
         _dashFrameCounter = 0;
+        _lastState = _currentState;
         _currentState = CharacterState.AirDash;
         _isIgnoringGravity = true;
         _moveDirection = new Vector3(AirDashForwardSpeed[0],0,0);
