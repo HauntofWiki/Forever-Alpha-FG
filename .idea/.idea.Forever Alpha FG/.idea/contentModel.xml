@@ -18,6 +18,7 @@
             <e p="MoveJumpBackward.cs" t="Include" />
             <e p="MoveJumpForward.cs" t="Include" />
             <e p="MoveJumpNeutral.cs" t="Include" />
+            <e p="MoveLightAttack.cs" t="Include" />
             <e p="MoveShoryuken.cs" t="Include" />
             <e p="MoveSpecialForward.cs" t="Include" />
             <e p="MoveStandIdle.cs" t="Include" />
