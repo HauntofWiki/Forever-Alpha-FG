@@ -53,13 +53,13 @@ public class CharacterController : MonoBehaviour
         _lastChacterOrientation = _characterOrientation;
         
         //Debug.Log(_characterOrientation + "," + _lastChacterOrientation);
-        if (transform.position.x > _opponentCharacter.transform.position.x && _character.canSwitchOrientation())
+        if (transform.position.x > _opponentCharacter.transform.position.x && _character.CanSwitchOrientation())
         {
-            var flipModel = new Vector3(-1,1,-1);
+            var flipModel = new Vector3(-1,1,1);
             _characterOrientation = -1;
             transform.localScale = Vector3.Lerp(transform.localScale,flipModel, 2.0f);
         }
-        else if (transform.position.x < _opponentCharacter.transform.position.x && _character.canSwitchOrientation())
+        else if (transform.position.x < _opponentCharacter.transform.position.x && _character.CanSwitchOrientation())
         {
             var flipModel = new Vector3(1,1,1);
             _characterOrientation = 1;
@@ -77,6 +77,7 @@ public class CharacterController : MonoBehaviour
         _character.DashForward(_currentInput);
         _character.DashBackward(_currentInput);
         //_character.AirDashForward(_currentInput);
+        _character.LightAttack(_currentInput);
         _character.SpecialForward(_currentInput);
         
         //Apply movement to character

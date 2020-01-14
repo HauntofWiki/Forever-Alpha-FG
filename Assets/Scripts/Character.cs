@@ -40,6 +40,7 @@ public class Character
     private int _inputFrameCounter;
     private int _jumpFrameCounter = 0;
     private int _dashFrameCounter = 0;
+    private int _attackFrameCounter = 0;
     
     //Define Game related Values.
     private UnityEngine.CharacterController _characterController;
@@ -71,7 +72,41 @@ public class Character
         HitStun,
         Cinematic,
         Empty
-    }     
+    }
+
+    public enum AttackState
+    {
+        None,
+        LightAttack,
+        CrouchLightAttack,
+        JumpLightAttack,
+        MediumAttack,
+        CrouchMediumAttack,
+        JumpMediumAttack,
+        HeavyAttack,
+        CrouchHeavyAttack,
+        JumpHeavyAttack,
+        SpecialAttack,
+        CrouchSpecialAttack,
+        JumpSpecialAttack,
+    }
+
+    private AttackState _attackState;
+
+    private enum CancellableState
+    {
+        None,
+        EmptyCancellable,
+        NormalCancellable,
+        SpecialCancellable,
+        SuperCancellable,
+        JumpCancellable,
+        AirJumpCancellable,
+        DashCancellable,
+        AirDashCancellable
+    }
+
+    private CancellableState _cancellableState;
     
     //Define Character Moves
     private ICharacterMove _moveStandIdle;
@@ -84,6 +119,7 @@ public class Character
     private MoveDashBackward _moveDashBackward;
     private ICharacterMove _moveSpecialForward;
     private MoveAirDashForward _moveAirDashForward;
+    private MoveLightAttack _moveLightAttack;
 
     private Animation _animation;
     private Animator _animator;
@@ -97,7 +133,9 @@ public class Character
         MeterPoints = 0;
         _currentState = CharacterState.Stand;
         _lastState = CharacterState.Empty;
-
+        _attackState = AttackState.None;
+        _cancellableState = CancellableState.None;
+        
         _moveStandIdle = new MoveStandIdle();
         _moveWalkForward = new MoveWalkForward();
         _moveWalkBackward = new MoveWalkBackward();
@@ -108,6 +146,8 @@ public class Character
         _moveDashBackward = new MoveDashBackward();
         _moveSpecialForward = new MoveSpecialForward();
         _moveAirDashForward = new MoveAirDashForward();
+        _moveLightAttack = new MoveLightAttack();
+        
 
         BackDashDuration = _moveDashBackward.AttackStateFrames.Length;
 
@@ -115,7 +155,7 @@ public class Character
         _animator = _characterController.GetComponent<Animator>();
     }
 
-    public bool canSwitchOrientation()
+    public bool CanSwitchOrientation()
     {
         return _currentState != _lastState;
     }
@@ -409,19 +449,51 @@ public class Character
         _isIgnoringGravity = true;
         _moveDirection = new Vector3(AirDashForwardSpeed[0],0,0);
     }
+
+    public void LightAttack(InputClass inputClass)
+    {
+        if (_currentState == CharacterState.Stand && _moveLightAttack.DetectMoveInput(inputClass) &&
+            _attackState == AttackState.None)
+        {
+            _attackFrameCounter = 0;
+            _animator.Play("LightAttack");
+            _attackState = AttackState.LightAttack;
+        }
+
+        if (_attackState == AttackState.LightAttack)
+        {
+            _attackFrameCounter++;
+            switch (_moveLightAttack.Cancellability[_attackFrameCounter])
+            {
+                case 0:
+                    _cancellableState = CancellableState.None;
+                    break;
+                case 1:
+                    _cancellableState = CancellableState.EmptyCancellable;
+                    break;
+                case 2:
+                    _cancellableState = CancellableState.NormalCancellable;
+                    break;
+                case 3:
+                    _cancellableState = CancellableState.SpecialCancellable;
+                    break;
+                case 4:
+                    _cancellableState = CancellableState.SuperCancellable;
+                    break;
+            }
+        }
+    }
     
     public void SpecialForward(InputClass inputClass)
     {
         if (!_moveSpecialForward.DetectMoveInput(inputClass)) return;
         
-        _animator.Play("Punch", -1, 0f);
         Debug.Log("Hadoken");
     }
     public void SpecialBackward(InputClass inputClass)
     {
         if (!_moveSpecialForward.DetectMoveInput(inputClass)) return;
         
-        _animator.Play("Punch", -1, 0f);
         Debug.Log("Hadoken");
     }
 }
