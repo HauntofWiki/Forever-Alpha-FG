@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics.Tracing;
+using UnityEngine;
 
 namespace CharacterMoves
 {
-    public class MoveShoryuken : ICharacterMove
+    public class MoveShoryuken : CharacterMove
     {
+        private CharacterProperties _properties;
         private string name = "Shoryuken";
         
         public int Damage;
@@ -38,14 +40,26 @@ namespace CharacterMoves
             0, 0, 0, 0, 0, 0, 0, 0, 0
         };
 
-            public bool DetectMoveInput(InputClass inputClass)
+        public override void InitializeMove(ref CharacterProperties properties)
+        {
+            _properties = properties;
+        }
+
+        public override bool DetectMoveInput(InputClass inputClass)
         {
             return false;
         }
 
-        public bool DetectHoldInput(InputClass inputClass)
+        public override bool DetectHoldInput(InputClass inputClass)
         {
             return false;
+        }
+
+        public override void PerformAction(InputClass inputClass)
+        {
+            if (!DetectMoveInput(inputClass)) return;
+        
+            Debug.Log("Hadoken");
         }
     }
 }

@@ -11,7 +11,8 @@
           <e p="Character.cs" t="Include" />
           <e p="CharacterController.cs" t="Include" />
           <e p="CharacterMoves" t="Include">
-            <e p="ICharacterMove.cs" t="Include" />
+            <e p="CharacterMove.cs" t="Include" />
+            <e p="CharacterProperties.cs" t="Include" />
             <e p="MoveAirDashForward.cs" t="Include" />
             <e p="MoveDashBackward.cs" t="Include" />
             <e p="MoveDashForward.cs" t="Include" />

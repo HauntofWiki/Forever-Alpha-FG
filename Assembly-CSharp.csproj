@@ -59,7 +59,8 @@
      <Compile Include="Assets\Scripts\CameraScript.cs" />
      <Compile Include="Assets\Scripts\Character.cs" />
      <Compile Include="Assets\Scripts\CharacterController.cs" />
-     <Compile Include="Assets\Scripts\CharacterMoves\ICharacterMove.cs" />
+     <Compile Include="Assets\Scripts\CharacterMoves\CharacterMove.cs" />
+     <Compile Include="Assets\Scripts\CharacterMoves\CharacterProperties.cs" />
      <Compile Include="Assets\Scripts\CharacterMoves\MoveAirDashForward.cs" />
      <Compile Include="Assets\Scripts\CharacterMoves\MoveDashBackward.cs" />
      <Compile Include="Assets\Scripts\CharacterMoves\MoveDashForward.cs" />

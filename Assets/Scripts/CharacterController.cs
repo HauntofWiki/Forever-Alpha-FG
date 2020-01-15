@@ -67,18 +67,8 @@ public class CharacterController : MonoBehaviour
         }
         
         _currentInput = _inputManager.Update(_characterOrientation);
-        
-        _character.CharacterIdle(_currentInput);
-        _character.WalkForward(_currentInput);
-        _character.WalkBackward(_currentInput);
-        _character.JumpForward(_currentInput);
-        _character.JumpBackward(_currentInput);
-        _character.JumpNeutral(_currentInput);
-        _character.DashForward(_currentInput);
-        _character.DashBackward(_currentInput);
-        //_character.AirDashForward(_currentInput);
-        _character.LightAttack(_currentInput);
-        _character.SpecialForward(_currentInput);
+
+        _character.Update(_currentInput);
         
         //Apply movement to character
         _character.ApplyMovement(_moveDirection,_characterOrientation, _lastChacterOrientation);

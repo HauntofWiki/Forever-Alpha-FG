@@ -2,8 +2,9 @@
 
 namespace CharacterMoves
 {
-    public class MoveSpecialForward : ICharacterMove
+    public class MoveSpecialForward : CharacterMove
     {
+        private CharacterProperties _properties;
         private readonly int _inputLimit;
         private readonly int[] _movePattern = {2,3,6};
         private bool _attackButton = false;
@@ -17,8 +18,13 @@ namespace CharacterMoves
             _moveDetectCounter = 0;
             _inputLimit = 15;
         }
-    
-        public bool DetectMoveInput(InputClass inputClass)
+
+        public override void InitializeMove(ref CharacterProperties properties)
+        {
+            _properties = properties;
+        }
+
+        public override bool DetectMoveInput(InputClass inputClass)
         {
             _moveDetectCounter++;
             if (_moveDetectCounter >= _inputLimit)
@@ -48,17 +54,7 @@ namespace CharacterMoves
             _lastMove = inputClass.DPadNumPad;
             return false;
         }
-
-        public bool DetectHoldInput(InputClass inputClass)
-        {
-            return false;
-        }
-
-        public Vector3 PerformAction(ref Character.CharacterState characterState)
-        {
-            return new Vector3(0,0,0);
-        }
-
+        
         public void ResetInputDetect()
         {
             _lastMove = -1;
@@ -66,6 +62,18 @@ namespace CharacterMoves
             _patternMatch[0] = false;
             _patternMatch[1] = false;
             _patternMatch[2] = false;
+        }
+
+        public override bool DetectHoldInput(InputClass inputClass)
+        {
+            return false;
+        }
+
+        public override void PerformAction(InputClass inputClass)
+        {
+            if (!DetectMoveInput(inputClass)) return;
+        
+            Debug.Log("Hadoken");
         }
     }
 }
