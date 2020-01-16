@@ -52,14 +52,13 @@ public class CharacterController : MonoBehaviour
     {
         _lastChacterOrientation = _characterOrientation;
         
-        //Debug.Log(_characterOrientation + "," + _lastChacterOrientation);
         if (transform.position.x > _opponentCharacter.transform.position.x && _character.CanSwitchOrientation())
         {
             var flipModel = new Vector3(-1,1,1);
             _characterOrientation = -1;
             transform.localScale = Vector3.Lerp(transform.localScale,flipModel, 2.0f);
         }
-        else if (transform.position.x < _opponentCharacter.transform.position.x && _character.CanSwitchOrientation())
+        else if (transform.position.x < _opponentCharacter.transform.position.x &&_character.CanSwitchOrientation())
         {
             var flipModel = new Vector3(1,1,1);
             _characterOrientation = 1;

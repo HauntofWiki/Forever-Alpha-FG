@@ -5,7 +5,7 @@ namespace CharacterMoves
     public class MoveDashBackward : CharacterMove
     {
         private CharacterProperties _properties;
-        private readonly int _inputLimit;
+        private int _inputLimit;
         private readonly int[] _movePattern = {-1,0,-1}; //Dash uses X-axis only
         private readonly bool[] _patternMatch = {false, false, false};
         private int _lastMove;
@@ -39,16 +39,13 @@ namespace CharacterMoves
             1,1,1,1,1,1,1,1,1,1,1,1,0,0,0
         };
         
-        public MoveDashBackward()
-        {
-            _lastMove = -1;
-            _moveDetectCounter = 0;
-            _inputLimit = 20;
-        }
-
         public override void InitializeMove(ref CharacterProperties properties)
         {
             _properties = properties;
+            _lastMove = -1;
+            _moveDetectCounter = 0;
+            _inputLimit = 20;
+            _properties.BackDashDuration = AttackStateFrames.Length;
         }
 
         public override bool DetectMoveInput(InputClass inputClass)

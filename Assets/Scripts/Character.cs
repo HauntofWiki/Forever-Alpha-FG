@@ -48,14 +48,16 @@ public class Character
         HealthPoints = 100;
         MeterPoints = 0;
 
+        _characterMoves = new List<CharacterMove>();
+        
         _properties = new CharacterProperties
         {
             WalkForwardXSpeed = 4.0f,
             WalkBackwardXSpeed = 4.0f,
-            JumpYSpeed = 12.0f,
+            JumpYSpeed = 15.0f,
             PersonalGravity = 24.0f,
-            DashForwardXSpeed = new float[] {7.0f, 10.0f, 3.0f},
-            AirDashForwardSpeed = new float[] {10.0f, 10.0f},
+            DashForwardXSpeed = new float[] {7.0f, 15.0f, 3.0f},
+            AirDashForwardSpeed = new float[] {15.0f, 15.0f},
             DashBackwardXSpeed = new float[] {7.0f, 20.0f, 3.0f},
             IsAirborne = false,
             IsIgnoringGravity = false,
@@ -111,7 +113,7 @@ public class Character
     
     public void ApplyMovement(Vector3 moveDirection, int currentOrientation, int lastOrientation)
     {
-        //Debug.Log("CurrentState: " + _currentState + "; LastState: " + _lastState);
+        Debug.Log(_properties.IsIgnoringGravity);//"CurrentState: " + _properties.CurrentState+ "; LastState: " + _properties.LastState);
 
         if(!_properties.IsIgnoringGravity)
             _properties.MoveDirection.y -= _properties.PersonalGravity * Time.deltaTime;

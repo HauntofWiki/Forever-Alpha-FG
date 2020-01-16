@@ -68,7 +68,10 @@ namespace CharacterMoves
             if (AttackStateFrames[_properties.JumpFrameCounter] == 0)
                 return;
             if (AttackStateFrames[_properties.JumpFrameCounter] == 1)
-                _properties.MoveDirection = new Vector3(-_properties.WalkBackwardXSpeed,_properties.JumpYSpeed,0);
+            {
+                _properties.IsAirborne = true;
+                _properties.MoveDirection = new Vector3(-_properties.WalkBackwardXSpeed, _properties.JumpYSpeed, 0);
+            }
         }
         
         if (_properties.CurrentState == CharacterProperties.CharacterState.LandingJumpBackward)
@@ -78,6 +81,7 @@ namespace CharacterMoves
             {
                 _properties.JumpFrameCounter = 0;
                 _properties.LastState = _properties.CurrentState;
+                _properties.IsAirborne = false;
                 _properties.CurrentState = CharacterProperties.CharacterState.Stand;
             }
         }

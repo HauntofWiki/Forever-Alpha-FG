@@ -74,6 +74,7 @@ namespace CharacterMoves
                 if (AttackStateFrames[_properties.JumpFrameCounter] == 1)
                 {
                     _properties.LastState = _properties.CurrentState;
+                    _properties.IsAirborne = true;
                     _properties.MoveDirection = new Vector3(_properties.WalkForwardXSpeed, _properties.JumpYSpeed, 0);
                 }
             }
@@ -85,9 +86,24 @@ namespace CharacterMoves
                 {
                     _properties.JumpFrameCounter = 0;
                     _properties.LastState = _properties.CurrentState;
+                    _properties.IsAirborne = false;
                     _properties.CurrentState = CharacterProperties.CharacterState.Stand;
                 }
             }
+            
+            //Detect proper state and detect input
+            if (_properties.CurrentState == CharacterProperties.CharacterState.JumpForward && AttackStateFrames[_properties.JumpFrameCounter] == 1)
+            {
+                _properties.MoveDirection.x = _properties.WalkForwardXSpeed;
+                return;
+            }
+
+            if (!DetectMoveInput(inputClass)) return;
+            if (_properties.CurrentState != CharacterProperties.CharacterState.Crouch && _properties.CurrentState != CharacterProperties.CharacterState.Stand && _properties.CurrentState != CharacterProperties.CharacterState.CancellableAnimation) return;
+        
+            _properties.JumpFrameCounter = 0;
+            _properties.LastState = _properties.CurrentState;
+            _properties.CurrentState = CharacterProperties.CharacterState.JumpForward;
         }
     }
 }

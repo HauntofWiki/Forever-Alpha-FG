@@ -5,7 +5,7 @@ namespace CharacterMoves
     public class MoveAirDashForward : CharacterMove
     {
         private CharacterProperties _properties;
-        private readonly int _inputLimit;
+        private int _inputLimit;
         private readonly int[] _movePattern = {1,0,1}; //Dash uses X-axis only
         private readonly bool[] _patternMatch = {false, false, false};
         private int _lastInput;
@@ -22,7 +22,7 @@ namespace CharacterMoves
         //0:StartUp, 1:Active, 2:Recovery 3:End
         public int[] AttackStateFrames =
         {
-            0,0,0,1,2,2,2,3
+            0,0,0,1,1,1,1,1,1,1,1,1,1,1,2,2,2,3
         };
         
         //Tracks Cancellable states of the move per frame.
@@ -38,20 +38,19 @@ namespace CharacterMoves
         {
             0
         };
-        public MoveAirDashForward()
-        {
-            _lastInput = -1;
-            _moveDetectCounter = 0;
-            _inputLimit = 20;
-        }
 
         public override void InitializeMove(ref CharacterProperties properties)
         {
             _properties = properties;
+            _lastInput = -1;
+            _moveDetectCounter = 0;
+            _inputLimit = 20;
+            _properties.AirDashDuration = 20; // = AttackStateFrames.Length;
         }
 
         public override bool DetectMoveInput(InputClass inputClass)
         {
+            if (!_properties.IsAirborne) return false;
             _moveDetectCounter++;
         
             if (_moveDetectCounter >= _inputLimit)
