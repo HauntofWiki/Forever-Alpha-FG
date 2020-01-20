@@ -108,12 +108,12 @@ public class Character
 
     public bool CanSwitchOrientation()
     {
-        return _properties.CurrentState != _properties.LastState;
+        return (_properties.CurrentState != _properties.LastState && _properties.CurrentState != CharacterProperties.CharacterState.JumpForward );//May want to add statuses or handle more elegantly
     }
     
     public void ApplyMovement(Vector3 moveDirection, int currentOrientation, int lastOrientation)
     {
-        Debug.Log(_properties.IsIgnoringGravity);//"CurrentState: " + _properties.CurrentState+ "; LastState: " + _properties.LastState);
+        //Debug.Log("CurrentState: " + _properties.CurrentState+ "; LastState: " + _properties.LastState);
 
         if(!_properties.IsIgnoringGravity)
             _properties.MoveDirection.y -= _properties.PersonalGravity * Time.deltaTime;

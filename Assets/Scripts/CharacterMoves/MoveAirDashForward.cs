@@ -36,7 +36,7 @@ namespace CharacterMoves
         //0: No, 1:Yes
         public int[] AirborneState =
         {
-            0
+            1
         };
 
         public override void InitializeMove(ref CharacterProperties properties)
@@ -45,7 +45,7 @@ namespace CharacterMoves
             _lastInput = -1;
             _moveDetectCounter = 0;
             _inputLimit = 20;
-            _properties.AirDashDuration = 20; // = AttackStateFrames.Length;
+            _properties.AirDashDuration = AttackStateFrames.Length;
         }
 
         public override bool DetectMoveInput(InputClass inputClass)
@@ -94,15 +94,18 @@ namespace CharacterMoves
         public override void PerformAction(InputClass inputClass)
         {
             //Play out AirDash Duration
-            if (_properties.CurrentState == CharacterProperties.CharacterState.AirDash && _properties.DashFrameCounter < _properties.AirDashDuration)
-            {
-                _properties.DashFrameCounter++;
-                if (_properties.DashFrameCounter > _properties.AirDashDuration * 0.75)
-                    _properties.MoveDirection.x = _properties.AirDashForwardSpeed[1];
+		if (_properties.CurrentState == CharacterProperties.CharacterState.AirDash && _properties.DashFrameCounter < _properties.AirDashDuration - 1)
+        {
+            _properties.LastState = _properties.CurrentState;
+            _properties.DashFrameCounter++;
+            if (AttackStateFrames[_properties.DashFrameCounter] == 0)
+                _properties.MoveDirection = new Vector3(_properties.AirDashForwardSpeed[0],0,0);
+			if (AttackStateFrames[_properties.DashFrameCounter] == 1)
+                _properties.MoveDirection = new Vector3(_properties.AirDashForwardSpeed[1],0,0);
             }
         
             //Exit dash animation
-            if (_properties.CurrentState == CharacterProperties.CharacterState.AirDash && _properties.DashFrameCounter >= _properties.AirDashDuration)
+            if (_properties.CurrentState == CharacterProperties.CharacterState.AirDash && _properties.DashFrameCounter >= _properties.AirDashDuration - 1)
             {
                 _properties.LastState = _properties.CurrentState;
                 _properties.CurrentState = CharacterProperties.CharacterState.JumpForward;
@@ -110,7 +113,6 @@ namespace CharacterMoves
                 _properties.IsIgnoringGravity = false;
             }
             
-        
             //Begin AirDash Detection
             if (!DetectMoveInput(inputClass)) return;
             if (_properties.CurrentState == CharacterProperties.CharacterState.Stand) return;
