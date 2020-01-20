@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
+//using UnityEngine.EventSystems;
 
 /*
  * This class is intermediate between Player 1 and the input system
@@ -32,8 +31,10 @@ public class CharacterController : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        _characterNumber = 1; //hardcoded for now
-        _characterOrientation = 1; //hardcoded for now
+        //Find whether the controller is Player1 or Player2
+        _characterNumber = transform.name == "Player2" ? 2 : 1;
+        
+        _characterOrientation = 0; //hardcoded for now
         player = GetComponent<UnityEngine.CharacterController>();
         _character = new Character(player);
         _inputManager = new InputManager(_characterNumber);
@@ -45,21 +46,27 @@ public class CharacterController : MonoBehaviour
         //Find Opposing Character GameObject
         if (_characterNumber == 1)
             _opponentCharacter = GameObject.Find("Player2");
+        else _opponentCharacter = GameObject.Find("Player1");
     }
 
     // Update is called once per frame
     private void Update()
     {
+
+        bool lastButtonDown = Input.GetKeyDown(KeyCode.Joystick2Button0);
+
+        Debug.Log(lastButtonDown);
+        lastButtonDown = false;
+        
         _lastChacterOrientation = _characterOrientation;
         
-        //Debug.Log(_characterOrientation + "," + _lastChacterOrientation);
         if (transform.position.x > _opponentCharacter.transform.position.x && _character.CanSwitchOrientation())
         {
             var flipModel = new Vector3(-1,1,1);
             _characterOrientation = -1;
             transform.localScale = Vector3.Lerp(transform.localScale,flipModel, 2.0f);
         }
-        else if (transform.position.x < _opponentCharacter.transform.position.x && _character.CanSwitchOrientation())
+        else if (transform.position.x < _opponentCharacter.transform.position.x &&_character.CanSwitchOrientation())
         {
             var flipModel = new Vector3(1,1,1);
             _characterOrientation = 1;
@@ -67,18 +74,8 @@ public class CharacterController : MonoBehaviour
         }
         
         _currentInput = _inputManager.Update(_characterOrientation);
-        
-        _character.CharacterIdle(_currentInput);
-        _character.WalkForward(_currentInput);
-        _character.WalkBackward(_currentInput);
-        _character.JumpForward(_currentInput);
-        _character.JumpBackward(_currentInput);
-        _character.JumpNeutral(_currentInput);
-        _character.DashForward(_currentInput);
-        _character.DashBackward(_currentInput);
-        //_character.AirDashForward(_currentInput);
-        _character.LightAttack(_currentInput);
-        _character.SpecialForward(_currentInput);
+
+        _character.Update(_currentInput);
         
         //Apply movement to character
         _character.ApplyMovement(_moveDirection,_characterOrientation, _lastChacterOrientation);

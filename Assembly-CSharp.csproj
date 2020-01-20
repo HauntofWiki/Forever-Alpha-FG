@@ -59,7 +59,8 @@
      <Compile Include="Assets\Scripts\CameraScript.cs" />
      <Compile Include="Assets\Scripts\Character.cs" />
      <Compile Include="Assets\Scripts\CharacterController.cs" />
-     <Compile Include="Assets\Scripts\CharacterMoves\ICharacterMove.cs" />
+     <Compile Include="Assets\Scripts\CharacterMoves\CharacterMove.cs" />
+     <Compile Include="Assets\Scripts\CharacterMoves\CharacterProperties.cs" />
      <Compile Include="Assets\Scripts\CharacterMoves\MoveAirDashForward.cs" />
      <Compile Include="Assets\Scripts\CharacterMoves\MoveDashBackward.cs" />
      <Compile Include="Assets\Scripts\CharacterMoves\MoveDashForward.cs" />
@@ -74,6 +75,7 @@
      <Compile Include="Assets\Scripts\CharacterMoves\MoveWalkForward.cs" />
      <Compile Include="Assets\Scripts\InputClass.cs" />
      <Compile Include="Assets\Scripts\InputManager.cs" />
+     <Compile Include="Assets\Scripts\Joystick.cs" />
      <Compile Include="Assets\Scripts\Player2Controller.cs" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>C:/Users/Richard/GameDev/Forever Alpha FG/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

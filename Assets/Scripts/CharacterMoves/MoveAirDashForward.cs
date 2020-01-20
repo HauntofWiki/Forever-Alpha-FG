@@ -1,8 +1,11 @@
-﻿namespace CharacterMoves
+﻿using UnityEngine;
+
+namespace CharacterMoves
 {
-    public class MoveAirDashForward : ICharacterMove
+    public class MoveAirDashForward : CharacterMove
     {
-        private readonly int _inputLimit;
+        private CharacterProperties _properties;
+        private int _inputLimit;
         private readonly int[] _movePattern = {1,0,1}; //Dash uses X-axis only
         private readonly bool[] _patternMatch = {false, false, false};
         private int _lastInput;
@@ -19,7 +22,7 @@
         //0:StartUp, 1:Active, 2:Recovery 3:End
         public int[] AttackStateFrames =
         {
-            0,0,0,1,2,2,2,3
+            0,0,0,1,1,1,1,1,1,1,1,1,1,1,2,2,2,3
         };
         
         //Tracks Cancellable states of the move per frame.
@@ -33,17 +36,21 @@
         //0: No, 1:Yes
         public int[] AirborneState =
         {
-            0
+            1
         };
-        public MoveAirDashForward()
+
+        public override void InitializeMove(ref CharacterProperties properties)
         {
+            _properties = properties;
             _lastInput = -1;
             _moveDetectCounter = 0;
             _inputLimit = 20;
+            _properties.AirDashDuration = AttackStateFrames.Length;
         }
-        
-        public bool DetectMoveInput(InputClass inputClass)
+
+        public override bool DetectMoveInput(InputClass inputClass)
         {
+            if (!_properties.IsAirborne) return false;
             _moveDetectCounter++;
         
             if (_moveDetectCounter >= _inputLimit)
@@ -69,11 +76,6 @@
             _lastInput = inputClass.DPadNumPad;
             return false;
         }
-
-        public bool DetectHoldInput(InputClass inputClass)
-        {
-            return false;
-        }
         
         private void ResetInputDetect()
         {
@@ -83,5 +85,44 @@
             _patternMatch[1] = false;
             _patternMatch[2] = false;
         }
+
+        public override bool DetectHoldInput(InputClass inputClass)
+        {
+            return false;
+        }
+
+        public override void PerformAction(InputClass inputClass)
+        {
+            //Play out AirDash Duration
+		if (_properties.CurrentState == CharacterProperties.CharacterState.AirDash && _properties.DashFrameCounter < _properties.AirDashDuration - 1)
+        {
+            _properties.LastState = _properties.CurrentState;
+            _properties.DashFrameCounter++;
+            if (AttackStateFrames[_properties.DashFrameCounter] == 0)
+                _properties.MoveDirection = new Vector3(_properties.AirDashForwardSpeed[0],0,0);
+			if (AttackStateFrames[_properties.DashFrameCounter] == 1)
+                _properties.MoveDirection = new Vector3(_properties.AirDashForwardSpeed[1],0,0);
+            }
+        
+            //Exit dash animation
+            if (_properties.CurrentState == CharacterProperties.CharacterState.AirDash && _properties.DashFrameCounter >= _properties.AirDashDuration - 1)
+            {
+                _properties.LastState = _properties.CurrentState;
+                _properties.CurrentState = CharacterProperties.CharacterState.JumpForward;
+                _properties.DashFrameCounter = 0;
+                _properties.IsIgnoringGravity = false;
+            }
+            
+            //Begin AirDash Detection
+            if (!DetectMoveInput(inputClass)) return;
+            if (_properties.CurrentState == CharacterProperties.CharacterState.Stand) return;
+            _properties.DashFrameCounter = 0;
+            _properties.LastState = _properties.CurrentState;
+            _properties.CurrentState = CharacterProperties.CharacterState.AirDash;
+            _properties.IsIgnoringGravity = true;
+            _properties.MoveDirection = new Vector3(_properties.AirDashForwardSpeed[0],0,0);
+        }
+
+
     }
 }

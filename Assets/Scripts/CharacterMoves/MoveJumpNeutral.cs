@@ -2,8 +2,10 @@
 
 namespace CharacterMoves
 {
-    public class MoveJumpNeutral : ICharacterMove
+    public class MoveJumpNeutral : CharacterMove
     {
+        private CharacterProperties _properties;
+        
         //Tracks invincibility States per frame.
         //0:None, 1:Full, 2:UpperBody, 3:LowerBody 4:throw
         public int[] InvincibilyFrames =
@@ -31,19 +33,67 @@ namespace CharacterMoves
         {
             0,0,0,1,0,0,0
         };
-        public bool DetectMoveInput(InputClass inputClass)
+
+        public override void InitializeMove(ref CharacterProperties properties)
+        {
+            _properties = properties;
+        }
+
+        public override bool DetectMoveInput(InputClass inputClass)
         {
             return inputClass.DPadNumPad == 8;
         }
 
-        public bool DetectHoldInput(InputClass inputClass)
+        public override bool DetectHoldInput(InputClass inputClass)
         {
             return false;
         }
 
-        public Vector3 PerformAction(ref Character.CharacterState characterState)
+        public override void PerformAction(InputClass inputClass)
         {
-            return new Vector3(0,0,0);
+            //Use Character controller to determine if animation have reached the ground
+            if (_properties.CurrentState == CharacterProperties.CharacterState.Jump && _properties.characterController.isGrounded && AttackStateFrames[_properties.JumpFrameCounter] != 0)
+            {
+                _properties.JumpFrameCounter++;
+                _properties.LastState = _properties.CurrentState;
+                _properties.CurrentState = CharacterProperties.CharacterState.Landing; 
+            }
+            
+            //Advance Jump Frame Counter and assess Startup/Recovery
+            if (_properties.CurrentState == CharacterProperties.CharacterState.Jump && AttackStateFrames[_properties.JumpFrameCounter] == 0)
+            {
+                _properties.JumpFrameCounter++;
+                if (AttackStateFrames[_properties.JumpFrameCounter] == 0)
+                    return;
+                if (AttackStateFrames[_properties.JumpFrameCounter] == 1)
+                {
+                    _properties.IsAirborne = true;    
+                    _properties.MoveDirection = new Vector3(0,_properties.JumpYSpeed,0);
+                }
+            }
+
+            if (_properties.CurrentState == CharacterProperties.CharacterState.Landing)
+            {
+                _properties.JumpFrameCounter++;
+                if (AttackStateFrames[_properties.JumpFrameCounter] == 3)
+                {
+                    _properties.JumpFrameCounter = 0;
+                    _properties.LastState = _properties.CurrentState;
+                    _properties.IsAirborne = false;
+                    _properties.CurrentState = CharacterProperties.CharacterState.Stand;
+                }
+            }
+
+            if (_properties.CurrentState == CharacterProperties.CharacterState.Jump && AttackStateFrames[_properties.JumpFrameCounter] == 1)
+                return;
+        
+            //Detect proper state and detect input
+            if (!DetectMoveInput(inputClass)) return;
+            if (_properties.CurrentState != CharacterProperties.CharacterState.Crouch && _properties.CurrentState != CharacterProperties.CharacterState.Stand && _properties.CurrentState != CharacterProperties.CharacterState.CancellableAnimation) return;
+
+            _properties.JumpFrameCounter = 0;
+            _properties.LastState = _properties.CurrentState;
+            _properties.CurrentState = CharacterProperties.CharacterState.Jump;
         }
     }
 }

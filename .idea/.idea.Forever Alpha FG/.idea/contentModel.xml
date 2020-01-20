@@ -11,7 +11,8 @@
           <e p="Character.cs" t="Include" />
           <e p="CharacterController.cs" t="Include" />
           <e p="CharacterMoves" t="Include">
-            <e p="ICharacterMove.cs" t="Include" />
+            <e p="CharacterMove.cs" t="Include" />
+            <e p="CharacterProperties.cs" t="Include" />
             <e p="MoveAirDashForward.cs" t="Include" />
             <e p="MoveDashBackward.cs" t="Include" />
             <e p="MoveDashForward.cs" t="Include" />
@@ -27,6 +28,7 @@
           </e>
           <e p="InputClass.cs" t="Include" />
           <e p="InputManager.cs" t="Include" />
+          <e p="Joystick.cs" t="Include" />
           <e p="Player2Controller.cs" t="Include" />
         </e>
       </e>

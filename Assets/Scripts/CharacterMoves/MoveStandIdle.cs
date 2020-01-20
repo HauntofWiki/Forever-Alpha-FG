@@ -2,25 +2,34 @@
 
 namespace CharacterMoves
 {
-    public class MoveStandIdle : ICharacterMove
+    public class MoveStandIdle : CharacterMove
     {
-
-        public bool DetectMoveInput(InputClass inputClass)
+        private CharacterProperties _properties;
+        public override void InitializeMove(ref CharacterProperties properties)
+        {
+            _properties = properties;
+        }
+        
+        public override bool DetectMoveInput(InputClass inputClass)
         {
             return inputClass.DPadNumPad == 5;
         }
 
-        public bool DetectHoldInput(InputClass inputClass)
+        public override bool DetectHoldInput(InputClass inputClass)
         {
             return false;
         }
 
-        public Vector3 PerformAction(ref Character.CharacterState characterState)
+        public override void PerformAction(InputClass inputClass)
         {
-            characterState = Character.CharacterState.Stand;
-            var moveDirection = new Vector3(0, 0, 0);
+            if (!DetectMoveInput(inputClass)) return;
+            if (_properties.CurrentState != CharacterProperties.CharacterState.Crouch && _properties.CurrentState != CharacterProperties.CharacterState.Stand) return;
+            _properties.DashFrameCounter = 0;
 
-            return moveDirection;
+            _properties.LastState = _properties.CurrentState;
+            _properties.CurrentState = CharacterProperties.CharacterState.Stand;
+            _properties.MoveDirection = new Vector3(0, 0, 0);
         }
+        
     }
 }

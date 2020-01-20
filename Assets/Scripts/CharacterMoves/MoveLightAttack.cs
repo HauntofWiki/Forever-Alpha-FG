@@ -1,13 +1,9 @@
 ﻿namespace CharacterMoves
 {
-    public class MoveLightAttack : ICharacterMove
+    public class MoveLightAttack : CharacterMove
     {
-        private readonly int _inputLimit;
-        private readonly int[] _movePattern = {1,0,1}; //Dash uses X-axis only
-        private readonly bool[] _patternMatch = {false, false, false};
-        private int _lastInput;
-        private int _moveDetectCounter;
-
+        private CharacterProperties _properties;
+        
         //Tracks invincibility States per frame.
         //0:None, 1:Full, 2:UpperBody, 3:LowerBody 4:throw
         public int[] InvincibilyFrames =
@@ -36,30 +32,54 @@
         {
             0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
         };
-        public MoveLightAttack()
+
+        public override void InitializeMove(ref CharacterProperties properties)
         {
-            _lastInput = -1;
-            _moveDetectCounter = 0;
-            _inputLimit = 20;
+            _properties = properties;
         }
-        
-        public bool DetectMoveInput(InputClass inputClass)
+
+        public override bool DetectMoveInput(InputClass inputClass)
         {
             return inputClass.LightAttackButtonDown == 1;
         }
 
-        public bool DetectHoldInput(InputClass inputClass)
+        public override bool DetectHoldInput(InputClass inputClass)
         {
             return false;
         }
-        
-        private void ResetInputDetect()
+
+        public override void PerformAction(InputClass inputClass)
         {
-            _lastInput = -1;
-            _moveDetectCounter = 0;
-            _patternMatch[0] = false;
-            _patternMatch[1] = false;
-            _patternMatch[2] = false;
+            if (_properties.CurrentState == CharacterProperties.CharacterState.Stand && DetectMoveInput(inputClass) &&
+                _properties.AttackState == CharacterProperties.AttackStates.None)
+            {
+                _properties.AttackFrameCounter = 0;
+                //_animator.Play("LightAttack");
+                _properties.AttackState = CharacterProperties.AttackStates.LightAttack;
+            }
+
+            if (_properties.AttackState == CharacterProperties.AttackStates.LightAttack)
+            {
+                _properties.AttackFrameCounter++;
+                switch (Cancellability[_properties.AttackFrameCounter])
+                {
+                    case 0:
+                        _properties.CancellableState = CharacterProperties.CancellableStates.None;
+                        break;
+                    case 1:
+                        _properties.CancellableState = CharacterProperties.CancellableStates.EmptyCancellable;
+                        break;
+                    case 2:
+                        _properties.CancellableState = CharacterProperties.CancellableStates.NormalCancellable;
+                        break;
+                    case 3:
+                        _properties.CancellableState = CharacterProperties.CancellableStates.SpecialCancellable;
+                        break;
+                    case 4:
+                        _properties.CancellableState = CharacterProperties.CancellableStates.SuperCancellable;
+                        break;
+                }
+            }
         }
     }
 }
