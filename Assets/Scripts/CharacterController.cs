@@ -52,6 +52,12 @@ public class CharacterController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+
+        bool lastButtonDown = Input.GetKeyDown(KeyCode.Joystick2Button0);
+
+        Debug.Log(lastButtonDown);
+        lastButtonDown = false;
+        
         _lastChacterOrientation = _characterOrientation;
         
         if (transform.position.x > _opponentCharacter.transform.position.x && _character.CanSwitchOrientation())
