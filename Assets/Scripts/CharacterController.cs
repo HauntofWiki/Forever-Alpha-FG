@@ -23,6 +23,7 @@ public class CharacterController : MonoBehaviour
     private float _currentCharacterDistance;
     private float _maxCharacterDistance = 7.0f;
 
+
    
     public Animator animator;
     public Animation _animation;
@@ -37,7 +38,7 @@ public class CharacterController : MonoBehaviour
         _characterOrientation = 0; //hardcoded for now
         player = GetComponent<UnityEngine.CharacterController>();
         _character = new Character(player);
-        _inputManager = new InputManager(_characterNumber);
+        _inputManager = new InputManager(1, "Madcatz fightstick");//Hardcoded for now
         animator = GetComponent<Animator>();
         _animation = GetComponent<Animation>();
         
@@ -52,12 +53,6 @@ public class CharacterController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-
-        bool lastButtonDown = Input.GetKeyDown(KeyCode.Joystick2Button0);
-
-        Debug.Log(lastButtonDown);
-        lastButtonDown = false;
-        
         _lastChacterOrientation = _characterOrientation;
         
         if (transform.position.x > _opponentCharacter.transform.position.x && _character.CanSwitchOrientation())

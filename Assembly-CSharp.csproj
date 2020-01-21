@@ -56,6 +56,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\GameManagerScript.cs" />
      <Compile Include="Assets\Scripts\CameraScript.cs" />
      <Compile Include="Assets\Scripts\Character.cs" />
      <Compile Include="Assets\Scripts\CharacterController.cs" />
@@ -75,8 +76,8 @@
      <Compile Include="Assets\Scripts\CharacterMoves\MoveWalkForward.cs" />
      <Compile Include="Assets\Scripts\InputClass.cs" />
      <Compile Include="Assets\Scripts\InputManager.cs" />
-     <Compile Include="Assets\Scripts\Joystick.cs" />
      <Compile Include="Assets\Scripts\Player2Controller.cs" />
+     <Compile Include="Assets\Scripts\SideSelectScript.cs" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>C:/Users/Richard/GameDev/Forever Alpha FG/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>
