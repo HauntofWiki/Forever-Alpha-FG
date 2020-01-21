@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InputClass
 {
-    public string AxesName;
+    public string AxisName;
     public string Action;
     public float Value;
     public int DPadNumPad; //directional commands stored in numpad notation
@@ -19,6 +19,8 @@ public class InputClass
     public int Auxiliary2ButtonDown;
     public float Auxiliary3ButtonDown;
     public float Auxiliary4ButtonDown;
+    public float Auxiliary3AxisDown;
+    public float Auxiliary4AxisDown;
     public int StartButtonDown;
     public int SelectButtonDown;
     
