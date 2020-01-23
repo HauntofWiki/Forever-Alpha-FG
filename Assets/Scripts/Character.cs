@@ -69,7 +69,7 @@ public class Character
             LastState = CharacterProperties.CharacterState.Empty,
             AttackState = CharacterProperties.AttackStates.None,
             CancellableState = CharacterProperties.CancellableStates.None,
-            characterController = _characterController
+            CharacterController = _characterController
         };
         
         //Add Moves to List. Order can effect priority.

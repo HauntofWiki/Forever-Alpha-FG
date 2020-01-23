@@ -6,7 +6,7 @@ namespace CharacterMoves
     public class MoveShoryuken : CharacterMove
     {
         private CharacterProperties _properties;
-        private string name = "Shoryuken";
+        private string _name = "Shoryuken";
         
         public int Damage;
         

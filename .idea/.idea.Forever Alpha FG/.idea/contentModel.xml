@@ -6,7 +6,6 @@
     <e p="C:\Users\Richard\GameDev\Forever Alpha FG" t="IncludeRecursive">
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="GameManagerScript.cs" t="Include" />
         <e p="Scripts" t="Include">
           <e p="CameraScript.cs" t="Include" />
           <e p="Character.cs" t="Include" />
@@ -27,10 +26,15 @@
             <e p="MoveWalkBackward.cs" t="Include" />
             <e p="MoveWalkForward.cs" t="Include" />
           </e>
+          <e p="CharacterSelectScene" t="Include">
+            <e p="Planet 1 Orbit.cs" t="Include" />
+            <e p="PlanetaryMovement.cs" t="Include" />
+          </e>
+          <e p="GameManagerScript.cs" t="Include" />
           <e p="InputClass.cs" t="Include" />
           <e p="InputManager.cs" t="Include" />
+          <e p="Player.cs" t="Include" />
           <e p="Player2Controller.cs" t="Include" />
-          <e p="SideSelectScript.cs" t="Include" />
         </e>
       </e>
       <e p="Forever Alpha FG.sln" t="IncludeFlat" />

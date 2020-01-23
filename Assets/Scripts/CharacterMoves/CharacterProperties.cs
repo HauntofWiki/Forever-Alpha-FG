@@ -28,7 +28,7 @@ namespace CharacterMoves
         
         //Vector3 which is used for moving the player Around;
         public Vector3 MoveDirection;
-        public UnityEngine.CharacterController characterController;
+        public UnityEngine.CharacterController CharacterController;
     
         //Define Character State
         public CharacterState CurrentState;

@@ -52,7 +52,7 @@ namespace CharacterMoves
         public override void PerformAction(InputClass inputClass)
         {
             //Use Character controller to determine if animation have reached the ground
-            if (_properties.CurrentState == CharacterProperties.CharacterState.Jump && _properties.characterController.isGrounded && AttackStateFrames[_properties.JumpFrameCounter] != 0)
+            if (_properties.CurrentState == CharacterProperties.CharacterState.Jump && _properties.CharacterController.isGrounded && AttackStateFrames[_properties.JumpFrameCounter] != 0)
             {
                 _properties.JumpFrameCounter++;
                 _properties.LastState = _properties.CurrentState;
