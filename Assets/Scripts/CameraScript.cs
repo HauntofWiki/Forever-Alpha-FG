@@ -7,7 +7,7 @@ public class CameraScript : MonoBehaviour
 {
     private GameObject _player1;
     private GameObject _player2;
-    private Camera camera;
+    private Camera _camera;
     private float _cameraHeightOffset = 1.0f;
     private float _cameraDefaultZ = -4;
     private float _heightOfCamera;
@@ -23,7 +23,7 @@ public class CameraScript : MonoBehaviour
     {
         _player1 = GameObject.Find("Player1");
         _player2 = GameObject.Find("Player2");
-        camera = GetComponent<Camera>();
+        _camera = GetComponent<Camera>();
         
     }
 

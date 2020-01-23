@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
+
 //using UnityEngine.EventSystems;
 
 /*
@@ -26,7 +28,7 @@ public class CharacterController : MonoBehaviour
 
    
     public Animator animator;
-    public Animation _animation;
+    [FormerlySerializedAs("_animation")] public Animation animation;
 
 
     // Start is called before the first frame update
@@ -40,7 +42,7 @@ public class CharacterController : MonoBehaviour
         _character = new Character(player);
         _inputManager = new InputManager(1, "Madcatz fightstick");//Hardcoded for now
         animator = GetComponent<Animator>();
-        _animation = GetComponent<Animation>();
+        animation = GetComponent<Animation>();
         
         //Find Camera
         _gameCamera = GameObject.Find("Main Camera");
@@ -69,7 +71,7 @@ public class CharacterController : MonoBehaviour
         }
         
         _currentInput = _inputManager.Update(_characterOrientation);
-
+        Debug.Log(_currentInput.DPadNumPad);
         _character.Update(_currentInput);
         
         //Apply movement to character

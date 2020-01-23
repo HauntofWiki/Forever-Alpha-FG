@@ -16,8 +16,8 @@ public class InputManager
     public string JoystickType { get; set; }
 
     private int _joystickNumber;
-    private string _DigitalAxisXAccessName;//i.e. Joy1Axis1
-    private string _DigitalAxisYAccessName;
+    private string _digitalAxisXAccessName;//i.e. Joy1Axis1
+    private string _digitalAxisYAccessName;
     private int _digitalAxisXNumber;
     private int _digitalAxisYNumber;
     private string _analogLeftAxisXName;
@@ -52,7 +52,7 @@ public class InputManager
         _inputQueueSize = 50;
         _numberOfInputs = 10;
         
-        SetDefaultMapping(joystickNumber,joystickName);
+        SetDefaultMapping(joystickNumber + 1,joystickName);
     }
     
     //Inserts inputs into Queue once per frame - inputs are currently set up for Playstation controller via project settings
@@ -61,38 +61,38 @@ public class InputManager
         _currentInput = new InputClass();
         
         //Read Direction inputs into Numpad Notation (1-9)
-        if (Input.GetAxis(_DigitalAxisXAccessName) * characterOrientation > 0 &&
-            Input.GetAxis(_DigitalAxisYAccessName) == 0)
+        if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation > 0 &&
+            Input.GetAxis(_digitalAxisYAccessName) == 0)
             _currentInput.DPadNumPad = 6;
-        else if (Input.GetAxis(_DigitalAxisXAccessName) * characterOrientation > 0 &&
-                 Input.GetAxis(_DigitalAxisYAccessName) > 0)
+        else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation > 0 &&
+                 Input.GetAxis(_digitalAxisYAccessName) > 0)
             _currentInput.DPadNumPad = 9;
-        else if (Input.GetAxis(_DigitalAxisXAccessName) * characterOrientation == 0 &&
-                 Input.GetAxis(_DigitalAxisYAccessName) > 0)
+        else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation == 0 &&
+                 Input.GetAxis(_digitalAxisYAccessName) > 0)
             _currentInput.DPadNumPad = 8;
-        else if (Input.GetAxis(_DigitalAxisXAccessName) * characterOrientation < 0 &&
-                 Input.GetAxis(_DigitalAxisYAccessName) > 0)
+        else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation < 0 &&
+                 Input.GetAxis(_digitalAxisYAccessName) > 0)
             _currentInput.DPadNumPad = 7;
-        else if (Input.GetAxis(_DigitalAxisXAccessName) * characterOrientation < 0 &&
-                 Input.GetAxis(_DigitalAxisYAccessName) == 0)
+        else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation < 0 &&
+                 Input.GetAxis(_digitalAxisYAccessName) == 0)
             _currentInput.DPadNumPad = 4;
-        else if (Input.GetAxis(_DigitalAxisXAccessName) * characterOrientation < 0 &&
-                 Input.GetAxis(_DigitalAxisYAccessName) < 0)
+        else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation < 0 &&
+                 Input.GetAxis(_digitalAxisYAccessName) < 0)
             _currentInput.DPadNumPad = 1;
-        else if (Input.GetAxis(_DigitalAxisXAccessName) * characterOrientation == 0 &&
-                 Input.GetAxis(_DigitalAxisYAccessName) < 0)
+        else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation == 0 &&
+                 Input.GetAxis(_digitalAxisYAccessName) < 0)
             _currentInput.DPadNumPad = 2;
-        else if (Input.GetAxis(_DigitalAxisXAccessName) * characterOrientation > 0 &&
-                 Input.GetAxis(_DigitalAxisYAccessName) < 0)
+        else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation > 0 &&
+                 Input.GetAxis(_digitalAxisYAccessName) < 0)
             _currentInput.DPadNumPad = 3;
-        else if (Input.GetAxis(_DigitalAxisXAccessName) * characterOrientation == 0 &&
-                 Input.GetAxis(_DigitalAxisXAccessName) == 0)
+        else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation == 0 &&
+                 Input.GetAxis(_digitalAxisXAccessName) == 0)
             _currentInput.DPadNumPad = 5;
         else _currentInput.DPadNumPad = 5;
         
         //Read direction inputs into tradition X/Y Axes
-        _currentInput.DPadX = Input.GetAxis(_DigitalAxisXAccessName) * characterOrientation;
-        _currentInput.DPadY = Input.GetAxis(_DigitalAxisYAccessName);
+        _currentInput.DPadX = Input.GetAxis(_digitalAxisXAccessName) * characterOrientation;
+        _currentInput.DPadY = Input.GetAxis(_digitalAxisYAccessName);
         
         //Read ButtonDown commands
         _currentInput.LightAttackButtonDown = Input.GetKeyDown(LightAttackButton) ? 1 : 0;
@@ -129,8 +129,8 @@ public class InputManager
         //Default Joystick mappings
         if (joystickName == "Controller (XBOX 360 For Windows)")
         {
-            _DigitalAxisXAccessName = GetJoystickAccessName(joystickNumber, 6);
-            _DigitalAxisYAccessName = GetJoystickAccessName(joystickNumber, 7);
+            _digitalAxisXAccessName = GetJoystickAccessName(joystickNumber, 6);
+            _digitalAxisYAccessName = GetJoystickAccessName(joystickNumber, 7);
             _analogLeftAxisXName = "Horizontal";
             _analogLeftAxisYName = "Vertical";
             _analogRightAxisXName = GetJoystickAccessName(joystickNumber, 4);
@@ -154,8 +154,8 @@ public class InputManager
         } 
         else if (joystickName == "Madcatz fightstick")
         {
-            _DigitalAxisXAccessName = GetJoystickAccessName(joystickNumber, 7);
-            _DigitalAxisYAccessName = GetJoystickAccessName(joystickNumber, 8);
+            _digitalAxisXAccessName = GetJoystickAccessName(joystickNumber, 7);
+            _digitalAxisYAccessName = GetJoystickAccessName(joystickNumber, 8);
             _analogLeftAxisXName = "Horizontal";
             _analogLeftAxisYName = "Vertical";
             _analogRightAxisXName = GetJoystickAccessName(joystickNumber, 3);
@@ -179,8 +179,8 @@ public class InputManager
         }
         else if (joystickName == "Keyboard")
         {
-            _DigitalAxisXAccessName = GetJoystickAccessName(joystickNumber, 7);
-            _DigitalAxisYAccessName = GetJoystickAccessName(joystickNumber, 8);
+            _digitalAxisXAccessName = GetJoystickAccessName(joystickNumber, 7);
+            _digitalAxisYAccessName = GetJoystickAccessName(joystickNumber, 8);
             _analogLeftAxisXName = "Horizontal";
             _analogLeftAxisYName = "Vertical";
             _analogRightAxisXName = GetJoystickAccessName(joystickNumber, 3);
@@ -205,8 +205,8 @@ public class InputManager
         else
         {
             Debug.Log("No Controller Connected");
-            _DigitalAxisXAccessName = "None";
-            _DigitalAxisYAccessName = "None";
+            _digitalAxisXAccessName = "None";
+            _digitalAxisYAccessName = "None";
             _analogLeftAxisXName = "None";
             _analogLeftAxisYName = "None";
             _analogRightAxisXName = "None";
@@ -232,7 +232,7 @@ public class InputManager
 
     private static string GetJoystickAccessName(int joystickNumber, int axisNumber)
     {
-        Debug.Log("Joy" + (joystickNumber) + "Axis" + axisNumber);
+        //Debug.Log("Joy" + (joystickNumber) + "Axis" + axisNumber);
         return "Joy" + (joystickNumber) + "Axis" + axisNumber;
     }
     

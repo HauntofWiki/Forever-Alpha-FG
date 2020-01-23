@@ -53,7 +53,7 @@ namespace CharacterMoves
         {
             //Use Character controller to determine if animation have reached the ground
             if (_properties.CurrentState == CharacterProperties.CharacterState.JumpForward &&
-                _properties.characterController.isGrounded && AttackStateFrames[_properties.JumpFrameCounter] != 0)
+                _properties.CharacterController.isGrounded && AttackStateFrames[_properties.JumpFrameCounter] != 0)
             {
                 _properties.JumpFrameCounter++;
                 _properties.LastState = _properties.CurrentState;
