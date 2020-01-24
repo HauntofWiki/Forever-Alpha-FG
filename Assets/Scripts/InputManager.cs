@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class InputManager
@@ -44,6 +45,8 @@ public class InputManager
     public KeyCode Auxiliary8Button { get; set; }
     public KeyCode StartButton { get; set; } 
     public KeyCode SelectButton { get; set; }
+    public KeyCode SubmitButton { get; set; }
+    public KeyCode CancelButton { get; set; }
     
     //Definition of games input
 
@@ -121,7 +124,10 @@ public class InputManager
         _currentInput.Auxiliary4ButtonDown = Input.GetKeyUp(Auxiliary4Button) ? 1 : 0;
         _currentInput.StartButtonDown = Input.GetKeyUp(StartButton) ? 1 : 0;
         _currentInput.SelectButtonDown = Input.GetKeyUp(SelectButton) ? 1 : 0;
-        //Debug.Log(_currentInput.LightAttackButtonDown + " " + Input.GetKeyDown(LightAttackButton));
+
+        _currentInput.SubmitButtonDown = Input.GetKeyDown(SubmitButton);
+        _currentInput.SubmitButtonDown = Input.GetKeyDown(CancelButton);
+        
         return _currentInput;
     }
     public void SetDefaultMapping(int joystickNumber, string joystickName) //GetJoystickNames[JoystickNumber + 1]
@@ -151,6 +157,11 @@ public class InputManager
             Auxiliary4Button = KeyCode.None;
             Auxiliary7Button = KeyCode.None;
             Auxiliary8Button = KeyCode.None;
+
+            SubmitButton = GetJoystickButton(joystickNumber, 0);
+            SubmitButton = GetJoystickButton(joystickNumber, 1);
+
+
         } 
         else if (joystickName == "Madcatz fightstick")
         {
@@ -176,6 +187,9 @@ public class InputManager
             Auxiliary6Button = GetJoystickButton(joystickNumber,11);
             Auxiliary7Button = GetJoystickButton(joystickNumber,12);
             Auxiliary8Button = GetJoystickButton(joystickNumber,13);
+            
+            SubmitButton = GetJoystickButton(joystickNumber, 1);
+            SubmitButton = GetJoystickButton(joystickNumber, 2);
         }
         else if (joystickName == "Keyboard")
         {
