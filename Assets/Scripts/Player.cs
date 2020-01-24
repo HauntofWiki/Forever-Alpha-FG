@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using GamePlayScripts;
 using UnityEngine;
 
 public class Player
@@ -13,6 +14,16 @@ public class Player
 
     public PlayerNumbers PlayerNumber;
 
+    public enum JoystickTypes
+    {
+        None,
+        Joystick,
+        Controller,
+        Keyboard
+    }
+
+    public JoystickTypes JoystickType;
+    
     public enum Characters
     {
         Robot,
@@ -24,6 +35,11 @@ public class Player
     }
 
     public InputManager InputManager;
+    //Tracking current and last input to help prevent jumping around the menus too fast.
+    public float CurrentXInput = 0;
+    public float LastXInput = 0;
+    public float CurrentYInput = 0;
+    public float LastYInput = 0;
     public Characters CurrentCharacter;
     public Character FavoriteCharacter;
     

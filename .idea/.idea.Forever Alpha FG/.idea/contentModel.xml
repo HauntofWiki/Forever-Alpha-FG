@@ -7,34 +7,36 @@
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
-          <e p="CameraScript.cs" t="Include" />
-          <e p="Character.cs" t="Include" />
-          <e p="CharacterController.cs" t="Include" />
-          <e p="CharacterMoves" t="Include">
-            <e p="CharacterMove.cs" t="Include" />
-            <e p="CharacterProperties.cs" t="Include" />
-            <e p="MoveAirDashForward.cs" t="Include" />
-            <e p="MoveDashBackward.cs" t="Include" />
-            <e p="MoveDashForward.cs" t="Include" />
-            <e p="MoveJumpBackward.cs" t="Include" />
-            <e p="MoveJumpForward.cs" t="Include" />
-            <e p="MoveJumpNeutral.cs" t="Include" />
-            <e p="MoveLightAttack.cs" t="Include" />
-            <e p="MoveShoryuken.cs" t="Include" />
-            <e p="MoveSpecialForward.cs" t="Include" />
-            <e p="MoveStandIdle.cs" t="Include" />
-            <e p="MoveWalkBackward.cs" t="Include" />
-            <e p="MoveWalkForward.cs" t="Include" />
-          </e>
-          <e p="CharacterSelectScene" t="Include">
-            <e p="Planet 1 Orbit.cs" t="Include" />
-            <e p="PlanetaryMovement.cs" t="Include" />
-          </e>
           <e p="GameManagerScript.cs" t="Include" />
+          <e p="GameplayScripts" t="Include">
+            <e p="CameraScript.cs" t="Include" />
+            <e p="Character.cs" t="Include" />
+            <e p="CharacterController.cs" t="Include" />
+            <e p="CharacterMoves" t="Include">
+              <e p="CharacterMove.cs" t="Include" />
+              <e p="CharacterProperties.cs" t="Include" />
+              <e p="MoveAirDashForward.cs" t="Include" />
+              <e p="MoveDashBackward.cs" t="Include" />
+              <e p="MoveDashForward.cs" t="Include" />
+              <e p="MoveJumpBackward.cs" t="Include" />
+              <e p="MoveJumpForward.cs" t="Include" />
+              <e p="MoveJumpNeutral.cs" t="Include" />
+              <e p="MoveLightAttack.cs" t="Include" />
+              <e p="MoveShoryuken.cs" t="Include" />
+              <e p="MoveSpecialForward.cs" t="Include" />
+              <e p="MoveStandIdle.cs" t="Include" />
+              <e p="MoveWalkBackward.cs" t="Include" />
+              <e p="MoveWalkForward.cs" t="Include" />
+            </e>
+          </e>
           <e p="InputClass.cs" t="Include" />
           <e p="InputManager.cs" t="Include" />
+          <e p="MenuScripts" t="Include">
+            <e p="CharacterSelect" t="Include">
+              <e p="SideSelect.cs" t="Include" />
+            </e>
+          </e>
           <e p="Player.cs" t="Include" />
-          <e p="Player2Controller.cs" t="Include" />
         </e>
       </e>
       <e p="Forever Alpha FG.sln" t="IncludeFlat" />

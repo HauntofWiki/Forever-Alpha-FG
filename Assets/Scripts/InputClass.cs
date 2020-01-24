@@ -23,6 +23,8 @@ public class InputClass
     public float Auxiliary4AxisDown;
     public int StartButtonDown;
     public int SelectButtonDown;
+    public bool SubmitButtonDown;
+    public bool CancelButtonDown;
     
     public int LightAttackButtonUp;
     public int MediumAttackButtonUp;

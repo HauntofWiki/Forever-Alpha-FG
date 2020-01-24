@@ -56,30 +56,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\CameraScript.cs" />
-     <Compile Include="Assets\Scripts\Character.cs" />
-     <Compile Include="Assets\Scripts\CharacterController.cs" />
-     <Compile Include="Assets\Scripts\CharacterMoves\CharacterMove.cs" />
-     <Compile Include="Assets\Scripts\CharacterMoves\CharacterProperties.cs" />
-     <Compile Include="Assets\Scripts\CharacterMoves\MoveAirDashForward.cs" />
-     <Compile Include="Assets\Scripts\CharacterMoves\MoveDashBackward.cs" />
-     <Compile Include="Assets\Scripts\CharacterMoves\MoveDashForward.cs" />
-     <Compile Include="Assets\Scripts\CharacterMoves\MoveJumpBackward.cs" />
-     <Compile Include="Assets\Scripts\CharacterMoves\MoveJumpForward.cs" />
-     <Compile Include="Assets\Scripts\CharacterMoves\MoveJumpNeutral.cs" />
-     <Compile Include="Assets\Scripts\CharacterMoves\MoveLightAttack.cs" />
-     <Compile Include="Assets\Scripts\CharacterMoves\MoveShoryuken.cs" />
-     <Compile Include="Assets\Scripts\CharacterMoves\MoveSpecialForward.cs" />
-     <Compile Include="Assets\Scripts\CharacterMoves\MoveStandIdle.cs" />
-     <Compile Include="Assets\Scripts\CharacterMoves\MoveWalkBackward.cs" />
-     <Compile Include="Assets\Scripts\CharacterMoves\MoveWalkForward.cs" />
-     <Compile Include="Assets\Scripts\CharacterSelectScene\Planet 1 Orbit.cs" />
-     <Compile Include="Assets\Scripts\CharacterSelectScene\PlanetaryMovement.cs" />
      <Compile Include="Assets\Scripts\GameManagerScript.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CameraScript.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\Character.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterController.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\CharacterMove.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\CharacterProperties.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveAirDashForward.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveDashBackward.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveDashForward.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveJumpBackward.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveJumpForward.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveJumpNeutral.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveLightAttack.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveShoryuken.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveSpecialForward.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveStandIdle.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveWalkBackward.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveWalkForward.cs" />
      <Compile Include="Assets\Scripts\InputClass.cs" />
      <Compile Include="Assets\Scripts\InputManager.cs" />
+     <Compile Include="Assets\Scripts\MenuScripts\CharacterSelect\SideSelect.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
-     <Compile Include="Assets\Scripts\Player2Controller.cs" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>C:/Users/Richard/GameDev/Forever Alpha FG/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>
