@@ -6,6 +6,7 @@ using System.Net.Mime;
 using MenuScripts.CharacterSelect;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 public class GameManagerScript : MonoBehaviour
 {
@@ -29,7 +30,7 @@ public class GameManagerScript : MonoBehaviour
     public void Start()
     {
         _sideSelect = new SideSelect();
-        _gameState = GameStates.SideSelect;//temporarily starting at SideSelect
+        _gameState = GameStates.MatchActive;//temporarily hardcoded
     }
 
     public void Update()
@@ -51,6 +52,7 @@ public class GameManagerScript : MonoBehaviour
 
     public void SideSelect()
     {
+        Debug.Log("sideselct");
         _sideSelect.Update();
     }
     

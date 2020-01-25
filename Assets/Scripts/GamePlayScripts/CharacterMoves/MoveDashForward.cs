@@ -5,6 +5,7 @@ namespace GamePlayScripts.CharacterMoves
     public class MoveDashForward : CharacterMove
     {
         private CharacterProperties _properties;
+        private Animator _animator;
         private readonly int _inputLimit;
         private readonly int[] _movePattern = {1, 0, 1}; //Dash uses X-axis only
         private readonly bool[] _patternMatch = {false, false, false};
@@ -43,11 +44,12 @@ namespace GamePlayScripts.CharacterMoves
         {
             _lastInput = -1;
             _moveDetectCounter = 0;
-            _inputLimit = 20;
+            _inputLimit = 15;
         }
 
         public override void InitializeMove(ref CharacterProperties properties)
         {
+            _animator = GameObject.Find("Player1").GetComponent<Animator>();
             _properties = properties;
         }
 
@@ -117,6 +119,7 @@ namespace GamePlayScripts.CharacterMoves
                     0, 0);
                 if (AttackStateFrames[_properties.DashFrameCounter] >= 2)
                 {
+                    _animator.Play("DashForwardBrake");
                     _properties.LastState = _properties.CurrentState;
                     _properties.CurrentState = CharacterProperties.CharacterState.CancellableAnimation;
                 }
@@ -142,6 +145,7 @@ namespace GamePlayScripts.CharacterMoves
             if (!DetectMoveInput(inputClass)) return;
             if (_properties.CurrentState != CharacterProperties.CharacterState.Stand &&
                 _properties.CurrentState != CharacterProperties.CharacterState.Crouch) return;
+            _animator.Play("DashForward");
             _properties.DashFrameCounter = 0;
             _properties.LastState = _properties.CurrentState;
             _properties.CurrentState = CharacterProperties.CharacterState.Dash;

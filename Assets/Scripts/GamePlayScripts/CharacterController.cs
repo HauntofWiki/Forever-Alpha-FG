@@ -50,7 +50,7 @@ namespace GamePlayScripts
             }
             else 
             {
-                _opponentCharacter = GameObject.Find("Player2");
+                _opponentCharacter = GameObject.Find("Player1");
                 _inputManager = new InputManager(0, Input.GetJoystickNames()[0]); //Hardcoded for now
             }
         }
@@ -74,7 +74,8 @@ namespace GamePlayScripts
             }
         
             _currentInput = _inputManager.Update(_characterOrientation);
-            Debug.Log(_currentInput.DPadNumPad);
+            if (_playerNumber == 2)
+                Debug.Log(_currentInput.DPadNumPad + ", " + _currentInput.LightAttackButtonDown + ", " + _currentInput.MediumAttackButtonDown + ", " + _currentInput.HeavyAttackButtonDown + ", " + _currentInput.SpecialAttackButtonDown + ", ");
             _character.Update(_currentInput);
         
             //Apply movement to character
