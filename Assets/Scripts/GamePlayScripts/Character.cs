@@ -53,7 +53,7 @@ namespace GamePlayScripts
                 WalkBackwardXSpeed = 4.0f,
                 JumpYSpeed = 15.0f,
                 PersonalGravity = 24.0f,
-                DashForwardXSpeed = new float[] {7.0f, 15.0f, 3.0f},
+                DashForwardXSpeed = new float[] {5.5f, 9.75f, 2.0f},
                 AirDashForwardSpeed = new float[] {15.0f, 15.0f},
                 DashBackwardXSpeed = new float[] {7.0f, 20.0f, 3.0f},
                 IsAirborne = false,
@@ -80,7 +80,7 @@ namespace GamePlayScripts
             _characterMoves.Add(new MoveDashBackward());
             _characterMoves.Add(new MoveSpecialForward());
             _characterMoves.Add(new MoveAirDashForward());
-            _characterMoves.Add(new MoveLightAttack());
+            //_characterMoves.Add(new MoveLightAttack());
         
             //Initialize moves.
             foreach (var move in _characterMoves)

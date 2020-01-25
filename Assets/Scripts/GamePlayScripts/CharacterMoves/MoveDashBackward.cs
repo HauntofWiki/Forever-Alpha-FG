@@ -5,6 +5,7 @@ namespace GamePlayScripts.CharacterMoves
     public class MoveDashBackward : CharacterMove
     {
         private CharacterProperties _properties;
+        private Animator _animator;
         private int _inputLimit;
         private readonly int[] _movePattern = {-1,0,-1}; //Dash uses X-axis only
         private readonly bool[] _patternMatch = {false, false, false};
@@ -41,10 +42,11 @@ namespace GamePlayScripts.CharacterMoves
         
         public override void InitializeMove(ref CharacterProperties properties)
         {
+            _animator = GameObject.Find("Player1").GetComponent<Animator>();
             _properties = properties;
             _lastMove = -1;
             _moveDetectCounter = 0;
-            _inputLimit = 20;
+            _inputLimit = 15;
             _properties.BackDashDuration = AttackStateFrames.Length;
         }
 
@@ -109,6 +111,7 @@ namespace GamePlayScripts.CharacterMoves
                 //Begin Dash Detection
                 if (!DetectMoveInput(inputClass)) return;
                 if (_properties.CurrentState != CharacterProperties.CharacterState.Stand) return;
+                _animator.Play("DashBackward");
                 _properties.DashFrameCounter = 0;
                 _properties.LastState = _properties.CurrentState;
                 _properties.CurrentState = CharacterProperties.CharacterState.BackDash;

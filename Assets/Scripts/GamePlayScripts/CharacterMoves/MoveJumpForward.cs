@@ -5,6 +5,7 @@ namespace GamePlayScripts.CharacterMoves
     public class MoveJumpForward : CharacterMove
     {
         private CharacterProperties _properties;
+        private Animator _animator;
 
         //Tracks invincibility States per frame.
         //0:None, 1:Full, 2:UpperBody, 3:LowerBody 4:throw
@@ -36,6 +37,7 @@ namespace GamePlayScripts.CharacterMoves
 
         public override void InitializeMove(ref CharacterProperties properties)
         {
+            _animator = GameObject.Find("Player1").GetComponent<Animator>();
             _properties = properties;
         }
 
@@ -100,7 +102,7 @@ namespace GamePlayScripts.CharacterMoves
 
             if (!DetectMoveInput(inputClass)) return;
             if (_properties.CurrentState != CharacterProperties.CharacterState.Crouch && _properties.CurrentState != CharacterProperties.CharacterState.Stand && _properties.CurrentState != CharacterProperties.CharacterState.CancellableAnimation) return;
-        
+            _animator.Play("JumpForward");
             _properties.JumpFrameCounter = 0;
             _properties.LastState = _properties.CurrentState;
             _properties.CurrentState = CharacterProperties.CharacterState.JumpForward;

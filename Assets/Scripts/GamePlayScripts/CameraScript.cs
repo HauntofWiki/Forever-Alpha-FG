@@ -12,8 +12,8 @@ namespace GamePlayScripts
         private float _heightOfCamera;
         private float _centerXBetweenCharacters;
         private Vector3 _moveCameraPosition;
-        private float _stageMaxX = -18;
-        private float _stageMinX = 18;
+        private float _stageMaxX = -9;
+        private float _stageMinX = 9;
         private float _stageMaxY;
         private float _stageMinY;
 
