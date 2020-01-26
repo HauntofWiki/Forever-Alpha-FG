@@ -128,6 +128,9 @@ public class InputManager
         _currentInput.SubmitButtonDown = Input.GetKeyDown(SubmitButton);
         _currentInput.SubmitButtonDown = Input.GetKeyDown(CancelButton);
         
+        
+        //Debug.Log(_playerNumber);
+
         return _currentInput;
     }
     public void SetDefaultMapping(int joystickNumber, string joystickName) //GetJoystickNames[JoystickNumber + 1]
@@ -246,7 +249,7 @@ public class InputManager
 
     private static string GetJoystickAccessName(int joystickNumber, int axisNumber)
     {
-        //Debug.Log("Joy" + (joystickNumber) + "Axis" + axisNumber);
+        Debug.Log("Joy" + (joystickNumber) + "Axis" + axisNumber);
         return "Joy" + (joystickNumber) + "Axis" + axisNumber;
     }
     

@@ -17,21 +17,21 @@ namespace GamePlayScripts
         private InputClass _currentInput;
         private GameObject _opponentCharacter;
         private GameObject _gameManager;
-        private GameManagerScript _gameManagerScript;
+        private GamePlayManager _gamePlayerManager;
         private Vector3 _moveDirection = Vector3.zero;
         private int _playerNumber; //Defines Player 1 or Player 2
         private int _characterOrientation; // this defines whether player is on the left or right, should be 1 or -1
         private int _lastCharacterOrientation;
    
         public Animator animator;
-        [FormerlySerializedAs("_animation")] public Animation animation;
+        public Animation animation;
 
         // Start is called before the first frame update
         private void Start()
         {
             //Get GameManager Object
-            _gameManager = GameObject.Find("GameManager");
-            _gameManagerScript = _gameManager.GetComponent<GameManagerScript>();
+            _gameManager = GameObject.Find("GamePlayManager");
+            _gamePlayerManager = _gameManager.GetComponent<GamePlayManager>();
 
             //Find whether the controller is Player1 or Player2
             _playerNumber = transform.name == "Player2" ? 2 : 1;
@@ -42,16 +42,17 @@ namespace GamePlayScripts
             animator = GetComponent<Animator>();
             animation = GetComponent<Animation>();
 
+            
             //Find Opposing Character GameObject
             if (_playerNumber == 1)
             {
                 _opponentCharacter = GameObject.Find("Player2");
-                _inputManager = new InputManager(1, Input.GetJoystickNames()[1]); //Hardcoded for now
+                _inputManager = new InputManager(0, Input.GetJoystickNames()[0]); //Hardcoded for now
             }
             else 
             {
                 _opponentCharacter = GameObject.Find("Player1");
-                _inputManager = new InputManager(0, Input.GetJoystickNames()[0]); //Hardcoded for now
+                _inputManager = new InputManager(1, Input.GetJoystickNames()[1]); //Hardcoded for now
             }
         }
 
@@ -74,8 +75,7 @@ namespace GamePlayScripts
             }
         
             _currentInput = _inputManager.Update(_characterOrientation);
-            if (_playerNumber == 2)
-                Debug.Log(_currentInput.DPadNumPad + ", " + _currentInput.LightAttackButtonDown + ", " + _currentInput.MediumAttackButtonDown + ", " + _currentInput.HeavyAttackButtonDown + ", " + _currentInput.SpecialAttackButtonDown + ", ");
+            //Debug.Log(_currentInput.DPadNumPad + ", " + _currentInput.LightAttackButtonDown + ", " + _currentInput.MediumAttackButtonDown + ", " + _currentInput.HeavyAttackButtonDown + ", " + _currentInput.SpecialAttackButtonDown + ", ");
             _character.Update(_currentInput);
         
             //Apply movement to character

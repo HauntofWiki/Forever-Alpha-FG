@@ -5,6 +5,7 @@ namespace GamePlayScripts.CharacterMoves
     public class MoveShoryuken : CharacterMove
     {
         private CharacterProperties _properties;
+        private Animator _animator;
         private string _name = "Shoryuken";
         
         public int Damage;
@@ -39,8 +40,9 @@ namespace GamePlayScripts.CharacterMoves
             0, 0, 0, 0, 0, 0, 0, 0, 0
         };
 
-        public override void InitializeMove(ref CharacterProperties properties)
+        public override void InitializeMove(ref CharacterProperties properties, Animator animator)
         {
+            _animator = animator;
             _properties = properties;
         }
 

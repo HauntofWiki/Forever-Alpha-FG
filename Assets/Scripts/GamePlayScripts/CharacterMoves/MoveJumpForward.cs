@@ -35,9 +35,9 @@ namespace GamePlayScripts.CharacterMoves
             0, 0, 0, 1, 0, 0, 0
         };
 
-        public override void InitializeMove(ref CharacterProperties properties)
+        public override void InitializeMove(ref CharacterProperties properties, Animator animator)
         {
-            _animator = GameObject.Find("Player1").GetComponent<Animator>();
+            _animator = animator;
             _properties = properties;
         }
 
