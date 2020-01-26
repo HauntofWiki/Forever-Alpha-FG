@@ -52,7 +52,7 @@ public class GameManagerScript : MonoBehaviour
 
     public void SideSelect()
     {
-        Debug.Log("sideselct");
+        //Debug.Log("sideselect");
         _sideSelect.Update();
     }
     

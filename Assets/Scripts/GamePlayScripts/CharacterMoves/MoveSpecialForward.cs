@@ -5,6 +5,7 @@ namespace GamePlayScripts.CharacterMoves
     public class MoveSpecialForward : CharacterMove
     {
         private CharacterProperties _properties;
+        private Animator _animator;
         private readonly int _inputLimit;
         private readonly int[] _movePattern = {2,3,6};
         private bool _attackButton = false;
@@ -19,8 +20,9 @@ namespace GamePlayScripts.CharacterMoves
             _inputLimit = 15;
         }
 
-        public override void InitializeMove(ref CharacterProperties properties)
+        public override void InitializeMove(ref CharacterProperties properties, Animator animator)
         {
+            _animator = animator;
             _properties = properties;
         }
 

@@ -80,16 +80,17 @@ namespace GamePlayScripts
             _characterMoves.Add(new MoveDashBackward());
             _characterMoves.Add(new MoveSpecialForward());
             _characterMoves.Add(new MoveAirDashForward());
-            //_characterMoves.Add(new MoveLightAttack());
-        
-            //Initialize moves.
-            foreach (var move in _characterMoves)
-            {
-                move.InitializeMove(ref _properties);
-            }
+            _characterMoves.Add(new MoveLightAttack());
         
             _animation = _characterController.GetComponent<Animation>();
             _animator = _characterController.GetComponent<Animator>();
+            
+            //Initialize moves.
+            foreach (var move in _characterMoves)
+            {
+                move.InitializeMove(ref _properties, _animator);
+            }
+            
         }
 
         public void Update(InputClass inputClass)

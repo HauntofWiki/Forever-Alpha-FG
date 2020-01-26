@@ -1,8 +1,11 @@
-﻿namespace GamePlayScripts.CharacterMoves
+﻿using UnityEngine;
+
+namespace GamePlayScripts.CharacterMoves
 {
     public class MoveLightAttack : CharacterMove
     {
         private CharacterProperties _properties;
+        private Animator _animator;
         
         //Tracks invincibility States per frame.
         //0:None, 1:Full, 2:UpperBody, 3:LowerBody 4:throw
@@ -33,8 +36,9 @@
             0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
         };
 
-        public override void InitializeMove(ref CharacterProperties properties)
+        public override void InitializeMove(ref CharacterProperties properties, Animator animator)
         {
+            _animator = animator;
             _properties = properties;
         }
 
@@ -50,36 +54,61 @@
 
         public override void PerformAction(InputClass inputClass)
         {
+            //Detect input
             if (_properties.CurrentState == CharacterProperties.CharacterState.Stand && DetectMoveInput(inputClass) &&
                 _properties.AttackState == CharacterProperties.AttackStates.None)
             {
                 _properties.AttackFrameCounter = 0;
-                //_animator.Play("LightAttack");
+                _animator.Play("LightAttack");
                 _properties.AttackState = CharacterProperties.AttackStates.LightAttack;
             }
-
+            
+            //Play out animation and frame information per frame
             if (_properties.AttackState == CharacterProperties.AttackStates.LightAttack)
             {
-                _properties.AttackFrameCounter++;
-                switch (Cancellability[_properties.AttackFrameCounter])
+                //Startup
+                if (AttackStateFrames[_properties.AttackFrameCounter] == 0)
                 {
-                    case 0:
-                        _properties.CancellableState = CharacterProperties.CancellableStates.None;
-                        break;
-                    case 1:
-                        _properties.CancellableState = CharacterProperties.CancellableStates.EmptyCancellable;
-                        break;
-                    case 2:
-                        _properties.CancellableState = CharacterProperties.CancellableStates.NormalCancellable;
-                        break;
-                    case 3:
-                        _properties.CancellableState = CharacterProperties.CancellableStates.SpecialCancellable;
-                        break;
-                    case 4:
-                        _properties.CancellableState = CharacterProperties.CancellableStates.SuperCancellable;
-                        break;
+                    _properties.AttackFrameCounter++;
                 }
+                //Active
+                if (AttackStateFrames[_properties.AttackFrameCounter] == 1)
+                {
+                    _properties.AttackFrameCounter++;
+                }
+                //Recovery
+                if (AttackStateFrames[_properties.AttackFrameCounter] == 2)
+                {
+                    _properties.AttackFrameCounter++;
+                }
+                
+                //Exit Move
+                if (AttackStateFrames[_properties.AttackFrameCounter] == 3)
+                {
+                    _properties.AttackState = CharacterProperties.AttackStates.None;
+                }
+                    
+//                switch (Cancellability[_properties.AttackFrameCounter])
+//                {
+//                    case 0:
+//                        _properties.CancellableState = CharacterProperties.CancellableStates.None;
+//                        break;
+//                    case 1:
+//                        _properties.CancellableState = CharacterProperties.CancellableStates.EmptyCancellable;
+//                        break;
+//                    case 2:
+//                        _properties.CancellableState = CharacterProperties.CancellableStates.NormalCancellable;
+//                        break;
+//                    case 3:
+//                        _properties.CancellableState = CharacterProperties.CancellableStates.SpecialCancellable;
+//                        break;
+//                    case 4:
+//                        _properties.CancellableState = CharacterProperties.CancellableStates.SuperCancellable;
+//                        break;
+//                }
             }
+            
+            
         }
     }
 }

@@ -5,8 +5,10 @@ namespace GamePlayScripts.CharacterMoves
     public class MoveWalkBackward : CharacterMove
     {
         private CharacterProperties _properties;
-        public override void InitializeMove(ref CharacterProperties properties)
+        private Animator _animator;
+        public override void InitializeMove(ref CharacterProperties properties, Animator animator)
         {
+            _animator = animator;
             _properties = properties;
         }
 
@@ -24,7 +26,8 @@ namespace GamePlayScripts.CharacterMoves
         {
             if (!DetectMoveInput(inputClass)) return;
             if (_properties.CurrentState != CharacterProperties.CharacterState.Crouch && _properties.CurrentState != CharacterProperties.CharacterState.Stand) return;
-        
+
+            _animator.Play("WalkBackward");
             _properties.LastState = _properties.CurrentState;
             _properties.CurrentState = CharacterProperties.CharacterState.Stand;
             _properties.MoveDirection = new Vector3(-_properties.WalkBackwardXSpeed,0,0);

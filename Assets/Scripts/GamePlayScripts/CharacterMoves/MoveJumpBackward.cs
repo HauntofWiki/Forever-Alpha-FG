@@ -6,6 +6,7 @@ namespace GamePlayScripts.CharacterMoves
     public class MoveJumpBackward : CharacterMove
     {
         private CharacterProperties _properties;
+        private Animator _animator;
         
         //Tracks invincibility States per frame.
         //0:None, 1:Full, 2:UpperBody, 3:LowerBody 4:throw
@@ -35,8 +36,9 @@ namespace GamePlayScripts.CharacterMoves
             0,0,0,1,0,0,0
         };
 
-        public override void InitializeMove(ref CharacterProperties properties)
+        public override void InitializeMove(ref CharacterProperties properties, Animator animator)
         {
+            _animator = animator;
             _properties = properties;
         }
 

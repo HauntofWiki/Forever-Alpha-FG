@@ -23,7 +23,7 @@ namespace GamePlayScripts.CharacterMoves
         //0:StartUp, 1:Active, 2:Recovery 3:End
         public int[] AttackStateFrames =
         {
-            0,0,0,1,1,1,1,1,1,1,1,2,2,2,3
+            0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,3
         };
         
         //Tracks Cancellable states of the move per frame.
@@ -40,9 +40,9 @@ namespace GamePlayScripts.CharacterMoves
             1,1,1,1,1,1,1,1,1,1,1,1,0,0,0
         };
         
-        public override void InitializeMove(ref CharacterProperties properties)
+        public override void InitializeMove(ref CharacterProperties properties, Animator animator)
         {
-            _animator = GameObject.Find("Player1").GetComponent<Animator>();
+            _animator = animator;
             _properties = properties;
             _lastMove = -1;
             _moveDetectCounter = 0;
