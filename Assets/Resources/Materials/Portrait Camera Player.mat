@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Portrait Camera 1
+  m_Name: Portrait Camera Player
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: _MAPPING_LATITUDE_LONGITUDE_LAYOUT _NORMALMAP _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   m_LightmapFlags: 4
@@ -24,7 +24,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 8400000, guid: 5566ce0453946a84997881e183c51a01, type: 2}
+        m_Texture: {fileID: 8400000, guid: f0bb578322718d245a5fecd3f483e5a9, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -48,7 +48,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 8400000, guid: 5566ce0453946a84997881e183c51a01, type: 2}
+        m_Texture: {fileID: 8400000, guid: f0bb578322718d245a5fecd3f483e5a9, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0.08}
     - _MetallicGlossMap:
@@ -56,7 +56,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
-        m_Texture: {fileID: 8400000, guid: 5566ce0453946a84997881e183c51a01, type: 2}
+        m_Texture: {fileID: 8400000, guid: f0bb578322718d245a5fecd3f483e5a9, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:

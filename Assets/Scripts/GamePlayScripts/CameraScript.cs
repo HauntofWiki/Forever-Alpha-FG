@@ -29,13 +29,17 @@ namespace GamePlayScripts
         // Update is called once per frame
         void Update()
         {
+            if (_player1 == null)
+                _player1 = GameObject.Find("Player1");
+            if (_player2 == null)
+                _player2 = GameObject.Find("Player2");
+            
             _centerXBetweenCharacters = (_player1.transform.position.x + _player2.transform.position.x) / 2;
         
             _heightOfCamera = ((_player1.transform.position.y + _player2.transform.position.y) / 2) + _cameraHeightOffset;
      
         
             _moveCameraPosition = new Vector3(_centerXBetweenCharacters,_heightOfCamera,_cameraDefaultZ);
-            //Debug.Log(_player1.transform.position.x + ","+ _player2.transform.position.x+"," + camera.transform.position.x);
             transform.position = Vector3.Lerp(transform.position,_moveCameraPosition, 2.0f);
         }
     }

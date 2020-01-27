@@ -17,7 +17,7 @@ namespace GamePlayScripts
         private InputClass _currentInput;
         private GameObject _opponentCharacter;
         private GameObject _gameManager;
-        private GamePlayManager _gamePlayerManager;
+        private GamePlayManagerTestScene _gamePlayerManagerTestScene;
         private Vector3 _moveDirection = Vector3.zero;
         private int _playerNumber; //Defines Player 1 or Player 2
         private int _characterOrientation; // this defines whether player is on the left or right, should be 1 or -1
@@ -31,7 +31,7 @@ namespace GamePlayScripts
         {
             //Get GameManager Object
             _gameManager = GameObject.Find("GamePlayManager");
-            _gamePlayerManager = _gameManager.GetComponent<GamePlayManager>();
+            _gamePlayerManagerTestScene = _gameManager.GetComponent<GamePlayManagerTestScene>();
 
             //Find whether the controller is Player1 or Player2
             _playerNumber = transform.name == "Player2" ? 2 : 1;

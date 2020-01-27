@@ -60,4 +60,9 @@ public class GameManagerScript : MonoBehaviour
     {
         
     }
+
+    public void ReportTriggerEnter(String Detector, String Receiver)
+    {
+        
+    }
 }
