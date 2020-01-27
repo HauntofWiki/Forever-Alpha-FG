@@ -7,6 +7,7 @@
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
+          <e p="Constants.cs" t="Include" />
           <e p="GameManagerScript.cs" t="Include" />
           <e p="GameplayScripts" t="Include">
             <e p="CameraScript.cs" t="Include" />
@@ -30,6 +31,7 @@
             </e>
             <e p="CollisionBoxProperties.cs" t="Include" />
             <e p="GamePlayManager.cs" t="Include" />
+            <e p="GamePlayManagerTestScene.cs" t="Include" />
             <e p="HitDetectionBox" t="Include">
               <e p="HitDetectionScript.cs" t="Include" />
             </e>

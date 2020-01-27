@@ -1,26 +1,36 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
+using Image = UnityEngine.UI.Image;
 
 namespace GamePlayScripts
 {
     public class GamePlayManager : MonoBehaviour
     {
+        public UnityEngine.Object prefab;
+        public GameObject MainCamera;
+        
         //Define Players and stats
-        public GameObject player1Object;
+        public GameObject Player1Object;
+        public UnityEngine.CharacterController player1Controller;
         public Player player1;
+        public Character player1Character;
+        public InputManager player1InputManager;
         public float player1CurrentHealth;
         public float player1MaxHealth;
         public float player1Meter;
-        public GameObject player2Object;
+        public GameObject Player2Object;
+        public UnityEngine.CharacterController player2Controller;
         public Player player2;
+        public Character player2Character;
+        public InputManager player2InputManager;
         public float player2CurrentHealth;
         public float player2MaxHealth;
         public float player2Meter;
         public bool player1ComboActive;
         public bool player2ComboActive;
-    
+        
         //Collision detection hit boxes
         public List<CollisionBoxProperties> hitBoxes;
     
@@ -42,10 +52,14 @@ namespace GamePlayScripts
         public Image player1MeterBar;
         public Image player2MeterBar;
         public Text gameTimer;
+        public Image leftPanel;
+        public Image rightPanel;
         
         // Start is called before the first frame update
         void Start()
         {
+            InstantiateCharacterGameObjects();
+            
             //Set UI OBjects
             player1HealthBarEmpty = GameObject.Find("Player 1 Empty").GetComponent<Image>();
             player1HealthBarDifferential = GameObject.Find("Player 1 Differential").GetComponent<Image>();
@@ -60,7 +74,11 @@ namespace GamePlayScripts
             //player1MeterBar = GameObject.Find("Player 1 Meter").GetComponent<Image>();
             //player2MeterBar = GameObject.Find("Player 2 Meter").GetComponent<Image>();
             gameTimer = GameObject.Find("Text Timer").GetComponent<Text>();
-
+            leftPanel = GameObject.Find("Panel Portrait Left").GetComponent<Image>();
+            leftPanel.material = (Material) Resources.Load("Materials/Portrait Camera Player 1");
+            rightPanel = GameObject.Find("Panel Portrait Right").GetComponent<Image>();
+            rightPanel.material = (Material) Resources.Load("Materials/Portrait Camera Player 1");
+            
             //Set initial Health Bar values
             player1HealthBarEmpty.fillAmount = 1f;
             player1HealthBarDifferential.fillAmount = 1f;
@@ -75,11 +93,9 @@ namespace GamePlayScripts
             
             //Set Player Objects and Initial values
             //Hardcoded values for now
-            player1Object = GameObject.Find("Player1");
             player1MaxHealth = 1000;
             player1CurrentHealth = 1000;
             player1Meter = 100;
-            player2Object = GameObject.Find("Player2");
             player2MaxHealth = 1000;
             player2CurrentHealth = 1000;
             player2Meter = 100;
@@ -89,10 +105,7 @@ namespace GamePlayScripts
             
             frameCounter = 0;
             gameTime = 99;
-            
-            //Set Hit Boxes;
-            PopulateHitDetectionBoxes();
-            
+
         }
 
         // Update is called once per frame
@@ -123,7 +136,25 @@ namespace GamePlayScripts
             }
         }
 
-        private void DetectCollisions()
+        private void InstantiateCharacterGameObjects()
+        {
+            //Prefabs/Characters/Player will be replaced by the actual models sent over from character select
+            //The player GameObjects should be named Player1 and Player2
+            prefab = Resources.Load("Prefabs/Characters/Player");
+            Player1Object = (GameObject) GameObject.Instantiate(prefab);
+            Player1Object.name = "Player1";
+            Player1Object.transform.position = new Vector3(-3,5,0);
+            Player1Object.GetComponentInChildren<Camera>().targetTexture =
+                (RenderTexture) Resources.Load("Textures/Player 1 Render Texture");
+
+            prefab = Resources.Load("Prefabs/Characters/Player");
+            Player2Object = (GameObject) GameObject.Instantiate(prefab);
+            Player2Object.name = "Player2";
+            Player2Object.transform.position = new Vector3(3,5,0);
+//            Player1Object.GetComponent<Camera>().targetTexture =
+//                (RenderTexture) Resources.Load("Textures/Player 2 Render Texture");
+        }
+                private void DetectCollisions()
         {
             
         }
@@ -191,80 +222,8 @@ namespace GamePlayScripts
         private void PopulateHitDetectionBoxes()
         {
 
-            //hitBoxes = new List<HitDetectionBox>();
-            
-            //Add player 1 hit detection boxes
-            /*hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P1LowerBodyHurtbox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.LowerBodyHitBox,
-                OwnerPlayer = player1
-            });
-            
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P1UpperBodyHurtbox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.UpperBodyHitBox,
-                OwnerPlayer = player1
-            });
-            
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P1HeadHurtbox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.HeadHitBox,
-                OwnerPlayer = player1
-            });
-            
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P1ThrowBox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.HeadHitBox,
-                OwnerPlayer = player1
-            });
-            
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P1Pushbox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.PushHitBox,
-                OwnerPlayer = player1
-            });
-            
-            //Add player 2 hit detection boxes
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P2LowerBodyHurtbox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.LowerBodyHitBox,
-                OwnerPlayer = player2
-                
-            });
-            
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P2UpperBodyHurtbox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.UpperBodyHitBox,
-                OwnerPlayer = player2
-            });
-            
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P2HeadHurtbox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.HeadHitBox,
-                OwnerPlayer = player2
-            });
-            
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P2ThrowBox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.HeadHitBox,
-                OwnerPlayer = player2
-            });
-            
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P2Pushbox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.PushHitBox,
-                OwnerPlayer = player2
-            });*/
+
         }
+    
     }
 }
