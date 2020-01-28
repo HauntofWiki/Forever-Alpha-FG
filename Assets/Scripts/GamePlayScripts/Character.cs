@@ -15,7 +15,7 @@ namespace GamePlayScripts
         public int HealthPoints {get; set;}
         public int MeterPoints { get; set; }
 
-        private CharacterProperties _properties;
+        public CharacterProperties Properties;
         private List<CharacterMove> _characterMoves;
     
         //Define Game related Values.
@@ -34,7 +34,6 @@ namespace GamePlayScripts
         private CharacterMove _moveAirDashForward;
         private CharacterMove _moveLightAttack;
 
-        private Animation _animation;
         private Animator _animator;
 
 
@@ -47,7 +46,7 @@ namespace GamePlayScripts
 
             _characterMoves = new List<CharacterMove>();
         
-            _properties = new CharacterProperties
+            Properties = new CharacterProperties
             {
                 WalkForwardXSpeed = 4.0f,
                 WalkBackwardXSpeed = 4.0f,
@@ -63,7 +62,7 @@ namespace GamePlayScripts
                 AttackFrameCounter = 0,
                 MoveDirection = new Vector3(0,0,0),
                 CurrentState = CharacterProperties.CharacterState.Stand,
-                LastState = CharacterProperties.CharacterState.Empty,
+                LastState = CharacterProperties.CharacterState.None,
                 AttackState = CharacterProperties.AttackStates.None,
                 CancellableState = CharacterProperties.CancellableStates.None,
                 CharacterController = _characterController
@@ -82,15 +81,13 @@ namespace GamePlayScripts
             _characterMoves.Add(new MoveAirDashForward());
             _characterMoves.Add(new MoveLightAttack());
         
-            _animation = _characterController.GetComponent<Animation>();
             _animator = _characterController.GetComponent<Animator>();
             
             //Initialize moves.
             foreach (var move in _characterMoves)
             {
-                move.InitializeMove(ref _properties, _animator);
+                move.InitializeMove(ref Properties, _animator);
             }
-            
         }
 
         public void Update(InputClass inputClass)
@@ -99,24 +96,25 @@ namespace GamePlayScripts
             {
                 move.PerformAction(inputClass);
             }
+            
+            ApplyMovement(Properties.CharacterOrientation);
+            
         }
 
         public bool CanSwitchOrientation()
         {
-            return (_properties.CurrentState != _properties.LastState && _properties.CurrentState != CharacterProperties.CharacterState.JumpForward );//May want to add statuses or handle more elegantly
+            return (Properties.CurrentState != Properties.LastState && Properties.CurrentState != CharacterProperties.CharacterState.JumpForward );//May want to add statuses or handle more elegantly
         }
     
-        public void ApplyMovement(Vector3 moveDirection, int currentOrientation, int lastOrientation)
+        public void ApplyMovement(int currentOrientation)
         {
-            //Debug.Log("CurrentState: " + _properties.CurrentState+ "; LastState: " + _properties.LastState);
 
-            if(!_properties.IsIgnoringGravity)
-                _properties.MoveDirection.y -= _properties.PersonalGravity * Time.deltaTime;
+            if(!Properties.IsIgnoringGravity)
+                Properties.MoveDirection.y -= Properties.PersonalGravity * Time.deltaTime;
 
 
-            _properties.MoveDirection.x *= currentOrientation;
-            //Debug.Log(_properties.MoveDirection.x);
-            _characterController.Move(_properties.MoveDirection * Time.deltaTime);
+            Properties.MoveDirection.x *= currentOrientation;
+            _characterController.Move(Properties.MoveDirection * Time.deltaTime);
         }
     }
 }

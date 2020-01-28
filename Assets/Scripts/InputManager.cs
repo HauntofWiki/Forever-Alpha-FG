@@ -10,7 +10,7 @@ public class InputManager
     private int _inputQueueSize; //Length of input Queue
     private int _numberOfInputs; //Number of inputs to monitor
     private int _playerNumber; //1: Player1 2: Player
-    private InputClass _currentInput;
+    public InputClass CurrentInput;
     
     public int CharacterId { get; set; }
     public string JoystickName { get; set; }
@@ -61,77 +61,77 @@ public class InputManager
     //Inserts inputs into Queue once per frame - inputs are currently set up for Playstation controller via project settings
     public InputClass Update(int characterOrientation)
     {
-        _currentInput = new InputClass();
+        CurrentInput = new InputClass();
         
         //Read Direction inputs into Numpad Notation (1-9)
         if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation > 0 &&
             Input.GetAxis(_digitalAxisYAccessName) == 0)
-            _currentInput.DPadNumPad = 6;
+            CurrentInput.DPadNumPad = 6;
         else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation > 0 &&
                  Input.GetAxis(_digitalAxisYAccessName) > 0)
-            _currentInput.DPadNumPad = 9;
+            CurrentInput.DPadNumPad = 9;
         else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation == 0 &&
                  Input.GetAxis(_digitalAxisYAccessName) > 0)
-            _currentInput.DPadNumPad = 8;
+            CurrentInput.DPadNumPad = 8;
         else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation < 0 &&
                  Input.GetAxis(_digitalAxisYAccessName) > 0)
-            _currentInput.DPadNumPad = 7;
+            CurrentInput.DPadNumPad = 7;
         else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation < 0 &&
                  Input.GetAxis(_digitalAxisYAccessName) == 0)
-            _currentInput.DPadNumPad = 4;
+            CurrentInput.DPadNumPad = 4;
         else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation < 0 &&
                  Input.GetAxis(_digitalAxisYAccessName) < 0)
-            _currentInput.DPadNumPad = 1;
+            CurrentInput.DPadNumPad = 1;
         else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation == 0 &&
                  Input.GetAxis(_digitalAxisYAccessName) < 0)
-            _currentInput.DPadNumPad = 2;
+            CurrentInput.DPadNumPad = 2;
         else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation > 0 &&
                  Input.GetAxis(_digitalAxisYAccessName) < 0)
-            _currentInput.DPadNumPad = 3;
+            CurrentInput.DPadNumPad = 3;
         else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation == 0 &&
                  Input.GetAxis(_digitalAxisXAccessName) == 0)
-            _currentInput.DPadNumPad = 5;
-        else _currentInput.DPadNumPad = 5;
+            CurrentInput.DPadNumPad = 5;
+        else CurrentInput.DPadNumPad = 5;
         
         //Read direction inputs into tradition X/Y Axes
-        _currentInput.DPadX = Input.GetAxis(_digitalAxisXAccessName) * characterOrientation;
-        _currentInput.DPadY = Input.GetAxis(_digitalAxisYAccessName);
+        CurrentInput.DPadX = Input.GetAxis(_digitalAxisXAccessName) * characterOrientation;
+        CurrentInput.DPadY = Input.GetAxis(_digitalAxisYAccessName);
         
         //Read ButtonDown commands
-        _currentInput.LightAttackButtonDown = Input.GetKeyDown(LightAttackButton) ? 1 : 0;
-        _currentInput.MediumAttackButtonDown = Input.GetKeyDown(MediumAttackButton) ? 1 : 0;
-        _currentInput.HeavyAttackButtonDown = Input.GetKeyDown(HeavyAttackButton) ? 1 : 0;
-        _currentInput.SpecialAttackButtonDown = Input.GetKeyDown(SpecialAttackButton) ? 1 : 0;
-        _currentInput.Auxiliary1ButtonDown = Input.GetKeyDown(Auxiliary1Button) ? 1 : 0;
-        _currentInput.Auxiliary2ButtonDown = Input.GetKeyDown(Auxiliary2Button) ? 1 : 0;
-        _currentInput.Auxiliary3ButtonDown = Input.GetKeyDown(Auxiliary3Button) ? 1 : 0;
-        _currentInput.Auxiliary4ButtonDown = Input.GetKeyDown(Auxiliary4Button) ? 1 : 0;
-        _currentInput.StartButtonDown = Input.GetKeyDown(StartButton) ? 1 : 0;
-        _currentInput.SelectButtonDown = Input.GetKeyDown(SelectButton) ? 1 : 0;
+        CurrentInput.LightAttackButtonDown = Input.GetKeyDown(LightAttackButton) ? 1 : 0;
+        CurrentInput.MediumAttackButtonDown = Input.GetKeyDown(MediumAttackButton) ? 1 : 0;
+        CurrentInput.HeavyAttackButtonDown = Input.GetKeyDown(HeavyAttackButton) ? 1 : 0;
+        CurrentInput.SpecialAttackButtonDown = Input.GetKeyDown(SpecialAttackButton) ? 1 : 0;
+        CurrentInput.Auxiliary1ButtonDown = Input.GetKeyDown(Auxiliary1Button) ? 1 : 0;
+        CurrentInput.Auxiliary2ButtonDown = Input.GetKeyDown(Auxiliary2Button) ? 1 : 0;
+        CurrentInput.Auxiliary3ButtonDown = Input.GetKeyDown(Auxiliary3Button) ? 1 : 0;
+        CurrentInput.Auxiliary4ButtonDown = Input.GetKeyDown(Auxiliary4Button) ? 1 : 0;
+        CurrentInput.StartButtonDown = Input.GetKeyDown(StartButton) ? 1 : 0;
+        CurrentInput.SelectButtonDown = Input.GetKeyDown(SelectButton) ? 1 : 0;
         
         //Trigger buttons are sometimes assigned by axis
-        _currentInput.Auxiliary3AxisDown = Input.GetAxis(_auxiliaryButton3AxisName);
-        _currentInput.Auxiliary4AxisDown = Input.GetAxis(_auxiliaryButton4AxisName);
+        CurrentInput.Auxiliary3AxisDown = Input.GetAxis(_auxiliaryButton3AxisName);
+        CurrentInput.Auxiliary4AxisDown = Input.GetAxis(_auxiliaryButton4AxisName);
         
         //Read ButtonDown commands
-        _currentInput.LightAttackButtonDown = Input.GetKeyUp(LightAttackButton) ? 1 : 0;
-        _currentInput.MediumAttackButtonDown = Input.GetKeyUp(MediumAttackButton) ? 1 : 0;
-        _currentInput.HeavyAttackButtonDown = Input.GetKeyUp(HeavyAttackButton) ? 1 : 0;
-        _currentInput.SpecialAttackButtonDown = Input.GetKeyUp(SpecialAttackButton) ? 1 : 0;
-        _currentInput.Auxiliary1ButtonDown = Input.GetKeyUp(Auxiliary1Button) ? 1 : 0;
-        _currentInput.Auxiliary2ButtonDown = Input.GetKeyUp(Auxiliary2Button) ? 1 : 0;
-        _currentInput.Auxiliary3ButtonDown = Input.GetKeyUp(Auxiliary3Button) ? 1 : 0;
-        _currentInput.Auxiliary4ButtonDown = Input.GetKeyUp(Auxiliary4Button) ? 1 : 0;
-        _currentInput.StartButtonDown = Input.GetKeyUp(StartButton) ? 1 : 0;
-        _currentInput.SelectButtonDown = Input.GetKeyUp(SelectButton) ? 1 : 0;
+        CurrentInput.LightAttackButtonDown = Input.GetKeyUp(LightAttackButton) ? 1 : 0;
+        CurrentInput.MediumAttackButtonDown = Input.GetKeyUp(MediumAttackButton) ? 1 : 0;
+        CurrentInput.HeavyAttackButtonDown = Input.GetKeyUp(HeavyAttackButton) ? 1 : 0;
+        CurrentInput.SpecialAttackButtonDown = Input.GetKeyUp(SpecialAttackButton) ? 1 : 0;
+        CurrentInput.Auxiliary1ButtonDown = Input.GetKeyUp(Auxiliary1Button) ? 1 : 0;
+        CurrentInput.Auxiliary2ButtonDown = Input.GetKeyUp(Auxiliary2Button) ? 1 : 0;
+        CurrentInput.Auxiliary3ButtonDown = Input.GetKeyUp(Auxiliary3Button) ? 1 : 0;
+        CurrentInput.Auxiliary4ButtonDown = Input.GetKeyUp(Auxiliary4Button) ? 1 : 0;
+        CurrentInput.StartButtonDown = Input.GetKeyUp(StartButton) ? 1 : 0;
+        CurrentInput.SelectButtonDown = Input.GetKeyUp(SelectButton) ? 1 : 0;
 
-        _currentInput.SubmitButtonDown = Input.GetKeyDown(SubmitButton);
-        _currentInput.SubmitButtonDown = Input.GetKeyDown(CancelButton);
+        CurrentInput.SubmitButtonDown = Input.GetKeyDown(SubmitButton);
+        CurrentInput.SubmitButtonDown = Input.GetKeyDown(CancelButton);
         
         
         //Debug.Log(_playerNumber);
 
-        return _currentInput;
+        return CurrentInput;
     }
     public void SetDefaultMapping(int joystickNumber, string joystickName) //GetJoystickNames[JoystickNumber + 1]
     {
@@ -249,7 +249,7 @@ public class InputManager
 
     private static string GetJoystickAccessName(int joystickNumber, int axisNumber)
     {
-        Debug.Log("Joy" + (joystickNumber) + "Axis" + axisNumber);
+        //Debug.Log("Joy" + (joystickNumber) + "Axis" + axisNumber);
         return "Joy" + (joystickNumber) + "Axis" + axisNumber;
     }
     

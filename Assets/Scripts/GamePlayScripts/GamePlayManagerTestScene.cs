@@ -115,6 +115,9 @@ namespace GamePlayScripts
         void Update()
         {
             frameCounter++;
+            
+            //layer1InputManager.
+            Debug.Log(player1InputManager.CurrentInput.DPadX);
 
             DetectCollisions();
             SetHealthBars();
@@ -206,81 +209,6 @@ namespace GamePlayScripts
 
         private void PopulateHitDetectionBoxes()
         {
-
-            //hitBoxes = new List<HitDetectionBox>();
-            
-            //Add player 1 hit detection boxes
-            /*hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P1LowerBodyHurtbox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.LowerBodyHitBox,
-                OwnerPlayer = player1
-            });
-            
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P1UpperBodyHurtbox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.UpperBodyHitBox,
-                OwnerPlayer = player1
-            });
-            
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P1HeadHurtbox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.HeadHitBox,
-                OwnerPlayer = player1
-            });
-            
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P1ThrowBox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.HeadHitBox,
-                OwnerPlayer = player1
-            });
-            
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P1Pushbox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.PushHitBox,
-                OwnerPlayer = player1
-            });
-            
-            //Add player 2 hit detection boxes
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P2LowerBodyHurtbox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.LowerBodyHitBox,
-                OwnerPlayer = player2
-                
-            });
-            
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P2UpperBodyHurtbox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.UpperBodyHitBox,
-                OwnerPlayer = player2
-            });
-            
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P2HeadHurtbox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.HeadHitBox,
-                OwnerPlayer = player2
-            });
-            
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P2ThrowBox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.HeadHitBox,
-                OwnerPlayer = player2
-            });
-            
-            hitBoxes.Add(new HitDetectionBox()
-            {
-                HitBoxObject = GameObject.Find("P2Pushbox"),
-                HitBoxType = HitDetectionBox.HitBoxTypes.PushHitBox,
-                OwnerPlayer = player2
-            });*/
         }
     }
 }

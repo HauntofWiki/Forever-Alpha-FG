@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
@@ -8,20 +10,21 @@ namespace GamePlayScripts
 {
     public class GamePlayManager : MonoBehaviour
     {
-        public UnityEngine.Object prefab;
-        public GameObject MainCamera;
+        public UnityEngine.Object characterPrefab;
         
         //Define Players and stats
-        public GameObject Player1Object;
-        public UnityEngine.CharacterController player1Controller;
+        public GameObject player1Object;
+        public CharacterController player1Controller;
+        public CharacterControllerScript player1ControllerScript;
         public Player player1;
         public Character player1Character;
         public InputManager player1InputManager;
         public float player1CurrentHealth;
         public float player1MaxHealth;
         public float player1Meter;
-        public GameObject Player2Object;
-        public UnityEngine.CharacterController player2Controller;
+        public GameObject player2Object;
+        public CharacterController player2Controller;
+        public CharacterControllerScript player2ControllerScript;
         public Player player2;
         public Character player2Character;
         public InputManager player2InputManager;
@@ -33,7 +36,9 @@ namespace GamePlayScripts
         
         //Collision detection hit boxes
         public List<CollisionBoxProperties> hitBoxes;
-    
+        public GameObject player1UpperHurtBox;
+        public GameObject player1HitBox;
+        
         //Define other values
         public int gameTime;
         public int frameCounter;
@@ -58,8 +63,42 @@ namespace GamePlayScripts
         // Start is called before the first frame update
         void Start()
         {
-            InstantiateCharacterGameObjects();
+            //Prefabs/Characters/Player will be replaced by the actual models sent over from character select
+            //The player GameObjects should be named Player1 and Player2
+            characterPrefab = Resources.Load("Prefabs/Characters/Player");
+            player1Object = (GameObject) GameObject.Instantiate(characterPrefab);
+            player1Object.name = "Player1";
+            player1Object.transform.position = new Vector3(-3, 5, 0);
+            player1Controller = player1Object.GetComponent<UnityEngine.CharacterController>();
+            player1ControllerScript = player1Controller.GetComponent<CharacterControllerScript>();
+            player1Character = new Character(player1Controller);
+            player1InputManager = new InputManager(1,Input.GetJoystickNames()[1]);//still hardcoded
+            player1Object.GetComponentInChildren<Camera>().targetTexture =
+                (RenderTexture) Resources.Load("Textures/Player 1 Render Texture");
             
+            //Set Player 1 Collision Detection Boxes
+            player1UpperHurtBox = GameObject.Find("UpperBodyHurtBox");
+            player1UpperHurtBox.name = "P1UpperBodyHurtBox";
+            player1UpperHurtBox.tag = "P1UpperBodyHitBox";
+            player1HitBox = GameObject.Find("HitBox");
+            player1HitBox.name = "P1HitBox";
+
+            characterPrefab = Resources.Load("Prefabs/Characters/Player");
+            player2Object = (GameObject) GameObject.Instantiate(characterPrefab);
+            player2Object.name = "Player2";
+            player2Object.transform.position = new Vector3(3,5,0);
+            player2Controller = player2Object.GetComponent<UnityEngine.CharacterController>();
+            player2ControllerScript = player2Controller.GetComponent<CharacterControllerScript>();
+            player2Character = new Character(player2Controller);
+            player2InputManager = new InputManager(0,Input.GetJoystickNames()[0]);//still hardcoded
+            
+            player1ControllerScript.InstantiateCharacterController(player2Object, ref player1Character);
+            player1ControllerScript.CustomUpdate();
+            player2ControllerScript.InstantiateCharacterController(player1Object, ref player2Character);
+            player2ControllerScript.CustomUpdate();
+            
+
+
             //Set UI OBjects
             player1HealthBarEmpty = GameObject.Find("Player 1 Empty").GetComponent<Image>();
             player1HealthBarDifferential = GameObject.Find("Player 1 Differential").GetComponent<Image>();
@@ -112,10 +151,16 @@ namespace GamePlayScripts
         void Update()
         {
             frameCounter++;
-
+            //Debug.Log(player1Character.Properties.LastState);
             DetectCollisions();
             SetHealthBars();
             SetClock();
+            player1Character.Update(player1InputManager.Update(player1Character.Properties.CharacterOrientation));
+            player2Character.Update(player2InputManager.Update(player2Character.Properties.CharacterOrientation));
+            player1ControllerScript.CustomUpdate();
+            player2ControllerScript.CustomUpdate();
+            
+            
             
             //simulating/testing life drain
             if (frameCounter % 60 == 0)
@@ -135,26 +180,7 @@ namespace GamePlayScripts
                 player2ComboActive = true;
             }
         }
-
-        private void InstantiateCharacterGameObjects()
-        {
-            //Prefabs/Characters/Player will be replaced by the actual models sent over from character select
-            //The player GameObjects should be named Player1 and Player2
-            prefab = Resources.Load("Prefabs/Characters/Player");
-            Player1Object = (GameObject) GameObject.Instantiate(prefab);
-            Player1Object.name = "Player1";
-            Player1Object.transform.position = new Vector3(-3,5,0);
-            Player1Object.GetComponentInChildren<Camera>().targetTexture =
-                (RenderTexture) Resources.Load("Textures/Player 1 Render Texture");
-
-            prefab = Resources.Load("Prefabs/Characters/Player");
-            Player2Object = (GameObject) GameObject.Instantiate(prefab);
-            Player2Object.name = "Player2";
-            Player2Object.transform.position = new Vector3(3,5,0);
-//            Player1Object.GetComponent<Camera>().targetTexture =
-//                (RenderTexture) Resources.Load("Textures/Player 2 Render Texture");
-        }
-                private void DetectCollisions()
+        private void DetectCollisions()
         {
             
         }

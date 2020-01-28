@@ -25,6 +25,7 @@ namespace GamePlayScripts.CharacterMoves
         public int JumpFrameCounter;
         public int DashFrameCounter;
         public int AttackFrameCounter;
+        public int CharacterOrientation;
         
         //Vector3 which is used for moving the player Around;
         public Vector3 MoveDirection;
@@ -52,7 +53,7 @@ namespace GamePlayScripts.CharacterMoves
             BlockStun,
             HitStun,
             Cinematic,
-            Empty
+            None
         }
 
         public enum AttackStates

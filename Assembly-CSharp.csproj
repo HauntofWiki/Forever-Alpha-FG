@@ -60,7 +60,7 @@
      <Compile Include="Assets\Scripts\GameManagerScript.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CameraScript.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\Character.cs" />
-     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterController.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterControllerScript.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\CharacterMove.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\CharacterProperties.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveAirDashForward.cs" />

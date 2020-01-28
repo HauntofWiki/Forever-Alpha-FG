@@ -18,7 +18,7 @@ namespace GamePlayScripts.HitDetectionBox
         
         public void OnTriggerEnter(Collider collider)
         {
-            //Debug.Log("OnTriggerEnterEvent: " + collider.GetComponent<Collider>().name);
+            Debug.Log("Owner: " + gameObject.name + ", Receiver: " + collider.transform.name);
             //gameManagerScript.ReportTriggerEnter(transform.name, collider.name);
 
         }
