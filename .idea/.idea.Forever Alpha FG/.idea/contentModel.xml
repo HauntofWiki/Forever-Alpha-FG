@@ -12,7 +12,7 @@
           <e p="GameplayScripts" t="Include">
             <e p="CameraScript.cs" t="Include" />
             <e p="Character.cs" t="Include" />
-            <e p="CharacterController.cs" t="Include" />
+            <e p="CharacterControllerScript.cs" t="Include" />
             <e p="CharacterMoves" t="Include">
               <e p="CharacterMove.cs" t="Include" />
               <e p="CharacterProperties.cs" t="Include" />
