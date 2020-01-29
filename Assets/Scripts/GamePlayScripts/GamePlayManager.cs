@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using GamePlayScripts.CharacterMoves;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -16,17 +18,23 @@ namespace GamePlayScripts
         public GameObject player1Object;
         public CharacterController player1Controller;
         public CharacterControllerScript player1ControllerScript;
+        public Animator player1Animator;
         public Player player1;
         public Character player1Character;
+        public HitStunManager player1HitStunManager;
         public InputManager player1InputManager;
         public float player1CurrentHealth;
         public float player1MaxHealth;
         public float player1Meter;
+        
+        //Player2
         public GameObject player2Object;
         public CharacterController player2Controller;
         public CharacterControllerScript player2ControllerScript;
+        public Animator player2Animator;
         public Player player2;
         public Character player2Character;
+        public HitStunManager player2HitStunManager;
         public InputManager player2InputManager;
         public float player2CurrentHealth;
         public float player2MaxHealth;
@@ -35,9 +43,23 @@ namespace GamePlayScripts
         public bool player2ComboActive;
         
         //Collision detection hit boxes
-        public List<CollisionBoxProperties> hitBoxes;
-        public GameObject player1UpperHurtBox;
-        public GameObject player1HitBox;
+        //HurtBoxes are vulnerable collision boxes
+        public List<BoxCollider> player1HurtBoxes;
+        public List<BoxCollider> player2HurtBoxes;
+        
+        //Player 1
+        public BoxCollider player1UpperBodyHurtBox;
+        public BoxCollider player1LowerBodyHurtBox;
+        
+        //Player 2
+        public BoxCollider player2UpperBodyHurtBox;
+        public BoxCollider player2LowerBodyHurtBox;
+        
+        //Hitboxes are Offensive collision boxes
+        public List<BoxCollider> player1HitBoxes;
+        public List<BoxCollider> player2HitBoxes;
+        public BoxCollider player1HitBox;
+        public BoxCollider player2HitBox;
         
         //Define other values
         public int gameTime;
@@ -71,26 +93,42 @@ namespace GamePlayScripts
             player1Object.transform.position = new Vector3(-3, 5, 0);
             player1Controller = player1Object.GetComponent<UnityEngine.CharacterController>();
             player1ControllerScript = player1Controller.GetComponent<CharacterControllerScript>();
+            player1Animator = player1Object.GetComponent<Animator>();
             player1Character = new Character(player1Controller);
             player1InputManager = new InputManager(1,Input.GetJoystickNames()[1]);//still hardcoded
             player1Object.GetComponentInChildren<Camera>().targetTexture =
                 (RenderTexture) Resources.Load("Textures/Player 1 Render Texture");
+            player1HitStunManager = new HitStunManager(player1Animator, ref player1Character.Properties);
             
             //Set Player 1 Collision Detection Boxes
-            player1UpperHurtBox = GameObject.Find("UpperBodyHurtBox");
-            player1UpperHurtBox.name = "P1UpperBodyHurtBox";
-            player1UpperHurtBox.tag = "P1UpperBodyHitBox";
-            player1HitBox = GameObject.Find("HitBox");
-            player1HitBox.name = "P1HitBox";
+            GameObject.Find("UpperBodyHurtBox").name = "P1UpperBodyHurtBox";
+            GameObject.Find("LowerBodyHurtBox").name = "P1LowerBodyHurtBox";
+            GameObject.Find("HitBox").name = "P1HitBox";
+            player1UpperBodyHurtBox = GameObject.Find("P1UpperBodyHurtBox").GetComponent<BoxCollider>();
+            player1LowerBodyHurtBox = GameObject.Find("P1LowerBodyHurtBox").GetComponent<BoxCollider>();
 
+            player1HitBox = GameObject.Find("P1HitBox").GetComponent<BoxCollider>();
+            
+            
+            //Set Player 2 Objects
             characterPrefab = Resources.Load("Prefabs/Characters/Player");
             player2Object = (GameObject) GameObject.Instantiate(characterPrefab);
             player2Object.name = "Player2";
             player2Object.transform.position = new Vector3(3,5,0);
             player2Controller = player2Object.GetComponent<UnityEngine.CharacterController>();
             player2ControllerScript = player2Controller.GetComponent<CharacterControllerScript>();
+            player2Animator = player2Object.GetComponent<Animator>();
             player2Character = new Character(player2Controller);
             player2InputManager = new InputManager(0,Input.GetJoystickNames()[0]);//still hardcoded
+            player2HitStunManager = new HitStunManager(player2Animator, ref player2Character.Properties);
+            
+            //Set Player 2 Collision Detection Boxes
+            GameObject.Find("UpperBodyHurtBox").name = "P2UpperBodyHurtBox";
+            GameObject.Find("LowerBodyHurtBox").name = "P2LowerBodyHurtBox";
+            GameObject.Find("HitBox").name = "P2HitBox";
+            player2UpperBodyHurtBox = GameObject.Find("P2UpperBodyHurtBox").GetComponent<BoxCollider>();
+            player2LowerBodyHurtBox = GameObject.Find("P2LowerBodyHurtBox").GetComponent<BoxCollider>();
+            player2HitBox = GameObject.Find("P2HitBox").GetComponent<BoxCollider>();
             
             player1ControllerScript.InstantiateCharacterController(player2Object, ref player1Character);
             player1ControllerScript.CustomUpdate();
@@ -155,6 +193,13 @@ namespace GamePlayScripts
             DetectCollisions();
             SetHealthBars();
             SetClock();
+
+            if (player2Character.Properties.CurrentState == CharacterProperties.CharacterState.HitStun)
+            {
+                player2HitStunManager.Update();
+            }
+                
+            
             player1Character.Update(player1InputManager.Update(player1Character.Properties.CharacterOrientation));
             player2Character.Update(player2InputManager.Update(player2Character.Properties.CharacterOrientation));
             player1ControllerScript.CustomUpdate();
@@ -182,6 +227,11 @@ namespace GamePlayScripts
         }
         private void DetectCollisions()
         {
+            if (player1HitBox.bounds.Intersects(player2UpperBodyHurtBox.bounds))
+            {
+                player2Character.Properties.CurrentState = CharacterProperties.CharacterState.HitStun;
+                player2Character.Properties.HitStunDuration = 10;
+            }
             
         }
         

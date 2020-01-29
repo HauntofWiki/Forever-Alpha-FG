@@ -27,6 +27,10 @@ namespace GamePlayScripts.CharacterMoves
         public int AttackFrameCounter;
         public int CharacterOrientation;
         
+        //Hitstun and block stun tracking variables
+        public int HitStunDuration;
+        public int BlockstunDuration;
+        
         //Vector3 which is used for moving the player Around;
         public Vector3 MoveDirection;
         public UnityEngine.CharacterController CharacterController;
@@ -51,7 +55,11 @@ namespace GamePlayScripts.CharacterMoves
             AirBackDash,
             DoubleJump,
             BlockStun,
+            KnockDown,
             HitStun,
+            StandingHitStun,
+            CrouchingHitStun,
+            FloatingHitstun,
             Cinematic,
             None
         }

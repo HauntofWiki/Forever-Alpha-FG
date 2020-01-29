@@ -323,7 +323,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6925382858333558122}
   - component: {fileID: 1829096441205002369}
-  - component: {fileID: 4542551663744693042}
   m_Layer: 0
   m_Name: HitBox
   m_TagString: Untagged
@@ -353,26 +352,11 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1941069858349201709}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4542551663744693042
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1941069858349201709}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d16f56ee1083e8a4fb4318dbe0412d04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  collisionDetected: 0
-  gameManager: {fileID: 0}
-  gameManagerScript: {fileID: 0}
 --- !u!1 &2006500115818818234
 GameObject:
   m_ObjectHideFlags: 0
@@ -1507,7 +1491,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6599468119706237225}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.01, y: 0.9451685, z: 0.65}
@@ -1551,7 +1535,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6599468119913474917}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.01, y: 1.5246556, z: 0.33809218}
@@ -1639,7 +1623,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6599468121431610903}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.01, y: 0.57466245, z: 0.65}
@@ -1683,7 +1667,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6599468121440627548}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.01, y: 0.30216527, z: 0.25978935}

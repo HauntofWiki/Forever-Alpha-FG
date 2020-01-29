@@ -741,17 +741,29 @@ MonoBehaviour:
   player1Object: {fileID: 0}
   player1Controller: {fileID: 0}
   player1ControllerScript: {fileID: 0}
+  player1Animator: {fileID: 0}
   player1CurrentHealth: 0
   player1MaxHealth: 0
   player1Meter: 0
   player2Object: {fileID: 0}
   player2Controller: {fileID: 0}
   player2ControllerScript: {fileID: 0}
+  player2Animator: {fileID: 0}
   player2CurrentHealth: 0
   player2MaxHealth: 0
   player2Meter: 0
   player1ComboActive: 0
   player2ComboActive: 0
+  player1HurtBoxes: []
+  player2HurtBoxes: []
+  player1UpperBodyHurtBox: {fileID: 0}
+  player1LowerBodyHurtBox: {fileID: 0}
+  player2UpperBodyHurtBox: {fileID: 0}
+  player2LowerBodyHurtBox: {fileID: 0}
+  player1HitBoxes: []
+  player2HitBoxes: []
+  player1HitBox: {fileID: 0}
+  player2HitBox: {fileID: 0}
   gameTime: 0
   frameCounter: 0
   player1HealthBarEmpty: {fileID: 0}
