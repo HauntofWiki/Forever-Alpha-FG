@@ -32,9 +32,7 @@
             <e p="CollisionBoxProperties.cs" t="Include" />
             <e p="GamePlayManager.cs" t="Include" />
             <e p="GamePlayManagerTestScene.cs" t="Include" />
-            <e p="HitDetectionBox" t="Include">
-              <e p="HitDetectionScript.cs" t="Include" />
-            </e>
+            <e p="HitStunManager.cs" t="Include" />
           </e>
           <e p="InputClass.cs" t="Include" />
           <e p="InputManager.cs" t="Include" />

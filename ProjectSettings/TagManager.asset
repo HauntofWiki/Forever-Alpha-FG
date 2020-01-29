@@ -7,8 +7,6 @@ TagManager:
   - Player1
   - Player2
   - P0UpperBodyHitBox
-  - P1UpperBodyHitBox
-  - P2UpperBodyHitBox
   layers:
   - Default
   - TransparentFX
