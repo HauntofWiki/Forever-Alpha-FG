@@ -79,6 +79,7 @@
      <Compile Include="Assets\Scripts\GamePlayScripts\GamePlayManager.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\GamePlayManagerTestScene.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\HitStunManager.cs" />
+     <Compile Include="Assets\Scripts\HitStunAnimationScript.cs" />
      <Compile Include="Assets\Scripts\InputClass.cs" />
      <Compile Include="Assets\Scripts\InputManager.cs" />
      <Compile Include="Assets\Scripts\MenuScripts\CharacterSelect\SideSelect.cs" />

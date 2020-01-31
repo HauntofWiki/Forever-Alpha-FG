@@ -7,6 +7,8 @@ namespace GamePlayScripts
     {
         private Animator _animator;
         private CharacterProperties _properties;
+        private AnimationClip[] _animationClip;
+        private float _hitstunLength;
 
         private int _counter = 0;
 
@@ -20,13 +22,20 @@ namespace GamePlayScripts
         {
             if (_counter == 0)
             {
-                _animator.Play("HitStun");
-                
+                _animator.SetFloat("HitStunAmount",1);
+                _animator.Play("HitStunBlendTree");
             }
 
             if (_counter > 0 && _counter <= _properties.HitStunDuration)
             {
                 
+            }
+
+            if (_counter >= _properties.HitStunDuration)
+            {
+                _properties.CurrentState = CharacterProperties.CharacterState.Stand;
+                _counter = 0;
+                return;
             }
 
             _counter++;

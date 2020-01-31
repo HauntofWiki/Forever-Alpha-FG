@@ -34,6 +34,7 @@
             <e p="GamePlayManagerTestScene.cs" t="Include" />
             <e p="HitStunManager.cs" t="Include" />
           </e>
+          <e p="HitStunAnimationScript.cs" t="Include" />
           <e p="InputClass.cs" t="Include" />
           <e p="InputManager.cs" t="Include" />
           <e p="MenuScripts" t="Include">
