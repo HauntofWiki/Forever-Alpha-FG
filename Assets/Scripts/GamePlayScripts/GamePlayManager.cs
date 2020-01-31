@@ -26,6 +26,7 @@ namespace GamePlayScripts
         public float player1CurrentHealth;
         public float player1MaxHealth;
         public float player1Meter;
+        public float player1ComboCounter;
         
         //Player2
         public GameObject player2Object;
@@ -41,6 +42,7 @@ namespace GamePlayScripts
         public float player2Meter;
         public bool player1ComboActive;
         public bool player2ComboActive;
+        public float player2ComboCounter;
         
         //Collision detection hit boxes
         //HurtBoxes are vulnerable collision boxes
@@ -64,6 +66,7 @@ namespace GamePlayScripts
         //Define other values
         public int gameTime;
         public int frameCounter;
+        
     
         //Define UI elements
         public Image player1HealthBarEmpty;
@@ -99,6 +102,7 @@ namespace GamePlayScripts
             player1Object.GetComponentInChildren<Camera>().targetTexture =
                 (RenderTexture) Resources.Load("Textures/Player 1 Render Texture");
             player1HitStunManager = new HitStunManager(player1Animator, ref player1Character.Properties);
+            player1ComboCounter = 0;
             
             //Set Player 1 Collision Detection Boxes
             GameObject.Find("UpperBodyHurtBox").name = "P1UpperBodyHurtBox";
@@ -121,6 +125,7 @@ namespace GamePlayScripts
             player2Character = new Character(player2Controller);
             player2InputManager = new InputManager(0,Input.GetJoystickNames()[0]);//still hardcoded
             player2HitStunManager = new HitStunManager(player2Animator, ref player2Character.Properties);
+            player2ComboCounter = 0;
             
             //Set Player 2 Collision Detection Boxes
             GameObject.Find("UpperBodyHurtBox").name = "P2UpperBodyHurtBox";
@@ -189,11 +194,11 @@ namespace GamePlayScripts
         void Update()
         {
             frameCounter++;
-            //Debug.Log(player1Character.Properties.LastState);
+            Debug.Log(player1ComboCounter);
             DetectCollisions();
             SetHealthBars();
             SetClock();
-
+            //Debug.Log(player2Character.Properties.CurrentState);
             if (player2Character.Properties.CurrentState == CharacterProperties.CharacterState.HitStun)
             {
                 player2HitStunManager.Update();
@@ -204,7 +209,9 @@ namespace GamePlayScripts
             player2Character.Update(player2InputManager.Update(player2Character.Properties.CharacterOrientation));
             player1ControllerScript.CustomUpdate();
             player2ControllerScript.CustomUpdate();
-            
+
+            if (player2Character.Properties.CurrentState == CharacterProperties.CharacterState.Stand)
+                player1ComboCounter = 0;
             
             
             //simulating/testing life drain
@@ -231,6 +238,10 @@ namespace GamePlayScripts
             {
                 player2Character.Properties.CurrentState = CharacterProperties.CharacterState.HitStun;
                 player2Character.Properties.HitStunDuration = 10;
+                player1ComboActive = true;
+                if (player1ComboActive)
+                    player1ComboCounter++;
+                
             }
             
         }
