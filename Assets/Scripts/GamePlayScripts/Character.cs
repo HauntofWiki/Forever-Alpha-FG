@@ -2,25 +2,29 @@
 using GamePlayScripts.CharacterMoves;
 using UnityEngine;
 
-/*
- * This class defines characteristics unique to the character.
- *
- * This is a generic character representation
- */
 namespace GamePlayScripts
 {
     public class Character
     {
-        //Define Character Stats.
-        public int HealthPoints {get; set;}
-        public int MeterPoints { get; set; }
-
+        //Define General objects and stats
+        private GameObject _characterObject;
+        public GameObject OpponentCharacter;
+        private CharacterController _controller;
+        public CharacterControllerScript ControllerScript;
+        private Animator _animator;
+        private Player _player;
+        private HitStunManager _hitStunManager;
+        private InputManager _inputManager;
         public CharacterProperties Properties;
         private List<CharacterMove> _characterMoves;
-    
-        //Define Game related Values.
-        private UnityEngine.CharacterController _characterController;
-    
+        
+        //Hurtboxes are vulnerable collision boxes
+        private List<HurtBox> _hurtBoxes;
+        
+        //Hitboxes are Offensive collision boxes
+        //Most of the time there is only one, but there will be occasions where there are multiple
+        private List<Hitbox> _hitBoxes;
+
         //Define Character Moves
         private CharacterMove _moveStandIdle;
         private CharacterMove _moveWalkForward;
@@ -34,18 +38,12 @@ namespace GamePlayScripts
         private CharacterMove _moveAirDashForward;
         private CharacterMove _moveLightAttack;
 
-        private Animator _animator;
-
-
-        public Character(UnityEngine.CharacterController characterController)
+        public Character(GameObject characterGameObject, InputManager inputManager)
         {
-            _characterController = characterController;
-
-            HealthPoints = 100;
-            MeterPoints = 0;
-
-            _characterMoves = new List<CharacterMove>();
-        
+            _controller = characterGameObject.GetComponent<CharacterController>();
+            ControllerScript = characterGameObject.GetComponent<CharacterControllerScript>();
+            _animator = characterGameObject.GetComponent<Animator>();
+            _inputManager = inputManager;
             Properties = new CharacterProperties
             {
                 WalkForwardXSpeed = 4.0f,
@@ -65,9 +63,23 @@ namespace GamePlayScripts
                 LastState = CharacterProperties.CharacterState.None,
                 AttackState = CharacterProperties.AttackStates.None,
                 CancellableState = CharacterProperties.CancellableStates.None,
-                CharacterController = _characterController
+                CharacterController = _controller
             };
-        
+            
+            characterGameObject.GetComponentInChildren<Camera>().targetTexture =
+                (RenderTexture) Resources.Load("Textures/Player 1 Render Texture");
+            _hitStunManager = new HitStunManager(_animator, ref Properties);
+            
+            //Define and populate collision boxes
+            _hurtBoxes = new List<HurtBox>();
+            _hurtBoxes.Add(new HurtBox(GameObject.Find("UpperBodyHurtBox").GetComponent<BoxCollider>(), HurtBox.HurtZone.UpperBody));
+            _hurtBoxes.Add(new HurtBox(GameObject.Find("LowerBodyHurtBox").GetComponent<BoxCollider>(), HurtBox.HurtZone.LowerBody));
+            
+            _hitBoxes = new List<Hitbox>();
+            _hitBoxes.Add(new Hitbox(GameObject.Find("HitBox").GetComponent<BoxCollider>()));
+            
+            _characterMoves = new List<CharacterMove>();
+
             //Add Moves to List. Order can effect priority.
             _characterMoves.Add(new MoveStandIdle());
             _characterMoves.Add(new MoveWalkForward());
@@ -81,7 +93,7 @@ namespace GamePlayScripts
             _characterMoves.Add(new MoveAirDashForward());
             _characterMoves.Add(new MoveLightAttack());
         
-            _animator = _characterController.GetComponent<Animator>();
+            _animator = _controller.GetComponent<Animator>();
             
             //Initialize moves.
             foreach (var move in _characterMoves)
@@ -90,31 +102,67 @@ namespace GamePlayScripts
             }
         }
 
-        public void Update(InputClass inputClass)
+        public void Update(List<HurtBox> opponentHurtBoxes)
         {
+            //Debug.Log(Properties.CharacterOrientation);
+            DetectCollisions(opponentHurtBoxes);
+            ControllerScript.DeterminePlayerSide();
+            _inputManager.Update(Properties.CharacterOrientation);
+            
             foreach (var move in _characterMoves)
             {
-                move.PerformAction(inputClass);
+                move.PerformAction(_inputManager.CurrentInput);
             }
             
             ApplyMovement(Properties.CharacterOrientation);
             
         }
-
-        public bool CanSwitchOrientation()
-        {
-            return (Properties.CurrentState != Properties.LastState && Properties.CurrentState != CharacterProperties.CharacterState.JumpForward );//May want to add statuses or handle more elegantly
-        }
     
-        public void ApplyMovement(int currentOrientation)
+        private void ApplyMovement(int currentOrientation)
         {
-
             if(!Properties.IsIgnoringGravity)
                 Properties.MoveDirection.y -= Properties.PersonalGravity * Time.deltaTime;
 
 
             Properties.MoveDirection.x *= currentOrientation;
-            _characterController.Move(Properties.MoveDirection * Time.deltaTime);
+            _controller.Move(Properties.MoveDirection * Time.deltaTime);
+        }
+
+        private CollisionInformation DetectCollisions(List<HurtBox> hurtBoxes)
+        {
+            foreach (var v in _hitBoxes)
+            {
+                foreach (var w in hurtBoxes)
+                {
+                    if (v.Intersects(w.GetHurtBoxBounds()))
+                        return new CollisionInformation()
+                        {
+                            Damage = 100,
+                            HitStunAmount = 10,
+                            BlockStunAmount = 8,
+                            Zone = HurtBox.HurtZone.UpperBody,
+                            Collided = true
+                        };
+                }
+            }
+
+            return new CollisionInformation(){ Collided = false };
+        }
+
+        public CharacterProperties GetCharacterProperties()
+        {
+            return Properties;
+        }
+        
+        public List<HurtBox> GetHurtBoxes()
+        {
+            return _hurtBoxes;
+        }
+
+        public void PostLoadSetup()
+        {
+            ControllerScript.InstantiateCharacterController(OpponentCharacter, ref Properties);
+            ControllerScript.DeterminePlayerSide();
         }
     }
 }

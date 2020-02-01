@@ -9,31 +9,38 @@ namespace GamePlayScripts
     public class CharacterControllerScript : MonoBehaviour
     {
         [SerializeField] private UnityEngine.CharacterController player;
-        private Character _character;
+        private CharacterProperties _properties;
         private Vector3 _moveDirection;
         private GameObject _opponentCharacter;
 
-        public void InstantiateCharacterController(GameObject opponent, ref Character character)
+        public void InstantiateCharacterController(GameObject opponent, ref CharacterProperties properties)
         {
             _opponentCharacter = opponent;
-            _character = character;
+            _properties = properties;
         }
 
-        //CustomUpdate is to Update from the GamePlayManager and not from Unity automatically
-        public void CustomUpdate()
+        //Determine which side the player is on
+        public void DeterminePlayerSide()
         {
-            if (transform.position.x > _opponentCharacter.transform.position.x && _character.CanSwitchOrientation())
+            
+            if (transform.position.x > _opponentCharacter.transform.position.x && CanSwitchOrientation())
             {
                 var flipModel = new Vector3(-1,1,1);
-                _character.Properties.CharacterOrientation = -1;
+                _properties.CharacterOrientation = -1;
                 transform.localScale = Vector3.Lerp(transform.localScale,flipModel, 2.0f);
             }
-            else if (transform.position.x < _opponentCharacter.transform.position.x &&_character.CanSwitchOrientation())
+            else if (transform.position.x < _opponentCharacter.transform.position.x && CanSwitchOrientation())
             {
                 var flipModel = new Vector3(1,1,1);
-                _character.Properties.CharacterOrientation = 1;
+                _properties.CharacterOrientation = 1;
                 transform.localScale = Vector3.Lerp(transform.localScale,flipModel, 2.0f);
             }
+        }
+
+        private bool CanSwitchOrientation()
+        {
+            //May want to add statuses or handle more elegantly
+            return (_properties.CurrentState != _properties.LastState && _properties.CurrentState != CharacterProperties.CharacterState.JumpForward );
         }
     }
 }

@@ -31,9 +31,15 @@ namespace GamePlayScripts.CharacterMoves
         public int HitStunDuration;
         public int BlockstunDuration;
         
-        //Vector3 which is used for moving the player Around;
+        //Vector3 which is used for moving the Character around;
         public Vector3 MoveDirection;
-        public UnityEngine.CharacterController CharacterController;
+        public CharacterController CharacterController;
+
+        //Character tracking variables
+        public float MaxHealth;
+        public float CurrentHealth;
+        public int Meter;
+        public int ComboCounter = 0;
     
         //Define Character State
         public CharacterState CurrentState;
