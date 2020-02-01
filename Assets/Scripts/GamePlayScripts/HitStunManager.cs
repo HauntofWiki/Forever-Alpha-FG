@@ -8,7 +8,6 @@ namespace GamePlayScripts
         private Animator _animator;
         private CharacterProperties _properties;
         private AnimationClip[] _animationClip;
-        private float _hitstunLength;
 
         private int _counter = 0;
 
@@ -20,6 +19,9 @@ namespace GamePlayScripts
         
         public void Update()
         {
+            if (_properties.NewHit)
+                _counter = 0;
+            
             if (_counter == 0)
             {
                 _animator.SetFloat("HitStunAmount",1);

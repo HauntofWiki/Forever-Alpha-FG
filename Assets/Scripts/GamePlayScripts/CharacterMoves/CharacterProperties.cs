@@ -17,8 +17,11 @@ namespace GamePlayScripts.CharacterMoves
         public int BackDashDuration;
         public int AirDashDuration;
 
-        public bool IsAirborne;
-        public bool IsIgnoringGravity;
+        public bool IsAirborne = false;
+        public bool IsIgnoringGravity = false;
+        public bool localHitBoxActive = false;
+        //Collided checks if an attack has already collided to not trigger further actions
+        public bool Collided = false;
     
         //Define frame tracking variables.
         public int InputFrameCounter;
@@ -39,7 +42,9 @@ namespace GamePlayScripts.CharacterMoves
         public float MaxHealth;
         public float CurrentHealth;
         public int Meter;
+        public bool ComboActive = false;
         public int ComboCounter = 0;
+        public bool NewHit = true;
     
         //Define Character State
         public CharacterState CurrentState;
