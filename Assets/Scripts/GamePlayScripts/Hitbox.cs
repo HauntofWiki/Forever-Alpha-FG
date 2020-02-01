@@ -5,13 +5,15 @@ using UnityEngine;
 public class Hitbox
 {
     public BoxCollider Collider;
+    public bool LocalHitBox;
     public bool Active;
     public bool HitOccured;
 
-    public Hitbox(BoxCollider collider)
+    public Hitbox(BoxCollider collider, bool localHitBox)
     {
         Collider = collider;
-        Active = false;
+        Active = true;
+        LocalHitBox = localHitBox;
         HitOccured = false;
     }
 

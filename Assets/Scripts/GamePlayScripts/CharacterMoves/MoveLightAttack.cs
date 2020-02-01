@@ -55,30 +55,51 @@ namespace GamePlayScripts.CharacterMoves
         public override void PerformAction(InputClass inputClass)
         {
             //Detect input
-            if (_properties.CurrentState == CharacterProperties.CharacterState.Stand && DetectMoveInput(inputClass) &&
-                _properties.AttackState == CharacterProperties.AttackStates.None)
+            if (_properties.CurrentState == CharacterProperties.CharacterState.Stand && DetectMoveInput(inputClass))
             {
-                _properties.AttackFrameCounter = 0;
-                _animator.Play("LightAttack");
-                _properties.AttackState = CharacterProperties.AttackStates.LightAttack;
+                //Attack while no other attacks are active
+                if (_properties.AttackState == CharacterProperties.AttackStates.None)
+                {
+                    _properties.AttackFrameCounter = 0;
+                    _animator.Play("LightAttack");
+                    _properties.AttackState = CharacterProperties.AttackStates.LightAttack;
+                    _properties.Collided = false;
+                }
+                
+                //Detect LightAttack Normal Cancelled into itself
+                if (_properties.CurrentState == CharacterProperties.CharacterState.Stand &&
+                    DetectMoveInput(inputClass))
+                {
+                    if(_properties.AttackState == CharacterProperties.AttackStates.LightAttack && _properties.Collided)
+                        if (AttackStateFrames[_properties.AttackFrameCounter] == 2)
+                        {
+                            _properties.AttackFrameCounter = 0;
+                            _animator.Play("LightAttack");
+                            _properties.AttackState = CharacterProperties.AttackStates.LightAttack;
+                            _properties.Collided = false;
+                        }
+                }
             }
-            
+
             //Play out animation and frame information per frame
             if (_properties.AttackState == CharacterProperties.AttackStates.LightAttack)
             {
                 //Startup
                 if (AttackStateFrames[_properties.AttackFrameCounter] == 0)
                 {
+                    _properties.localHitBoxActive = false;
                     _properties.AttackFrameCounter++;
                 }
                 //Active
                 if (AttackStateFrames[_properties.AttackFrameCounter] == 1)
                 {
+                    _properties.localHitBoxActive = true;
                     _properties.AttackFrameCounter++;
                 }
                 //Recovery
                 if (AttackStateFrames[_properties.AttackFrameCounter] == 2)
                 {
+                    _properties.localHitBoxActive = false;
                     _properties.AttackFrameCounter++;
                 }
                 

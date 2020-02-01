@@ -8,9 +8,8 @@ namespace GamePlayScripts
     {
         //Define General objects and stats
         private GameObject _characterObject;
-        private GameObject _opponentObject;
         private CharacterController _controller;
-        public CharacterControllerScript ControllerScript;
+        private CharacterControllerScript _controllerScript;
         private Animator _animator;
         private Player _player;
         private HitStunManager _hitStunManager;
@@ -42,11 +41,13 @@ namespace GamePlayScripts
         public Character(GameObject characterGameObject, InputManager inputManager)
         {
             _controller = characterGameObject.GetComponent<CharacterController>();
-            ControllerScript = characterGameObject.GetComponent<CharacterControllerScript>();
+            _controllerScript = characterGameObject.GetComponent<CharacterControllerScript>();
             _animator = characterGameObject.GetComponent<Animator>();
             _inputManager = inputManager;
             Properties = new CharacterProperties
             {
+                MaxHealth = 1000,
+                CurrentHealth = 1000,
                 WalkForwardXSpeed = 4.0f,
                 WalkBackwardXSpeed = 4.0f,
                 JumpYSpeed = 15.0f,
@@ -77,7 +78,9 @@ namespace GamePlayScripts
             _hurtBoxes.Add(new HurtBox(GameObject.Find("LowerBodyHurtBox").GetComponent<BoxCollider>(), HurtBox.HurtZone.LowerBody));
             
             _hitBoxes = new List<Hitbox>();
-            _hitBoxes.Add(new Hitbox(GameObject.Find("HitBox").GetComponent<BoxCollider>()));
+            _hitBoxes.Add(new Hitbox(GameObject.Find("HitBox").GetComponent<BoxCollider>(),true));
+            
+            Debug.Log(_hitBoxes.Count);
             
             _characterMoves = new List<CharacterMove>();
 
@@ -103,11 +106,13 @@ namespace GamePlayScripts
             }
         }
 
-        public void Update(List<HurtBox> opponentHurtBoxes)
+        public void Update()
         {
-            //Debug.Log(Properties.CharacterOrientation);
-            DetectCollisions(opponentHurtBoxes);
-            ControllerScript.DeterminePlayerSide();
+            if (Properties.CurrentState == CharacterProperties.CharacterState.HitStun)
+            {
+                _hitStunManager.Update();
+            }
+            _controllerScript.DeterminePlayerSide();
             _inputManager.Update(Properties.CharacterOrientation);
             
             foreach (var move in _characterMoves)
@@ -116,7 +121,8 @@ namespace GamePlayScripts
             }
             
             ApplyMovement(Properties.CharacterOrientation);
-            
+
+            Properties.NewHit = false;
         }
     
         private void ApplyMovement(int currentOrientation)
@@ -129,25 +135,41 @@ namespace GamePlayScripts
             _controller.Move(Properties.MoveDirection * Time.deltaTime);
         }
 
-        private CollisionInformation DetectCollisions(List<HurtBox> hurtBoxes)
+        public CollisionInformation DetectCollisions(List<HurtBox> hurtBoxes)
         {
             foreach (var v in _hitBoxes)
             {
+                //If a local hitbox is not active than no collision
+                if (!Properties.localHitBoxActive && v.LocalHitBox) return new CollisionInformation(){ Collided = false };
+                //Move already collided
+                if (Properties.Collided) return new CollisionInformation(){ Collided = false };
                 foreach (var w in hurtBoxes)
                 {
+                    
                     if (v.Intersects(w.GetHurtBoxBounds()))
+                    {
+                        Properties.ComboActive = true;
+                        Properties.Collided = true;
                         return new CollisionInformation()
                         {
                             Damage = 100,
-                            HitStunAmount = 10,
+                            HitStunAmount = 30,
                             BlockStunAmount = 8,
                             Zone = HurtBox.HurtZone.UpperBody,
                             Collided = true
                         };
+                    }
                 }
             }
 
             return new CollisionInformation(){ Collided = false };
+        }
+
+        public void ApplyCollision(CollisionInformation collisionInformation)
+        {
+            Properties.CurrentHealth -= collisionInformation.Damage;
+            Properties.CurrentState = CharacterProperties.CharacterState.HitStun;
+            Properties.HitStunDuration = collisionInformation.HitStunAmount;
         }
 
         public CharacterProperties GetCharacterProperties()
@@ -162,9 +184,8 @@ namespace GamePlayScripts
 
         public void PostLoadSetup(GameObject opponent)
         {
-            _opponentObject = opponent;
-            ControllerScript.InstantiateCharacterController(opponent, ref Properties);
-            ControllerScript.DeterminePlayerSide();
+            _controllerScript.InstantiateCharacterController(opponent, ref Properties);
+            _controllerScript.DeterminePlayerSide();
         }
     }
 }

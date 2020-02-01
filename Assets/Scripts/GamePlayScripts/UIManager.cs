@@ -97,6 +97,9 @@ public class UIManager
             player1HealthBarMiddle.fillAmount = 0;
             player1HealthBarLow.fillAmount = 0;
         }
+
+        if (!p2.ComboActive)
+            player1HealthBarDifferential.fillAmount = p1.CurrentHealth / p1.MaxHealth;
             
         //Player 2 health bars
         if (p2.CurrentHealth / p1.MaxHealth <= 0.25)
@@ -117,6 +120,9 @@ public class UIManager
             player2HealthBarMiddle.fillAmount = 0;
             player2HealthBarLow.fillAmount = 0;
         }
+        
+        if (!p1.ComboActive)
+            player2HealthBarDifferential.fillAmount = p2.CurrentHealth / p2.MaxHealth;
     }
     
     private void DisplayComboCounter()

@@ -54,7 +54,7 @@ public class InputManager
     {
         _inputQueueSize = 50;
         _numberOfInputs = 10;
-        Debug.Log("Joy" + joystickNumber + ", " + Input.GetJoystickNames()[joystickNumber]);
+        //Debug.Log("Joy" + joystickNumber + ", " + Input.GetJoystickNames()[joystickNumber]);
         SetDefaultMapping(joystickNumber + 1,joystickName);
     }
     
@@ -132,7 +132,7 @@ public class InputManager
         CurrentInput.SubmitButtonDown = Input.GetKeyDown(CancelButton);
         
         
-        Debug.Log(CurrentInput.DPadNumPad + ", " + CurrentInput.DPadX);
+        //Debug.Log(CurrentInput.DPadNumPad + ", " + CurrentInput.DPadX);
 
         return CurrentInput;
     }
@@ -224,7 +224,7 @@ public class InputManager
         }
         else
         {
-            Debug.Log("No Controller Connected");
+            //Debug.Log("No Controller Connected");
             _digitalAxisXAccessName = "None";
             _digitalAxisYAccessName = "None";
             _analogLeftAxisXName = "None";
@@ -252,7 +252,7 @@ public class InputManager
 
     private static string GetJoystickAccessName(int joystickNumber, int axisNumber)
     {
-        Debug.Log("Joy" + (joystickNumber) + "Axis" + axisNumber);
+        //Debug.Log("Joy" + (joystickNumber) + "Axis" + axisNumber);
         return "Joy" + (joystickNumber) + "Axis" + axisNumber;
     }
     
