@@ -21,6 +21,7 @@ namespace GamePlayScripts
         //Hurtboxes are vulnerable collision boxes
         private List<HurtBox> _hurtBoxes;
         
+        
         //Hitboxes are Offensive collision boxes
         //Most of the time there is only one, but there will be occasions where there are multiple
         private List<Hitbox> _hitBoxes;
