@@ -30,9 +30,12 @@
               <e p="MoveWalkForward.cs" t="Include" />
             </e>
             <e p="CollisionBoxProperties.cs" t="Include" />
+            <e p="CollisionInformation.cs" t="Include" />
             <e p="GamePlayManager.cs" t="Include" />
-            <e p="GamePlayManagerTestScene.cs" t="Include" />
+            <e p="Hitbox.cs" t="Include" />
             <e p="HitStunManager.cs" t="Include" />
+            <e p="HurtBox.cs" t="Include" />
+            <e p="UIManager.cs" t="Include" />
           </e>
           <e p="HitStunAnimationScript.cs" t="Include" />
           <e p="InputClass.cs" t="Include" />
