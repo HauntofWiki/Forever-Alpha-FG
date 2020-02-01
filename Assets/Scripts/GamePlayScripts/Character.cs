@@ -8,7 +8,7 @@ namespace GamePlayScripts
     {
         //Define General objects and stats
         private GameObject _characterObject;
-        public GameObject OpponentCharacter;
+        private GameObject _opponentObject;
         private CharacterController _controller;
         public CharacterControllerScript ControllerScript;
         private Animator _animator;
@@ -159,9 +159,10 @@ namespace GamePlayScripts
             return _hurtBoxes;
         }
 
-        public void PostLoadSetup()
+        public void PostLoadSetup(GameObject opponent)
         {
-            ControllerScript.InstantiateCharacterController(OpponentCharacter, ref Properties);
+            _opponentObject = opponent;
+            ControllerScript.InstantiateCharacterController(opponent, ref Properties);
             ControllerScript.DeterminePlayerSide();
         }
     }
