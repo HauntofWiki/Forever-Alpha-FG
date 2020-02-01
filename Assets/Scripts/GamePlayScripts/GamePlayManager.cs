@@ -68,10 +68,8 @@ namespace GamePlayScripts
 //            Debug.Log(Input.GetJoystickNames()[0]);
 //            Debug.Log(Input.GetJoystickNames()[1]);
 
-            player1Character.OpponentCharacter = player2Object;
-            player2Character.OpponentCharacter = player1Object;
-            player1Character.PostLoadSetup();
-            player2Character.PostLoadSetup();
+            player1Character.PostLoadSetup(player2Object);
+            player2Character.PostLoadSetup(player1Object);
             
             //Set Player Objects and Initial values
             //Hardcoded values for now
