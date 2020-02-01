@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#Make sure we are on master
+git checkout master
+
+#Get most up-to-date version of master and prune stale remote branches
+git fetch -p
+
+#Delete all merged branches, sans master
+git branch --merged | grep -v 'master$' | xargs git branch -d
+
+git pull
