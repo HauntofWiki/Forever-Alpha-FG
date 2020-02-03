@@ -6,39 +6,12 @@ namespace GamePlayScripts.CharacterMoves
     {
         private CharacterProperties _properties;
         private Animator _animator;
+        private FrameDataHandler _frameData;
         private int _inputLimit;
         private readonly int[] _movePattern = {-1,0,-1}; //Dash uses X-axis only
         private readonly bool[] _patternMatch = {false, false, false};
         private int _lastMove;
         private int _moveDetectCounter;
-    
-        //Tracks invincibility States per frame.
-        //0:None, 1:Full, 2:UpperBody, 3:LowerBody 4:throw
-        public int[] InvincibilyFrames =
-        {
-            1,1,1,0,0,0,0,0,0,0,0,0,0,0,0
-        };
-        
-        //Tracks attack properties of the move per frame.
-        //0:StartUp, 1:Active, 2:Recovery 3:End
-        public int[] AttackStateFrames =
-        {
-            0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,3
-        };
-        
-        //Tracks Cancellable states of the move per frame.
-        //0:None, 1:EmptyCancel, 2:NormalCancel, 3:SpecialCancel, 4:SuperCancel
-        public int[] Cancellability =
-        {
-            0
-        };
-        
-        //Tracks Airborne State of move per frame
-        //0: No, 1:Yes
-        public int[] AirborneState =
-        {
-            1,1,1,1,1,1,1,1,1,1,1,1,0,0,0
-        };
         
         public override void InitializeMove(ref CharacterProperties properties, Animator animator)
         {
@@ -47,7 +20,11 @@ namespace GamePlayScripts.CharacterMoves
             _lastMove = -1;
             _moveDetectCounter = 0;
             _inputLimit = 15;
-            _properties.BackDashDuration = AttackStateFrames.Length;
+            _frameData = new FrameDataHandler(30);
+            _frameData.SetFieldsZero();
+            _frameData.SetAttackFrames(3,24);
+            _frameData.SetAirborneFrames(0,20);
+            //_properties.BackDashDuration = AttackStateFrames.Length;
         }
 
         public override bool DetectMoveInput(InputClass inputClass)
@@ -70,7 +47,6 @@ namespace GamePlayScripts.CharacterMoves
                 _patternMatch[2] = true;
             if (_patternMatch[0] && _patternMatch[1] && _patternMatch[2])
             {
-                //Debug.Log("d");
                 ResetInputDetect();
                 return true;
             }
@@ -95,18 +71,21 @@ namespace GamePlayScripts.CharacterMoves
         public override void PerformAction(InputClass inputClass)
         {
                 //Play out BackDash animation
-                if (_properties.CurrentState == CharacterProperties.CharacterState.BackDash && _properties.DashFrameCounter < _properties.BackDashDuration - 1)
+                if (_properties.CurrentState == CharacterProperties.CharacterState.BackDash)
                 {
                     _properties.DashFrameCounter++;
-                    if (AttackStateFrames[_properties.DashFrameCounter] == 1)
+                    if (_frameData.AttackFrameState[_properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Startup)
                         _properties.MoveDirection.x = -_properties.DashBackwardXSpeed[1];
-                    else if (AttackStateFrames[_properties.DashFrameCounter] == 2)
+                    else if (_frameData.AttackFrameState[_properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Active)
                         _properties.MoveDirection.x = -_properties.DashBackwardXSpeed[2];
+                    else if (_frameData.AttackFrameState[_properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Recovery)
+                    {
+                        _properties.MoveDirection.x = 0;
+                        _properties.CurrentState = CharacterProperties.CharacterState.Stand;
+                    }
+
+                    _frameData.Update(_properties.DashFrameCounter);
                 }
-                
-                //Exit dash animation
-                if (_properties.CurrentState == CharacterProperties.CharacterState.BackDash && _properties.DashFrameCounter >= _properties.BackDashDuration - 1)
-                    _properties.CurrentState = CharacterProperties.CharacterState.Stand;
                 
                 //Begin Dash Detection
                 if (!DetectMoveInput(inputClass)) return;

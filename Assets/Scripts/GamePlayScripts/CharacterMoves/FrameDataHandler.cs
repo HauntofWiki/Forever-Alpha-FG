@@ -149,12 +149,31 @@ namespace GamePlayScripts.CharacterMoves
             }
         }
         
-        public void SetInvincibleFrames(int start, int end, CancellabilityStates state)
+        public void SetInvincibleFrames(int start, int end, InvincibilityStates state)
         {
             for (int i = start; i < end; i++)
             {
-                Cancellability[i] = state;
+                Invincibility[i] = state;
             }
+        }
+
+        public void SetAirborneFrames(int start, int end)
+        {
+            for (int i = start; i < end; i++)
+            {
+                Airborne = true;
+            }
+        }
+
+        //Sets all fields to 0, for some moves that will not use this data
+        public void SetFieldsZero()
+        {
+            Damage = 0;
+            Dizzy = 0;
+            MeterGain = 0;
+            PushBack = 0;
+            HitStun = 0;
+            BlockStun = 0;
         }
         
         

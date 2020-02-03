@@ -6,45 +6,23 @@ namespace GamePlayScripts.CharacterMoves
     {
         private CharacterProperties _properties;
         private Animator _animator;
+        private FrameDataHandler _frameData;
         private readonly int _inputLimit;
         private readonly int[] _movePattern = {1, 0, 1}; //Dash uses X-axis only
         private readonly bool[] _patternMatch = {false, false, false};
         private int _lastInput;
         private int _moveDetectCounter;
 
-        //Tracks invincibility States per frame.
-        //0:None, 1:Full, 2:UpperBody, 3:LowerBody 4:throw
-        public int[] InvincibilyFrames =
-        {
-            0
-        };
-
-        //Tracks attack properties of the move per frame.
-        //0:StartUp, 1:Active, 2:Recovery 3:End
-        public int[] AttackStateFrames =
-        {
-            0, 0, 0, 1, 2, 2, 2, 3
-        };
-
-        //Tracks Cancellable states of the move per frame.
-        //0:None, 1:EmptyCancel, 2:NormalCancel, 3:SpecialCancel, 4:SuperCancel
-        public int[] Cancellability =
-        {
-            1
-        };
-
-        //Tracks Airborne State of move per frame
-        //0: No, 1:Yes
-        public int[] AirborneState =
-        {
-            0
-        };
-
         public MoveDashForward()
         {
             _lastInput = -1;
             _moveDetectCounter = 0;
             _inputLimit = 15;
+            //Forward dash is special because length doesnt matter because you can hold the input
+            //Basically you just have input and recovery
+            _frameData = new FrameDataHandler(7);
+            _frameData.SetFieldsZero();
+            _frameData.SetAttackFrames(2,1);
         }
 
         public override void InitializeMove(ref CharacterProperties properties, Animator animator)
@@ -102,45 +80,26 @@ namespace GamePlayScripts.CharacterMoves
             //Detect whether the Forward is held for a long dash
             if (_properties.CurrentState == CharacterProperties.CharacterState.Dash &&
                 DetectHoldInput(inputClass) &&
-                AttackStateFrames[_properties.DashFrameCounter] == 1)
+                _frameData.AttackFrameState[_properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Active)
             {
-                _properties.MoveDirection = new Vector3(_properties.DashForwardXSpeed[AttackStateFrames[_properties.DashFrameCounter]],
-                    0, 0);
+                _properties.MoveDirection = new Vector3(_properties.DashForwardXSpeed[1],0, 0);
                 return;
             }
 
-
             //Play out dash animation
-            if (_properties.CurrentState == CharacterProperties.CharacterState.Dash &&
-                AttackStateFrames[_properties.DashFrameCounter] < 3)
+            if (_properties.CurrentState == CharacterProperties.CharacterState.Dash)
             {
                 _properties.DashFrameCounter++;
-                _properties.MoveDirection = new Vector3(_properties.DashForwardXSpeed[AttackStateFrames[_properties.DashFrameCounter]],
-                    0, 0);
-                if (AttackStateFrames[_properties.DashFrameCounter] >= 2)
+                _properties.MoveDirection = new Vector3(_properties.DashForwardXSpeed[2],0, 0);
+                if (_frameData.AttackFrameState[_properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Recovery)
                 {
                     _animator.Play("DashForwardBrake");
                     _properties.LastState = _properties.CurrentState;
-                    _properties.CurrentState = CharacterProperties.CharacterState.CancellableAnimation;
+                    _properties.CurrentState = CharacterProperties.CharacterState.Stand;
                 }
-
+                _frameData.Update(_properties.DashFrameCounter);
             }
-
-            if (_properties.CurrentState == CharacterProperties.CharacterState.CancellableAnimation &&
-                AttackStateFrames[_properties.DashFrameCounter] < 3)
-            {
-                _properties.DashFrameCounter++;
-            }
-
-            //Exit dash animation
-            if (_properties.CurrentState == CharacterProperties.CharacterState.CancellableAnimation &&
-                AttackStateFrames[_properties.DashFrameCounter] >= 3)
-            {
-                _properties.LastState = _properties.CurrentState;
-                _properties.CurrentState = CharacterProperties.CharacterState.Stand;
-                _properties.DashFrameCounter = 0;
-            }
-
+            
             //Begin Dash Detection
             if (!DetectMoveInput(inputClass)) return;
             if (_properties.CurrentState != CharacterProperties.CharacterState.Stand &&

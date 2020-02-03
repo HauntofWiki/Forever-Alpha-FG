@@ -6,40 +6,23 @@ namespace GamePlayScripts.CharacterMoves
     {
         private CharacterProperties _properties;
         private Animator _animator;
-        
-        //Tracks invincibility States per frame.
-        //0:None, 1:Full, 2:UpperBody, 3:LowerBody 4:throw
-        public int[] InvincibilyFrames =
-        {
-            0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        };
-        
-        //Tracks attack properties of the move per frame.
-        //0:StartUp, 1:Active, 2:Recovery 3:End
-        public int[] AttackStateFrames =
-        {
-            0,0,0,0,0,0,0,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3
-        };
-        
-        //Tracks Cancellable states of the move per frame.
-        //0:None, 1:EmptyCancel, 2:NormalCancel, 3:SpecialCancel, 4:SuperCancel
-        //5:JumpCancel, 6:AirJumpCancel, 7:DashCancel, 8:AirDashCancel
-        public int[] Cancellability =
-        {
-            0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
-        };
-        
-        //Tracks Airborne State of move per frame
-        //0: No, 1:Yes
-        public int[] AirborneState =
-        {
-            0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        };
+        private FrameDataHandler _frameData;
 
         public override void InitializeMove(ref CharacterProperties properties, Animator animator)
         {
             _animator = animator;
             _properties = properties;
+            _frameData = new FrameDataHandler(30)
+            {
+                Damage = 50.0f,
+                Dizzy = 10.0f,
+                HitStun = 10.0f,
+                BlockStun = 10.0f,
+                MeterGain = 10.0f,
+                PushBack = -5f
+            };
+            _frameData.SetAttackFrames(6, 4);
+            _frameData.SetCancellableFrames(6, 20, FrameDataHandler.CancellabilityStates.Normal);
         }
 
         public override bool DetectMoveInput(InputClass inputClass)
@@ -64,19 +47,21 @@ namespace GamePlayScripts.CharacterMoves
                     _animator.Play("MediumAttack");
                     _properties.AttackState = CharacterProperties.AttackStates.MediumAttack;
                     _properties.Collided = false;
+                    _properties.FrameDataHandler = _frameData;
                 }
                 
-                //Detect LightAttack Normal Cancelled into itself
+                //Detect MediumAttack Normal Cancelled into itself
                 if (_properties.CurrentState == CharacterProperties.CharacterState.Stand &&
                     DetectMoveInput(inputClass))
                 {
                     if(_properties.AttackState == CharacterProperties.AttackStates.LightAttack && _properties.Collided)
-                        if (AttackStateFrames[_properties.AttackFrameCounter] == 2)
+                        if (_frameData.Cancellable == FrameDataHandler.CancellabilityStates.Normal)
                         {
                             _properties.AttackFrameCounter = 0;
                             _animator.Play("MediumAttack");
                             _properties.AttackState = CharacterProperties.AttackStates.MediumAttack;
                             _properties.Collided = false;
+                            _properties.FrameDataHandler = _frameData;
                         }
                 }
             }
@@ -85,29 +70,32 @@ namespace GamePlayScripts.CharacterMoves
             if (_properties.AttackState == CharacterProperties.AttackStates.MediumAttack)
             {
                 //Startup
-                if (AttackStateFrames[_properties.AttackFrameCounter] == 0)
+                if (_frameData.AttackState == FrameDataHandler.AttackFrameStates.Startup)
                 {
                     _properties.LocalHitBoxActive = false;
                     _properties.AttackFrameCounter++;
                 }
                 //Active
-                if (AttackStateFrames[_properties.AttackFrameCounter] == 1)
+                if (_frameData.AttackState == FrameDataHandler.AttackFrameStates.Active)
                 {
                     _properties.LocalHitBoxActive = true;
                     _properties.AttackFrameCounter++;
                 }
                 //Recovery
-                if (AttackStateFrames[_properties.AttackFrameCounter] == 2)
+                if (_frameData.AttackState == FrameDataHandler.AttackFrameStates.Recovery)
                 {
+                    _properties.Collided = false;
                     _properties.LocalHitBoxActive = false;
                     _properties.AttackFrameCounter++;
                 }
                 
                 //Exit Move
-                if (AttackStateFrames[_properties.AttackFrameCounter] == 3)
+                if (_properties.AttackFrameCounter >= _frameData.Length)
                 {
                     _properties.AttackState = CharacterProperties.AttackStates.None;
                 }
+                
+                _frameData.Update(_properties.AttackFrameCounter);
             }
             
             
