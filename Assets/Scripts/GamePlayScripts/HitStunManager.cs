@@ -10,6 +10,7 @@ namespace GamePlayScripts
         private AnimationClip[] _animationClip;
 
         private int _counter = 0;
+        public float PushBack { get; set; }
 
         public HitStunManager(Animator animator, ref CharacterProperties properties)
         {
@@ -26,14 +27,16 @@ namespace GamePlayScripts
             {
                 _animator.SetFloat("HitStunAmount",1);
                 _animator.Play("HitStunBlendTree");
-            }
-
-            if (_counter > 0 && _counter <= _properties.HitStunDuration)
-            {
                 
+                _properties.MoveDirection = new Vector3(PushBack,0,0);
             }
 
-            if (_counter >= _properties.HitStunDuration)
+            if (_counter > 0 && _counter <= _properties.FrameDataHandler.HitStun)
+            {
+                _properties.MoveDirection = new Vector3(PushBack,0,0);
+            }
+
+            if (_counter >= _properties.FrameDataHandler.HitStun)
             {
                 _properties.CurrentState = CharacterProperties.CharacterState.Stand;
                 _counter = 0;

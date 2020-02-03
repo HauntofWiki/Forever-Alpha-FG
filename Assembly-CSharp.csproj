@@ -63,6 +63,7 @@
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterControllerScript.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\CharacterMove.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\CharacterProperties.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\FrameDataHandler.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveAirDashForward.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveDashBackward.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveDashForward.cs" />
@@ -70,6 +71,7 @@
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveJumpForward.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveJumpNeutral.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveLightAttack.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveMediumAttack.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveShoryuken.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveSpecialForward.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveStandIdle.cs" />
