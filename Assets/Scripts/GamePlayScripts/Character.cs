@@ -80,7 +80,7 @@ namespace GamePlayScripts
             _hitBoxes = new List<Hitbox>();
             _hitBoxes.Add(new Hitbox(GameObject.Find("HitBox").GetComponent<BoxCollider>(),true));
             
-            Debug.Log(_hitBoxes.Count);
+            //Debug.Log(_hitBoxes.Count);
             
             _characterMoves = new List<CharacterMove>();
 
@@ -96,6 +96,7 @@ namespace GamePlayScripts
             _characterMoves.Add(new MoveSpecialForward());
             _characterMoves.Add(new MoveAirDashForward());
             _characterMoves.Add(new MoveLightAttack());
+            _characterMoves.Add(new MoveMediumAttack());
         
             _animator = _controller.GetComponent<Animator>();
             
@@ -121,7 +122,7 @@ namespace GamePlayScripts
             }
             
             ApplyMovement(Properties.CharacterOrientation);
-
+            
             Properties.NewHit = false;
         }
     
@@ -130,46 +131,47 @@ namespace GamePlayScripts
             if(!Properties.IsIgnoringGravity)
                 Properties.MoveDirection.y -= Properties.PersonalGravity * Time.deltaTime;
 
-
+            //Keep character on the Z-Axis
+            if (_controller.transform.position.z != 0)
+                Properties.MoveDirection.z = (0 - _controller.transform.position.z);
+            
             Properties.MoveDirection.x *= currentOrientation;
             _controller.Move(Properties.MoveDirection * Time.deltaTime);
         }
 
-        public CollisionInformation DetectCollisions(List<HurtBox> hurtBoxes)
+        public bool DetectCollisions(List<HurtBox> hurtBoxes)
         {
             foreach (var v in _hitBoxes)
             {
+                
                 //If a local hitbox is not active than no collision
-                if (!Properties.localHitBoxActive && v.LocalHitBox) return new CollisionInformation(){ Collided = false };
+                if (!Properties.LocalHitBoxActive && v.LocalHitBox) return false;
+                
                 //Move already collided
-                if (Properties.Collided) return new CollisionInformation(){ Collided = false };
+                if (Properties.Collided) return false;
+                
                 foreach (var w in hurtBoxes)
                 {
                     
                     if (v.Intersects(w.GetHurtBoxBounds()))
                     {
+                        Debug.Log(_hitBoxes.Count);
                         Properties.ComboActive = true;
                         Properties.Collided = true;
-                        return new CollisionInformation()
-                        {
-                            Damage = 100,
-                            HitStunAmount = 30,
-                            BlockStunAmount = 8,
-                            Zone = HurtBox.HurtZone.UpperBody,
-                            Collided = true
-                        };
+                        return true;
                     }
                 }
             }
 
-            return new CollisionInformation(){ Collided = false };
+            return false;
         }
 
-        public void ApplyCollision(CollisionInformation collisionInformation)
+        public void ApplyCollision(FrameDataHandler handler)
         {
-            Properties.CurrentHealth -= collisionInformation.Damage;
+            Properties.CurrentHealth -= handler.Damage;
             Properties.CurrentState = CharacterProperties.CharacterState.HitStun;
-            Properties.HitStunDuration = collisionInformation.HitStunAmount;
+            Properties.FrameDataHandler.HitStun = handler.HitStun;
+            _hitStunManager.PushBack = handler.PushBack;
         }
 
         public CharacterProperties GetCharacterProperties()

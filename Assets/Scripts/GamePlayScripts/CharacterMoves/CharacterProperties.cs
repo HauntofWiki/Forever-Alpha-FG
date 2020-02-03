@@ -19,7 +19,7 @@ namespace GamePlayScripts.CharacterMoves
 
         public bool IsAirborne = false;
         public bool IsIgnoringGravity = false;
-        public bool localHitBoxActive = false;
+        public bool LocalHitBoxActive = false;
         //Collided checks if an attack has already collided to not trigger further actions
         public bool Collided = false;
     
@@ -30,9 +30,6 @@ namespace GamePlayScripts.CharacterMoves
         public int AttackFrameCounter;
         public int CharacterOrientation;
         
-        //Hitstun and block stun tracking variables
-        public int HitStunDuration;
-        public int BlockstunDuration;
         
         //Vector3 which is used for moving the Character around;
         public Vector3 MoveDirection;
@@ -45,7 +42,9 @@ namespace GamePlayScripts.CharacterMoves
         public bool ComboActive = false;
         public int ComboCounter = 0;
         public bool NewHit = true;
-    
+
+        public FrameDataHandler FrameDataHandler = new FrameDataHandler(0);
+        
         //Define Character State
         public CharacterState CurrentState;
         public CharacterState LastState;

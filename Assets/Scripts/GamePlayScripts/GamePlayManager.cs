@@ -86,22 +86,20 @@ namespace GamePlayScripts
         // Update is called once per frame
         void Update()
         {
-            //if (player1Character.Properties.ComboCounter > 0)
-            Debug.Log(player1Character.Properties.ComboCounter + ", " + player2Character.Properties.CurrentHealth);
+            
+
             
             player1Character.Update();
             player2Character.Update();
 
-            //Check for collisions and get information about the collision
-            Player1CollisionInformation = player1Character.DetectCollisions(player2Character.GetHurtBoxes());
-            Player2CollisionInformation = player2Character.DetectCollisions(player1Character.GetHurtBoxes());
-
-            //Handle Collisions
-            if (Player1CollisionInformation.Collided)
+            //Check and Handle Collisions
+            if (player1Character.DetectCollisions(player2Character.GetHurtBoxes()))
             {
                 player1Character.Properties.ComboCounter++;
+                player1Character.Properties.Collided = true;
                 player2Character.Properties.NewHit = true;
-                player2Character.ApplyCollision(Player1CollisionInformation);
+                
+                player2Character.ApplyCollision(player1Character.Properties.FrameDataHandler);
             }
 
             //Check to see if an Active Combo ended

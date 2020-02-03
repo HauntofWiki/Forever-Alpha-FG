@@ -16,6 +16,7 @@
             <e p="CharacterMoves" t="Include">
               <e p="CharacterMove.cs" t="Include" />
               <e p="CharacterProperties.cs" t="Include" />
+              <e p="FrameDataHandler.cs" t="Include" />
               <e p="MoveAirDashForward.cs" t="Include" />
               <e p="MoveDashBackward.cs" t="Include" />
               <e p="MoveDashForward.cs" t="Include" />
@@ -23,6 +24,7 @@
               <e p="MoveJumpForward.cs" t="Include" />
               <e p="MoveJumpNeutral.cs" t="Include" />
               <e p="MoveLightAttack.cs" t="Include" />
+              <e p="MoveMediumAttack.cs" t="Include" />
               <e p="MoveShoryuken.cs" t="Include" />
               <e p="MoveSpecialForward.cs" t="Include" />
               <e p="MoveStandIdle.cs" t="Include" />
