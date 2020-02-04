@@ -52,9 +52,9 @@ namespace GamePlayScripts.CharacterMoves
                 }
             }
             
-            //Use Character controller to determine if animation has reached the ground
+            //Determine if animation has reached the ground
             if (Properties.CurrentState == CharacterProperties.CharacterState.Jump &&
-                Properties.CharacterController.isGrounded &
+                Properties.IsGrounded &
                 FrameData.AttackFrameState[Properties.JumpFrameCounter] != FrameDataHandler.AttackFrameStates.Startup)
             {
                 Properties.JumpFrameCounter++;

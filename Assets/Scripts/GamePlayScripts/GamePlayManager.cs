@@ -84,7 +84,7 @@ namespace GamePlayScripts
         // Update is called once per frame
         void Update()
         {
-            
+            Debug.Log(player1Character.Properties.CurrentState);
 
             
             player1Character.Update();

@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using GamePlayScripts.CharacterMoves;
+using UnityEngine;
 
-namespace GamePlayScripts.CharacterMoves
+namespace GamePlayScripts
 {
     public class CharacterProperties
     {
@@ -20,6 +21,8 @@ namespace GamePlayScripts.CharacterMoves
         public bool IsAirborne = false;
         public bool IsIgnoringGravity = false;
         public bool LocalHitBoxActive = false;
+        public bool IsGrounded = false;
+        
         //Collided checks if an attack has already collided to not trigger further actions
         public bool Collided = false;
     
