@@ -8,13 +8,15 @@ namespace GamePlayScripts
 {
     public class CharacterControllerScript : MonoBehaviour
     {
-        [SerializeField] private UnityEngine.CharacterController player;
+        [SerializeField] private CharacterController controller;
         private CharacterProperties _properties;
         private Vector3 _moveDirection;
         private GameObject _opponentCharacter;
 
         public void InstantiateCharacterController(GameObject opponent, ref CharacterProperties properties)
         {
+            controller = GetComponent<CharacterController>();
+            controller.detectCollisions = false;
             _opponentCharacter = opponent;
             _properties = properties;
         }

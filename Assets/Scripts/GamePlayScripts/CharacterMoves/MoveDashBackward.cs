@@ -4,9 +4,6 @@ namespace GamePlayScripts.CharacterMoves
 {
     public class MoveDashBackward : CharacterMove
     {
-        private CharacterProperties _properties;
-        private Animator _animator;
-        private FrameDataHandler _frameData;
         private int _inputLimit;
         private readonly int[] _movePattern = {-1,0,-1}; //Dash uses X-axis only
         private readonly bool[] _patternMatch = {false, false, false};
@@ -15,15 +12,15 @@ namespace GamePlayScripts.CharacterMoves
         
         public override void InitializeMove(ref CharacterProperties properties, Animator animator)
         {
-            _animator = animator;
-            _properties = properties;
+            Animator = animator;
+            Properties = properties;
             _lastMove = -1;
             _moveDetectCounter = 0;
             _inputLimit = 15;
-            _frameData = new FrameDataHandler(30);
-            _frameData.SetFieldsZero();
-            _frameData.SetAttackFrames(3,24);
-            _frameData.SetAirborneFrames(0,20);
+            FrameData = new FrameDataHandler(30);
+            FrameData.SetFieldsZero();
+            FrameData.SetAttackFrames(3,24);
+            FrameData.SetAirborneFrames(0,20);
             //_properties.BackDashDuration = AttackStateFrames.Length;
         }
 
@@ -71,30 +68,31 @@ namespace GamePlayScripts.CharacterMoves
         public override void PerformAction(InputClass inputClass)
         {
                 //Play out BackDash animation
-                if (_properties.CurrentState == CharacterProperties.CharacterState.BackDash)
+                if (Properties.CurrentState == CharacterProperties.CharacterState.BackDash)
                 {
-                    _properties.DashFrameCounter++;
-                    if (_frameData.AttackFrameState[_properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Startup)
-                        _properties.MoveDirection.x = -_properties.DashBackwardXSpeed[1];
-                    else if (_frameData.AttackFrameState[_properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Active)
-                        _properties.MoveDirection.x = -_properties.DashBackwardXSpeed[2];
-                    else if (_frameData.AttackFrameState[_properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Recovery)
+                    Properties.DashFrameCounter++;
+                    if (FrameData.AttackFrameState[Properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Startup)
+                        Properties.MoveDirection.x = -Properties.DashBackwardXSpeed[1];
+                    else if (FrameData.AttackFrameState[Properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Active)
+                        Properties.MoveDirection.x = -Properties.DashBackwardXSpeed[2];
+                    else if (FrameData.AttackFrameState[Properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Recovery)
                     {
-                        _properties.MoveDirection.x = 0;
-                        _properties.CurrentState = CharacterProperties.CharacterState.Stand;
+                        Properties.MoveDirection.x = 0;
+                        Properties.CurrentState = CharacterProperties.CharacterState.Stand;
                     }
 
-                    _frameData.Update(_properties.DashFrameCounter);
+                    FrameData.Update(Properties.DashFrameCounter);
                 }
+                
                 
                 //Begin Dash Detection
                 if (!DetectMoveInput(inputClass)) return;
-                if (_properties.CurrentState != CharacterProperties.CharacterState.Stand) return;
-                _animator.Play("DashBackward");
-                _properties.DashFrameCounter = 0;
-                _properties.LastState = _properties.CurrentState;
-                _properties.CurrentState = CharacterProperties.CharacterState.BackDash;
-                _properties.MoveDirection = new Vector3(-_properties.DashBackwardXSpeed[0], 0, 0);
+                if (Properties.CurrentState != CharacterProperties.CharacterState.Stand) return;
+                Animator.Play("DashBackward");
+                Properties.DashFrameCounter = 0;
+                Properties.LastState = Properties.CurrentState;
+                Properties.CurrentState = CharacterProperties.CharacterState.BackDash;
+                Properties.MoveDirection = new Vector3(-Properties.DashBackwardXSpeed[0], 0, 0);
             }
         
     }

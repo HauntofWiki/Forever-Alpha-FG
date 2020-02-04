@@ -4,41 +4,18 @@ namespace GamePlayScripts.CharacterMoves
 {
     public class MoveJumpNeutral : CharacterMove
     {
-        private CharacterProperties _properties;
-        private Animator _animator;
-        
-        //Tracks invincibility States per frame.
-        //0:None, 1:Full, 2:UpperBody, 3:LowerBody 4:throw
-        public int[] InvincibilyFrames =
-        {
-            4,4,4,0,0,0
-        };
-        
-        //Tracks attack properties of the move per frame.
-        //0:StartUp, 1:Active, 2:Recovery 3:End
-        public int[] AttackStateFrames =
-        {
-            0,0,0,1,2,2,2,3
-        };
-        
-        //Tracks Cancellable states of the move per frame.
-        //0:None, 1:EmptyCancel, 2:NormalCancel, 3:SpecialCancel, 4:SuperCancel
-        public int[] Cancellability =
-        {
-            0
-        };
-        
-        //Tracks Airborne State of move per frame
-        //0: No, 1:Yes
-        public int[] AirborneState =
-        {
-            0,0,0,1,0,0,0
-        };
+        //private CharacterProperties _properties;
+
 
         public override void InitializeMove(ref CharacterProperties properties, Animator animator)
         {
-            _animator = animator;
-            _properties = properties;
+            Animator = animator;
+            Properties = properties;
+            FrameData = new FrameDataHandler(7);
+            FrameData.SetFieldsZero();
+            //For jumps length isnt important to how they function
+            FrameData.SetAttackFrames(3, 1);
+            FrameData.SetAirborneFrames(0, 6);
         }
 
         public override bool DetectMoveInput(InputClass inputClass)
@@ -53,49 +30,60 @@ namespace GamePlayScripts.CharacterMoves
 
         public override void PerformAction(InputClass inputClass)
         {
-            //Use Character controller to determine if animation have reached the ground
-            if (_properties.CurrentState == CharacterProperties.CharacterState.Jump && _properties.CharacterController.isGrounded && AttackStateFrames[_properties.JumpFrameCounter] != 0)
+            //Advance Jump Frame Counter and assess Startup/Recovery
+            if (Properties.CurrentState == CharacterProperties.CharacterState.Jump && 
+                FrameData.AttackFrameState[Properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Startup)
             {
-                _properties.JumpFrameCounter++;
-                _properties.LastState = _properties.CurrentState;
-                _properties.CurrentState = CharacterProperties.CharacterState.Landing; 
+                if (FrameData.AttackFrameState[Properties.JumpFrameCounter] ==
+                    FrameDataHandler.AttackFrameStates.Startup)
+                {
+                    Properties.JumpFrameCounter++;
+                    FrameData.Update(Properties.JumpFrameCounter);
+                    return;
+                }
+
+                if (FrameData.AttackFrameState[Properties.JumpFrameCounter] ==
+                    FrameDataHandler.AttackFrameStates.Active)
+                {
+                    Properties.JumpFrameCounter++;
+                    Properties.LastState = Properties.CurrentState;
+                    Properties.IsAirborne = true;
+                    Properties.MoveDirection = new Vector3(0, Properties.JumpYSpeed, 0);
+                }
             }
             
-            //Advance Jump Frame Counter and assess Startup/Recovery
-            if (_properties.CurrentState == CharacterProperties.CharacterState.Jump && AttackStateFrames[_properties.JumpFrameCounter] == 0)
+            //Use Character controller to determine if animation has reached the ground
+            if (Properties.CurrentState == CharacterProperties.CharacterState.Jump &&
+                Properties.CharacterController.isGrounded &
+                FrameData.AttackFrameState[Properties.JumpFrameCounter] != FrameDataHandler.AttackFrameStates.Startup)
             {
-                _properties.JumpFrameCounter++;
-                if (AttackStateFrames[_properties.JumpFrameCounter] == 0)
-                    return;
-                if (AttackStateFrames[_properties.JumpFrameCounter] == 1)
+                Properties.JumpFrameCounter++;
+                Properties.LastState = Properties.CurrentState;
+                Properties.CurrentState = CharacterProperties.CharacterState.Landing;
+                FrameData.Update(Properties.JumpFrameCounter);
+            }
+
+            if (Properties.CurrentState == CharacterProperties.CharacterState.Landing)
+            {
+                Properties.JumpFrameCounter++;
+                if (FrameData.AttackFrameState[Properties.JumpFrameCounter] !=
+                    FrameDataHandler.AttackFrameStates.Recovery)
                 {
-                    _properties.IsAirborne = true;    
-                    _properties.MoveDirection = new Vector3(0,_properties.JumpYSpeed,0);
+                    Properties.JumpFrameCounter = 0;
+                    Properties.LastState = Properties.CurrentState;
+                    Properties.IsAirborne = false;
+                    Properties.CurrentState = CharacterProperties.CharacterState.Stand;
                 }
             }
 
-            if (_properties.CurrentState == CharacterProperties.CharacterState.Landing)
-            {
-                _properties.JumpFrameCounter++;
-                if (AttackStateFrames[_properties.JumpFrameCounter] == 3)
-                {
-                    _properties.JumpFrameCounter = 0;
-                    _properties.LastState = _properties.CurrentState;
-                    _properties.IsAirborne = false;
-                    _properties.CurrentState = CharacterProperties.CharacterState.Stand;
-                }
-            }
-
-            if (_properties.CurrentState == CharacterProperties.CharacterState.Jump && AttackStateFrames[_properties.JumpFrameCounter] == 1)
-                return;
-        
-            //Detect proper state and detect input
             if (!DetectMoveInput(inputClass)) return;
-            if (_properties.CurrentState != CharacterProperties.CharacterState.Crouch && _properties.CurrentState != CharacterProperties.CharacterState.Stand && _properties.CurrentState != CharacterProperties.CharacterState.CancellableAnimation) return;
+            if (Properties.CurrentState != CharacterProperties.CharacterState.Crouch &&
+                Properties.CurrentState != CharacterProperties.CharacterState.Stand && Properties.CurrentState !=
+                CharacterProperties.CharacterState.CancellableAnimation) return;
 
-            _properties.JumpFrameCounter = 0;
-            _properties.LastState = _properties.CurrentState;
-            _properties.CurrentState = CharacterProperties.CharacterState.Jump;
+            Properties.JumpFrameCounter = 0;
+            Properties.LastState = Properties.CurrentState;
+            Properties.CurrentState = CharacterProperties.CharacterState.Jump;
         }
     }
 }

@@ -4,9 +4,6 @@ namespace GamePlayScripts.CharacterMoves
 {
     public class MoveAirDashForward : CharacterMove
     {
-        private CharacterProperties _properties;
-        private Animator _animator;
-        private FrameDataHandler _frameData;
         private int _inputLimit;
         private readonly int[] _movePattern = {1,0,1}; //Dash uses X-axis only
         private readonly bool[] _patternMatch = {false, false, false};
@@ -43,14 +40,14 @@ namespace GamePlayScripts.CharacterMoves
 
         public override void InitializeMove(ref CharacterProperties properties, Animator animator)
         {
-            _animator = animator;
-            _properties = properties;
+            Animator = animator;
+            Properties = properties;
             _lastInput = -1;
             _moveDetectCounter = 0;
             _inputLimit = 15;
-            _frameData = new FrameDataHandler(18);
-            _frameData.SetFieldsZero();
-            _frameData.SetAttackFrames(3, 11);
+            FrameData = new FrameDataHandler(18);
+            FrameData.SetFieldsZero();
+            FrameData.SetAttackFrames(3, 11);
             
             
            // _properties.AirDashDuration = AttackStateFrames.Length;
@@ -58,7 +55,7 @@ namespace GamePlayScripts.CharacterMoves
 
         public override bool DetectMoveInput(InputClass inputClass)
         {
-            if (!_properties.IsAirborne) return false;
+            if (!Properties.IsAirborne) return false;
             _moveDetectCounter++;
         
             //Check the limit of how many frames are available to input the move
@@ -111,37 +108,37 @@ namespace GamePlayScripts.CharacterMoves
         public override void PerformAction(InputClass inputClass)
         {
             //Play out AirDash Duration
-		    if (_properties.CurrentState == CharacterProperties.CharacterState.AirDash)
+		    if (Properties.CurrentState == CharacterProperties.CharacterState.AirDash)
             {
-                _properties.LastState = _properties.CurrentState;
-                _properties.DashFrameCounter++;
-                if (_frameData.AttackFrameState[_properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Startup)
-                    _properties.MoveDirection = new Vector3(_properties.AirDashForwardSpeed[0],0,0);
-			    if (_frameData.AttackFrameState[_properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Active)
-                    _properties.MoveDirection = new Vector3(_properties.AirDashForwardSpeed[1],0,0);
-                if (_frameData.AttackFrameState[_properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Recovery)
+                Properties.LastState = Properties.CurrentState;
+                Properties.DashFrameCounter++;
+                if (FrameData.AttackFrameState[Properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Startup)
+                    Properties.MoveDirection = new Vector3(Properties.AirDashForwardSpeed[0],0,0);
+			    if (FrameData.AttackFrameState[Properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Active)
+                    Properties.MoveDirection = new Vector3(Properties.AirDashForwardSpeed[1],0,0);
+                if (FrameData.AttackFrameState[Properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Recovery)
                 {
                     //Exit the dash state
-                    _properties.LastState = _properties.CurrentState;
-                    _properties.CurrentState = CharacterProperties.CharacterState.JumpForward;
-                    _properties.DashFrameCounter = 0;
-                    _properties.IsIgnoringGravity = false;
+                    Properties.LastState = Properties.CurrentState;
+                    Properties.CurrentState = CharacterProperties.CharacterState.JumpForward;
+                    Properties.DashFrameCounter = 0;
+                    Properties.IsIgnoringGravity = false;
                 }
                 
-                _frameData.Update(_properties.AttackFrameCounter);
+                FrameData.Update(Properties.AttackFrameCounter);
             }
             
             
             
             //Begin AirDash Detection
             if (!DetectMoveInput(inputClass)) return;
-            if (_properties.CurrentState == CharacterProperties.CharacterState.Stand) return;
-            _animator.Play("AirDashForward");
-            _properties.DashFrameCounter = 0;
-            _properties.LastState = _properties.CurrentState;
-            _properties.CurrentState = CharacterProperties.CharacterState.AirDash;
-            _properties.IsIgnoringGravity = true;
-            _properties.MoveDirection = new Vector3(_properties.AirDashForwardSpeed[0],0,0);
+            if (Properties.CurrentState == CharacterProperties.CharacterState.Stand) return;
+            Animator.Play("AirDashForward");
+            Properties.DashFrameCounter = 0;
+            Properties.LastState = Properties.CurrentState;
+            Properties.CurrentState = CharacterProperties.CharacterState.AirDash;
+            Properties.IsIgnoringGravity = true;
+            Properties.MoveDirection = new Vector3(Properties.AirDashForwardSpeed[0],0,0);
         }
     }
 }

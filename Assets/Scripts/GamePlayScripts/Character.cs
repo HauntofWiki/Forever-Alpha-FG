@@ -34,7 +34,6 @@ namespace GamePlayScripts
         private CharacterMove _moveJumpBackward;
         private CharacterMove _moveDashForward;
         private CharacterMove _moveDashBackward;
-        private CharacterMove _moveSpecialForward;
         private CharacterMove _moveAirDashForward;
         private CharacterMove _moveLightAttack;
 
@@ -93,7 +92,6 @@ namespace GamePlayScripts
             _characterMoves.Add(new MoveJumpNeutral());
             _characterMoves.Add(new MoveDashForward());
             _characterMoves.Add(new MoveDashBackward());
-            _characterMoves.Add(new MoveSpecialForward());
             _characterMoves.Add(new MoveAirDashForward());
             _characterMoves.Add(new MoveLightAttack());
             _characterMoves.Add(new MoveMediumAttack());
