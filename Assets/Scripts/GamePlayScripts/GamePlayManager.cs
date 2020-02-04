@@ -21,8 +21,6 @@ namespace GamePlayScripts
         public Character player2Character;
         public InputManager player1InputManager;
         public InputManager player2InputManager;
-        public CollisionInformation Player1CollisionInformation;
-        public CollisionInformation Player2CollisionInformation;
         public float player1CurrentHealth;
         public float player2CurrentHealth;
         public float player1MaxHealth;

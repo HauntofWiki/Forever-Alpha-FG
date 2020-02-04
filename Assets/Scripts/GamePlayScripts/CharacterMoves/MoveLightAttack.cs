@@ -5,15 +5,11 @@ namespace GamePlayScripts.CharacterMoves
 {
     public class MoveLightAttack : CharacterMove
     {
-        private CharacterProperties _properties;
-        private Animator _animator;
-        private FrameDataHandler _frameData;
-
         public override void InitializeMove(ref CharacterProperties properties, Animator animator)
         {
-            _animator = animator;
-            _properties = properties;
-            _frameData = new FrameDataHandler(15)
+            Animator = animator;
+            Properties = properties;
+            FrameData = new FrameDataHandler(15)
             {
                 Damage = 35.0f,
                 Dizzy = 10.0f,
@@ -23,8 +19,8 @@ namespace GamePlayScripts.CharacterMoves
                 PushBack = -5f
             };
 
-            _frameData.SetAttackFrames(3, 4);
-            _frameData.SetCancellableFrames(2, 12, FrameDataHandler.CancellabilityStates.Normal);
+            FrameData.SetAttackFrames(3, 4);
+            FrameData.SetCancellableFrames(2, 12, FrameDataHandler.CancellabilityStates.Normal);
         }
 
         public override bool DetectMoveInput(InputClass inputClass)
@@ -40,64 +36,64 @@ namespace GamePlayScripts.CharacterMoves
         public override void PerformAction(InputClass inputClass)
         {
             //Detect input
-            if (_properties.CurrentState == CharacterProperties.CharacterState.Stand && DetectMoveInput(inputClass))
+            if (Properties.CurrentState == CharacterProperties.CharacterState.Stand && DetectMoveInput(inputClass))
             {
                 //Attack while no other attacks are active
-                if (_properties.AttackState == CharacterProperties.AttackStates.None)
+                if (Properties.AttackState == CharacterProperties.AttackStates.None)
                 {
-                    _properties.AttackFrameCounter = 0;
-                    _animator.Play("LightAttack");
-                    _properties.AttackState = CharacterProperties.AttackStates.LightAttack;
-                    _properties.Collided = false;
-                    _properties.FrameDataHandler = _frameData;
+                    Properties.AttackFrameCounter = 0;
+                    Animator.Play("LightAttack");
+                    Properties.AttackState = CharacterProperties.AttackStates.LightAttack;
+                    Properties.Collided = false;
+                    Properties.FrameDataHandler = FrameData;
                 }
                 
                 //Detect LightAttack Normal Cancelled into itself
-                if (_properties.CurrentState == CharacterProperties.CharacterState.Stand &&
+                if (Properties.CurrentState == CharacterProperties.CharacterState.Stand &&
                     DetectMoveInput(inputClass))
                 {
-                    if(_properties.AttackState == CharacterProperties.AttackStates.LightAttack && _properties.Collided)
-                        if (_frameData.Cancellable == FrameDataHandler.CancellabilityStates.Normal)
+                    if(Properties.AttackState == CharacterProperties.AttackStates.LightAttack && Properties.Collided)
+                        if (FrameData.Cancellable == FrameDataHandler.CancellabilityStates.Normal)
                         {
-                            _properties.AttackFrameCounter = 0;
-                            _animator.Play("LightAttack");
-                            _properties.AttackState = CharacterProperties.AttackStates.LightAttack;
-                            _properties.Collided = false;
-                            _properties.FrameDataHandler = _frameData;
+                            Properties.AttackFrameCounter = 0;
+                            Animator.Play("LightAttack");
+                            Properties.AttackState = CharacterProperties.AttackStates.LightAttack;
+                            Properties.Collided = false;
+                            Properties.FrameDataHandler = FrameData;
                         }
                 }
             }
 
             //Play out animation and frame information per frame
-            if (_properties.AttackState == CharacterProperties.AttackStates.LightAttack)
+            if (Properties.AttackState == CharacterProperties.AttackStates.LightAttack)
             {
                 //Startup
-                if (_frameData.AttackState == FrameDataHandler.AttackFrameStates.Startup)
+                if (FrameData.AttackState == FrameDataHandler.AttackFrameStates.Startup)
                 {
-                    _properties.LocalHitBoxActive = false;
-                    _properties.AttackFrameCounter++;
+                    Properties.LocalHitBoxActive = false;
+                    Properties.AttackFrameCounter++;
                 }
                 //Active
-                if (_frameData.AttackState == FrameDataHandler.AttackFrameStates.Active)
+                if (FrameData.AttackState == FrameDataHandler.AttackFrameStates.Active)
                 {
-                    _properties.LocalHitBoxActive = true;
-                    _properties.AttackFrameCounter++;
+                    Properties.LocalHitBoxActive = true;
+                    Properties.AttackFrameCounter++;
                 }
                 //Recovery
-                if (_frameData.AttackState == FrameDataHandler.AttackFrameStates.Recovery)
+                if (FrameData.AttackState == FrameDataHandler.AttackFrameStates.Recovery)
                 {
-                    _properties.Collided = false;
-                    _properties.LocalHitBoxActive = false;
-                    _properties.AttackFrameCounter++;
+                    Properties.Collided = false;
+                    Properties.LocalHitBoxActive = false;
+                    Properties.AttackFrameCounter++;
                 }
                 
                 //Exit Move
-                if (_properties.AttackFrameCounter >= _frameData.Length)
+                if (Properties.AttackFrameCounter >= FrameData.Length)
                 {
-                    _properties.AttackState = CharacterProperties.AttackStates.None;
+                    Properties.AttackState = CharacterProperties.AttackStates.None;
                 }
                 
-                _frameData.Update(_properties.AttackFrameCounter);
+                FrameData.Update(Properties.AttackFrameCounter);
             }
         }
     }

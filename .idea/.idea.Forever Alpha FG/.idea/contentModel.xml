@@ -15,7 +15,6 @@
             <e p="CharacterControllerScript.cs" t="Include" />
             <e p="CharacterMoves" t="Include">
               <e p="CharacterMove.cs" t="Include" />
-              <e p="CharacterProperties.cs" t="Include" />
               <e p="FrameDataHandler.cs" t="Include" />
               <e p="MoveAirDashForward.cs" t="Include" />
               <e p="MoveDashBackward.cs" t="Include" />
@@ -25,12 +24,11 @@
               <e p="MoveJumpNeutral.cs" t="Include" />
               <e p="MoveLightAttack.cs" t="Include" />
               <e p="MoveMediumAttack.cs" t="Include" />
-              <e p="MoveShoryuken.cs" t="Include" />
-              <e p="MoveSpecialForward.cs" t="Include" />
               <e p="MoveStandIdle.cs" t="Include" />
               <e p="MoveWalkBackward.cs" t="Include" />
               <e p="MoveWalkForward.cs" t="Include" />
             </e>
+            <e p="CharacterProperties.cs" t="Include" />
             <e p="CollisionBoxProperties.cs" t="Include" />
             <e p="CollisionInformation.cs" t="Include" />
             <e p="GamePlayManager.cs" t="Include" />
