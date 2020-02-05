@@ -19,7 +19,7 @@ namespace GamePlayScripts.CharacterMoves
             _inputLimit = 15;
             FrameData = new FrameDataHandler(30);
             FrameData.SetFieldsZero();
-            FrameData.SetAttackFrames(3,24);
+            FrameData.SetActionFrames(3,24);
             FrameData.SetAirborneFrames(0,20);
             //_properties.BackDashDuration = AttackStateFrames.Length;
         }
@@ -71,11 +71,11 @@ namespace GamePlayScripts.CharacterMoves
                 if (Properties.CurrentState == CharacterProperties.CharacterState.BackDash)
                 {
                     Properties.DashFrameCounter++;
-                    if (FrameData.AttackFrameState[Properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Startup)
+                    if (FrameData.ActionFrameState[Properties.DashFrameCounter] == FrameDataHandler.ActionFrameStates.Startup)
                         Properties.MoveDirection.x = -Properties.DashBackwardXSpeed[1];
-                    else if (FrameData.AttackFrameState[Properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Active)
+                    else if (FrameData.ActionFrameState[Properties.DashFrameCounter] == FrameDataHandler.ActionFrameStates.Active)
                         Properties.MoveDirection.x = -Properties.DashBackwardXSpeed[2];
-                    else if (FrameData.AttackFrameState[Properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Recovery)
+                    else if (FrameData.ActionFrameState[Properties.DashFrameCounter] == FrameDataHandler.ActionFrameStates.Recovery)
                     {
                         Properties.MoveDirection.x = 0;
                         Properties.CurrentState = CharacterProperties.CharacterState.Stand;

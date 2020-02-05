@@ -47,7 +47,7 @@ namespace GamePlayScripts.CharacterMoves
             _inputLimit = 15;
             FrameData = new FrameDataHandler(18);
             FrameData.SetFieldsZero();
-            FrameData.SetAttackFrames(3, 11);
+            FrameData.SetActionFrames(3, 11);
             
             
            // _properties.AirDashDuration = AttackStateFrames.Length;
@@ -112,11 +112,11 @@ namespace GamePlayScripts.CharacterMoves
             {
                 Properties.LastState = Properties.CurrentState;
                 Properties.DashFrameCounter++;
-                if (FrameData.AttackFrameState[Properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Startup)
+                if (FrameData.ActionFrameState[Properties.DashFrameCounter] == FrameDataHandler.ActionFrameStates.Startup)
                     Properties.MoveDirection = new Vector3(Properties.AirDashForwardSpeed[0],0,0);
-			    if (FrameData.AttackFrameState[Properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Active)
+			    if (FrameData.ActionFrameState[Properties.DashFrameCounter] == FrameDataHandler.ActionFrameStates.Active)
                     Properties.MoveDirection = new Vector3(Properties.AirDashForwardSpeed[1],0,0);
-                if (FrameData.AttackFrameState[Properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Recovery)
+                if (FrameData.ActionFrameState[Properties.DashFrameCounter] == FrameDataHandler.ActionFrameStates.Recovery)
                 {
                     //Exit the dash state
                     Properties.LastState = Properties.CurrentState;

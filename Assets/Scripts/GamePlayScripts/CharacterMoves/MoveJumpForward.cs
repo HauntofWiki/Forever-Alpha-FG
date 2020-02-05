@@ -12,7 +12,7 @@ namespace GamePlayScripts.CharacterMoves
             FrameData = new FrameDataHandler(7);
             FrameData.SetFieldsZero();
             //For jumps length isnt important to how they function
-            FrameData.SetAttackFrames(3, 1);
+            FrameData.SetActionFrames(3, 1);
             FrameData.SetAirborneFrames(0, 6);
         }
 
@@ -28,69 +28,77 @@ namespace GamePlayScripts.CharacterMoves
 
          public override void PerformAction(InputClass inputClass)
         {
-            //Advance Jump Frame Counter and assess Startup/Recovery
-            if (Properties.CurrentState == CharacterProperties.CharacterState.JumpForward && 
-                FrameData.AttackFrameState[Properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Startup)
+            //Detect initial input, set state and reset counter.
+            if (DetectMoveInput(inputClass))
             {
-                if (FrameData.AttackFrameState[Properties.JumpFrameCounter] ==
-                    FrameDataHandler.AttackFrameStates.Startup)
+                if (Properties.CurrentState == CharacterProperties.CharacterState.Stand ||
+                    Properties.CurrentState == CharacterProperties.CharacterState.Crouch)
                 {
-                    Properties.JumpFrameCounter++;
-                    FrameData.Update(Properties.JumpFrameCounter);
-                    return;
-                }
-
-                if (FrameData.AttackFrameState[Properties.JumpFrameCounter] ==
-                    FrameDataHandler.AttackFrameStates.Active)
-                {
-                    Properties.JumpFrameCounter++;
-                    Properties.LastState = Properties.CurrentState;
-                    Properties.IsAirborne = true;
-                    Properties.MoveDirection = new Vector3(Properties.WalkForwardXSpeed, Properties.JumpYSpeed, 0);
-                    return;
+                    if (Properties.IsGrounded)
+                    {
+                        ActionCounter = 0;
+                        FrameData.Update(ActionCounter);
+                        Properties.LastState = Properties.CurrentState;
+                        Properties.CurrentState = CharacterProperties.CharacterState.JumpForward;
+                        Properties.IsAirborne = FrameData.Airborne;
+                        Properties.FrameDataHandler = FrameData;
+                        return;
+                    }
                 }
             }
-            
-            //Continue to apply forward motion until landing
+
+            //Play out jump according to frame data.
             if (Properties.CurrentState == CharacterProperties.CharacterState.JumpForward)
             {
-                Debug.Log(Properties.MoveDirection.x);
-                Properties.MoveDirection.x = Properties.WalkForwardXSpeed;
+                //In the start up of the jump there is no movement, only frame advancement
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Startup)
+                {
+                    FrameData.Update(ActionCounter++);
+                    return;
+                }
+                //Perform Jump animation
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Active)
+                {
+                    FrameData.Update(ActionCounter++);
+                    Properties.MoveDirection = new Vector3(Properties.WalkForwardXSpeed, Properties.JumpYSpeed, 0);
+                    Animator.Play("JumpForward");
+                    return;
+                }
+                
+                //Continue forward momentum after jump starts
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Recovery)
+                {
+                    //Continue forward momentum after jump starts
+                    if (!Properties.IsGrounded)
+                    {
+                        FrameData.Update(ActionCounter);
+                        Properties.MoveDirection.x = Properties.WalkForwardXSpeed;
+                        return;
+                    }
+                    //Once grounded, begin recovery portion of the jump
+                    if (Properties.IsGrounded)
+                    {
+                        FrameData.Update(ActionCounter++);
+                        Properties.CurrentState = CharacterProperties.CharacterState.LandingJumpForward;
+                        return;
+                    }
+                }
             }
-            
-            //Use Character controller to determine if animation has reached the ground
-            if (Properties.CurrentState == CharacterProperties.CharacterState.JumpForward &&
-                Properties.CharacterController.isGrounded &
-                FrameData.AttackFrameState[Properties.JumpFrameCounter] != FrameDataHandler.AttackFrameStates.Startup)
-            {
-                Properties.JumpFrameCounter++;
-                Properties.LastState = Properties.CurrentState;
-                Properties.CurrentState = CharacterProperties.CharacterState.LandingJumpForward;
-                FrameData.Update(Properties.JumpFrameCounter);
-            }
-            
+            //Play out recovery
             if (Properties.CurrentState == CharacterProperties.CharacterState.LandingJumpForward)
             {
-                Properties.JumpFrameCounter++;
-                if (FrameData.AttackFrameState[Properties.JumpFrameCounter] !=
-                    FrameDataHandler.AttackFrameStates.Recovery)
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Recovery)
                 {
-                    Properties.JumpFrameCounter = 0;
-                    Properties.LastState = Properties.CurrentState;
-                    Properties.IsAirborne = false;
+                    FrameData.Update(ActionCounter++);
+                    return;
+                }
+                //Exit Jump state
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.None)
+                {
+                    ActionCounter = 0;
                     Properties.CurrentState = CharacterProperties.CharacterState.Stand;
                 }
             }
-            
-            //Detect proper state and detect input
-            if (!DetectMoveInput(inputClass)) return;
-            if (Properties.CurrentState != CharacterProperties.CharacterState.Crouch &&
-                Properties.CurrentState != CharacterProperties.CharacterState.Stand && Properties.CurrentState !=
-                CharacterProperties.CharacterState.CancellableAnimation) return;
-            Animator.Play("JumpForward");
-            Properties.JumpFrameCounter = 0;
-            Properties.LastState = Properties.CurrentState;
-            Properties.CurrentState = CharacterProperties.CharacterState.JumpForward;
         }
     }
 }

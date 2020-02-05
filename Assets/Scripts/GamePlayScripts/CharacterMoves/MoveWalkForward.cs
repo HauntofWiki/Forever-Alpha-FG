@@ -26,7 +26,7 @@ namespace GamePlayScripts.CharacterMoves
         {
             if (!DetectMoveInput(inputClass)) return;
             if (_properties.CurrentState != CharacterProperties.CharacterState.Crouch && _properties.CurrentState != CharacterProperties.CharacterState.Stand) return;
-            Debug.Log("WALK");
+            //Debug.Log("WALK");
             _animator.Play("WalkForward");
             _properties.LastState = _properties.CurrentState;
             _properties.CurrentState = CharacterProperties.CharacterState.Stand;

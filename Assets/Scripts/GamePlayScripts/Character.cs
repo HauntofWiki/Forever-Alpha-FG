@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using GamePlayScripts.CharacterMoves;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace GamePlayScripts
 {
@@ -50,13 +51,13 @@ namespace GamePlayScripts
             {
                 MaxHealth = 1000,
                 CurrentHealth = 1000,
-                WalkForwardXSpeed = .05f,
-                WalkBackwardXSpeed = .05f,
-                JumpYSpeed = 1.0f,
-                PersonalGravity = 24.0f,
-                DashForwardXSpeed = new float[] {.1f, .2f, .05f},
-                AirDashForwardSpeed = new float[] {2.0f, 2.0f},
-                DashBackwardXSpeed = new float[] {.15f, .5f, .1f},
+                WalkForwardXSpeed = 3.5f,
+                WalkBackwardXSpeed = 3.25f,
+                JumpYSpeed = 8f,
+                PersonalGravity = 15f,
+                DashForwardXSpeed = new float[] {3f, 8f, 2f},
+                AirDashForwardSpeed = new float[] {8.0f, 4.0f},
+                DashBackwardXSpeed = new float[] {1f, 20f, 3f},
                 IsAirborne = false,
                 IsIgnoringGravity = false,
                 JumpFrameCounter = 0,
@@ -130,7 +131,7 @@ namespace GamePlayScripts
     
         private void ApplyMovement(int currentOrientation)
         {
-            if(!Properties.IsIgnoringGravity)
+            if(!Properties.IsIgnoringGravity && Properties.IsGrounded == false)
                 Properties.MoveDirection.y -= Properties.PersonalGravity * Time.deltaTime;
 /*
             //Keep character on the Z-Axis
@@ -138,17 +139,21 @@ namespace GamePlayScripts
                 Properties.MoveDirection.z = (0 - _controller.transform.position.z); */
             
             Properties.MoveDirection.x *= currentOrientation;
+
+            if (_characterObject.transform.position.y < .01)
+            {
+                if (_characterObject.transform.position.y + Properties.MoveDirection.y <= 0)
+                {
+                    Properties.MoveDirection.y = 0 - _characterObject.transform.position.y;
+                }
+            }
+
+            _characterObject.transform.Translate(Properties.MoveDirection * Time.deltaTime,Space.World);
             
-            
-            var oldPosition = _characterObject.transform.position;
-            var newPosition = oldPosition + Properties.MoveDirection;
-            if (newPosition.y <= 0f) newPosition.y = 0f;
-            
-            //Debug.Log(oldPosition + ", " + newPosition);
-            _characterObject.transform.position = Vector3.Lerp(oldPosition,newPosition,1f);
-            //_controller.Move(Properties.MoveDirection * Time.deltaTime);
-            if (_characterObject.transform.position.y == 0)
+            if (_characterObject.transform.position.y < .01)
                 Properties.IsGrounded = true;
+            else
+                Properties.IsGrounded = false;
         }
 
         public bool DetectCollisions(List<HurtBox> hurtBoxes)
