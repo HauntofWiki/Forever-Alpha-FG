@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using GamePlayScripts;
 using GamePlayScripts.CharacterMoves;
 using UnityEngine;
 using UnityEngine.UI;

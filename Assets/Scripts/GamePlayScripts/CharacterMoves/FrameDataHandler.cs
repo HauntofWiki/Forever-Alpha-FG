@@ -5,7 +5,7 @@ namespace GamePlayScripts.CharacterMoves
 {
     public class FrameDataHandler
     {
-        public enum AttackFrameStates
+        public enum ActionFrameStates
         {
             None,
             Startup,
@@ -31,11 +31,11 @@ namespace GamePlayScripts.CharacterMoves
             Throw,
         }
 
-        public List<AttackFrameStates> AttackFrameState;
+        public List<ActionFrameStates> ActionFrameState;
         public List<CancellabilityStates> Cancellability;
         public List<InvincibilityStates> Invincibility;
         public List<bool> AirborneFrames;
-        public AttackFrameStates AttackState;
+        public ActionFrameStates ActionState;
         public CancellabilityStates Cancellable;
         public InvincibilityStates Invinsible;
         public bool Airborne;
@@ -51,7 +51,7 @@ namespace GamePlayScripts.CharacterMoves
         public FrameDataHandler(int length)
         {
             Length = length;
-            AttackFrameState = new List<AttackFrameStates>();
+            ActionFrameState = new List<ActionFrameStates>();
             Cancellability = new List<CancellabilityStates>();
             Invincibility = new List<InvincibilityStates>();
             AirborneFrames = new List<bool>();
@@ -59,7 +59,7 @@ namespace GamePlayScripts.CharacterMoves
             //initialize lists to be composed of 'None'
             for (var i = 0; i <= Length; i++)
             {
-                AttackFrameState.Add(AttackFrameStates.None);
+                ActionFrameState.Add(ActionFrameStates.None);
                 Cancellability.Add(CancellabilityStates.None);
                 Invincibility.Add(InvincibilityStates.None);
                 AirborneFrames.Add(false);
@@ -70,19 +70,19 @@ namespace GamePlayScripts.CharacterMoves
         {
             if (frameCounter > Length) return;
             
-            switch (AttackFrameState[frameCounter])
+            switch (ActionFrameState[frameCounter])
             {
-                case AttackFrameStates.Startup:
-                    AttackState = AttackFrameStates.Startup;
+                case ActionFrameStates.Startup:
+                    ActionState = ActionFrameStates.Startup;
                     break;
-                case AttackFrameStates.Active:
-                    AttackState = AttackFrameStates.Active;
+                case ActionFrameStates.Active:
+                    ActionState = ActionFrameStates.Active;
                     break;
-                case AttackFrameStates.Recovery:
-                    AttackState = AttackFrameStates.Recovery;
+                case ActionFrameStates.Recovery:
+                    ActionState = ActionFrameStates.Recovery;
                     break;
                 default:
-                    AttackState = AttackFrameStates.None;
+                    ActionState = ActionFrameStates.None;
                     break;
             }
 
@@ -127,17 +127,17 @@ namespace GamePlayScripts.CharacterMoves
         }
 
         //Everything that isnt startup or Active is considered recovery
-        public void SetAttackFrames(int startUpFrames, int activeFrames)
+        public void SetActionFrames(int startUpFrames, int activeFrames)
         {
             for (var i = 0; i < Length; i++)
             {
                 if (i < startUpFrames)
-                    AttackFrameState[i] = AttackFrameStates.Startup;
+                    ActionFrameState[i] = ActionFrameStates.Startup;
                 else if (i < (startUpFrames + activeFrames))
-                    AttackFrameState[i] = AttackFrameStates.Active;
+                    ActionFrameState[i] = ActionFrameStates.Active;
                 else if (i >= (startUpFrames + activeFrames))
-                    AttackFrameState[i] = AttackFrameStates.Recovery;
-                else AttackFrameState[i] = AttackFrameStates.None;
+                    ActionFrameState[i] = ActionFrameStates.Recovery;
+                else ActionFrameState[i] = ActionFrameStates.None;
             }
         }
 

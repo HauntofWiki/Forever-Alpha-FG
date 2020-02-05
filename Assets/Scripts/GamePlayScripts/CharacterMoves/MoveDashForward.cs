@@ -4,66 +4,55 @@ namespace GamePlayScripts.CharacterMoves
 {
     public class MoveDashForward : CharacterMove
     {
-        private readonly int _inputLimit;
-        private readonly int[] _movePattern = {1, 0, 1}; //Dash uses X-axis only
-        private readonly bool[] _patternMatch = {false, false, false};
-        private int _lastInput;
-        private int _moveDetectCounter;
-
-        public MoveDashForward()
-        {
-            _lastInput = -1;
-            _moveDetectCounter = 0;
-            _inputLimit = 15;
-            //Forward dash is special because length doesnt matter because you can hold the input
-            //Basically you just have input and recovery
-            FrameData = new FrameDataHandler(7);
-            FrameData.SetFieldsZero();
-            FrameData.SetAttackFrames(2,1);
-        }
-
         public override void InitializeMove(ref CharacterProperties properties, Animator animator)
         {
-            Animator = animator;
             Properties = properties;
+            Animator = animator;
+            //Forward dash is special because length doesnt matter because you can hold the input
+            //Basically you just have startup and recovery
+            FrameData = new FrameDataHandler(7);
+            FrameData.SetFieldsZero();
+            FrameData.SetActionFrames(3,1);
+            ActionCounter = 0;
+            LastInput = -1;
+            InputLimit = 15;
+            InputCounter = 0;
+            MovePattern = new int[] {1, 0, 1};
+            PatternMatch = new bool[] {false, false, false};
         }
 
         public override bool DetectMoveInput(InputClass inputClass)
         {
-            _moveDetectCounter++;
-
-            if (_moveDetectCounter >= _inputLimit)
+            //Input limit reached
+            if (InputCounter >= InputLimit)
                 ResetInputDetect();
 
-            if (_lastInput == inputClass.DPadNumPad)
+            //Repeated input return till next new input
+            if (LastInput == inputClass.DPadX)
                 return false;
-            if (inputClass.DPadX == _movePattern[0] && !_patternMatch[0])
+            //First input
+            if (inputClass.DPadX == MovePattern[0] && !PatternMatch[0])
             {
-                _moveDetectCounter = 0;
-                _patternMatch[0] = true;
+                InputCounter = 0;
+                PatternMatch[0] = true;
             }
-
-            if (inputClass.DPadX == _movePattern[1] && _patternMatch[0])
-                _patternMatch[1] = true;
-            if (inputClass.DPadX == _movePattern[2] && _patternMatch[1])
-                _patternMatch[2] = true;
-            if (_patternMatch[0] && _patternMatch[1] && _patternMatch[2])
+            //Second input
+            if (inputClass.DPadX == MovePattern[1] && PatternMatch[0])
+                PatternMatch[1] = true;
+            //Third input
+            if (inputClass.DPadX == MovePattern[2] && PatternMatch[1])
+                PatternMatch[2] = true;
+            //Pattern detected
+            if (PatternMatch[0] && PatternMatch[1] && PatternMatch[2])
             {
                 ResetInputDetect();
                 return true;
             }
 
-            _lastInput = inputClass.DPadNumPad;
+            //Prepare for next rep
+            InputCounter++;
+            LastInput = inputClass.DPadNumPad;
             return false;
-        }
-
-        private void ResetInputDetect()
-        {
-            _lastInput = -1;
-            _moveDetectCounter = 0;
-            _patternMatch[0] = false;
-            _patternMatch[1] = false;
-            _patternMatch[2] = false;
         }
 
         public override bool DetectHoldInput(InputClass inputClass)
@@ -73,39 +62,76 @@ namespace GamePlayScripts.CharacterMoves
 
         public override void PerformAction(InputClass inputClass)
         {
-
-            //Detect whether the Forward is held for a long dash
-            if (Properties.CurrentState == CharacterProperties.CharacterState.Dash &&
-                DetectHoldInput(inputClass) &&
-                FrameData.AttackFrameState[Properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Active)
+            Debug.Log(ActionCounter);
+            //Detect input and proper state
+            if (DetectMoveInput(inputClass))
             {
-                Properties.MoveDirection = new Vector3(Properties.DashForwardXSpeed[1],0, 0);
-                return;
+                if (Properties.CurrentState == CharacterProperties.CharacterState.Stand ||
+                    Properties.CurrentState == CharacterProperties.CharacterState.Crouch)
+                {
+                    //Start animation
+                    ActionCounter = 0;
+                    Animator.Play("DashForward");
+                    FrameData.Update(ActionCounter);
+                    Properties.FrameDataHandler = FrameData;
+                    Properties.LastState = Properties.CurrentState;
+                    Properties.CurrentState = CharacterProperties.CharacterState.Dash;
+                    return;
+                }
             }
-
+            
             //Play out dash animation
             if (Properties.CurrentState == CharacterProperties.CharacterState.Dash)
             {
-                Properties.DashFrameCounter++;
-                Properties.MoveDirection = new Vector3(Properties.DashForwardXSpeed[2],0, 0);
-                if (FrameData.AttackFrameState[Properties.DashFrameCounter] == FrameDataHandler.AttackFrameStates.Recovery)
+                //Move at startup speed
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Startup)
                 {
+                    FrameData.Update(ActionCounter++);
+                    Properties.MoveDirection = new Vector3(Properties.DashForwardXSpeed[0], 0, 0);
+                    return;
+                }
+
+                //Check for a held input for a long dash, do not advance ActionCounter
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Active)
+                {
+                    if (DetectHoldInput(inputClass))
+                    {
+                        Properties.LastState = Properties.CurrentState;
+                        Properties.MoveDirection = new Vector3(Properties.DashForwardXSpeed[1], 0, 0);
+                        return;
+                    }
+
+                    FrameData.Update(ActionCounter++);
+                }
+
+                //Recovery, this is also the minimum dash distance
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Recovery)
+                {
+                    FrameData.Update(ActionCounter++);
                     Animator.Play("DashForwardBrake");
+                    Properties.MoveDirection = new Vector3(Properties.DashForwardXSpeed[2], 0, 0);
+                    Properties.LastState = Properties.CurrentState;
+                    return;
+                }
+
+                //Exit Dash action
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.None)
+                {
                     Properties.LastState = Properties.CurrentState;
                     Properties.CurrentState = CharacterProperties.CharacterState.Stand;
                 }
-                FrameData.Update(Properties.DashFrameCounter);
             }
-            
-            //Begin Dash Detection
-            if (!DetectMoveInput(inputClass)) return;
-            if (Properties.CurrentState != CharacterProperties.CharacterState.Stand &&
-                Properties.CurrentState != CharacterProperties.CharacterState.Crouch) return;
-            Animator.Play("DashForward");
-            Properties.DashFrameCounter = 0;
-            Properties.LastState = Properties.CurrentState;
-            Properties.CurrentState = CharacterProperties.CharacterState.Dash;
-            Properties.MoveDirection = new Vector3(Properties.DashForwardXSpeed[0], 0, 0);
+        }
+        
+        private void ResetInputDetect()
+        {
+            LastInput = -1;
+            InputCounter = 0;
+            PatternMatch[0] = false;
+            PatternMatch[1] = false;
+            PatternMatch[2] = false;
         }
     }
+    
+    
 }

@@ -17,7 +17,7 @@ namespace GamePlayScripts.CharacterMoves
                 MeterGain = 10.0f,
                 PushBack = -5f
             };
-            FrameData.SetAttackFrames(6, 4);
+            FrameData.SetActionFrames(6, 4);
             FrameData.SetCancellableFrames(6, 20, FrameDataHandler.CancellabilityStates.Normal);
         }
 
@@ -66,19 +66,19 @@ namespace GamePlayScripts.CharacterMoves
             if (Properties.AttackState == CharacterProperties.AttackStates.MediumAttack)
             {
                 //Startup
-                if (FrameData.AttackState == FrameDataHandler.AttackFrameStates.Startup)
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Startup)
                 {
                     Properties.LocalHitBoxActive = false;
                     Properties.AttackFrameCounter++;
                 }
                 //Active
-                if (FrameData.AttackState == FrameDataHandler.AttackFrameStates.Active)
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Active)
                 {
                     Properties.LocalHitBoxActive = true;
                     Properties.AttackFrameCounter++;
                 }
                 //Recovery
-                if (FrameData.AttackState == FrameDataHandler.AttackFrameStates.Recovery)
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Recovery)
                 {
                     Properties.Collided = false;
                     Properties.LocalHitBoxActive = false;

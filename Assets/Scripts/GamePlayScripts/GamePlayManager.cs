@@ -42,7 +42,7 @@ namespace GamePlayScripts
             characterPrefab = Resources.Load("Prefabs/Characters/Player");
             player1Object = (GameObject) GameObject.Instantiate(characterPrefab);
             player1Object.name = "Player1";
-            player1Object.transform.position = new Vector3(-3, 5, 0);
+            player1Object.transform.position = new Vector3(-3, 0, 0);
             player1InputManager = new InputManager(1,Input.GetJoystickNames()[1]);//still hardcoded
             player1Character = new Character(player1Object, player1InputManager);
             
@@ -55,7 +55,7 @@ namespace GamePlayScripts
             characterPrefab = Resources.Load("Prefabs/Characters/Player");
             player2Object = (GameObject) GameObject.Instantiate(characterPrefab);
             player2Object.name = "Player2";
-            player2Object.transform.position = new Vector3(3, 5, 0);
+            player2Object.transform.position = new Vector3(3, 0, 0);
             player2InputManager = new InputManager(0,Input.GetJoystickNames()[0]);//still hardcoded
             player2Character = new Character(player2Object, player2InputManager);
             
@@ -84,9 +84,9 @@ namespace GamePlayScripts
         // Update is called once per frame
         void Update()
         {
-            
+            Debug.Log(player1Character.Properties.CurrentState + ", " + player1Character.Properties.FrameDataHandler.ActionState);
 
-            
+            //Update characters
             player1Character.Update();
             player2Character.Update();
 
