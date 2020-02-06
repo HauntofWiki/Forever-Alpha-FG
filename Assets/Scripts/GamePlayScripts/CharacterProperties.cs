@@ -15,9 +15,6 @@ namespace GamePlayScripts
         public float[] DashBackwardXSpeed;
         public float[] AirDashBackwardSpeed;
 
-        public int BackDashDuration;
-        public int AirDashDuration;
-
         public bool IsAirborne = false;
         public bool IsIgnoringGravity = false;
         public bool LocalHitBoxActive = false;
@@ -27,16 +24,11 @@ namespace GamePlayScripts
         public bool Collided = false;
     
         //Define frame tracking variables.
-        public int InputFrameCounter;
-        public int JumpFrameCounter;
-        public int DashFrameCounter;
         public int AttackFrameCounter;
         public int CharacterOrientation;
-        
-        
+
         //Vector3 which is used for moving the Character around;
         public Vector3 MoveDirection;
-        public CharacterController CharacterController;
 
         //Character tracking variables
         public float MaxHealth;
@@ -61,6 +53,7 @@ namespace GamePlayScripts
             Landing,
             LandingJumpForward,
             LandingJumpBackward,
+            LandingAirDashForward,
             Dash,
             BackDash,
             CancellableAnimation,

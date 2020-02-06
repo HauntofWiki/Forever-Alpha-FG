@@ -1,5 +1,6 @@
 ﻿using System.Transactions;
 using UnityEngine;
+using UnityEngine.Experimental.PlayerLoop;
 
 namespace GamePlayScripts.CharacterMoves
 {
@@ -28,6 +29,7 @@ namespace GamePlayScripts.CharacterMoves
 
          public override void PerformAction(InputClass inputClass)
         {
+            
             //Detect initial input, set state and reset counter.
             if (DetectMoveInput(inputClass))
             {
@@ -75,6 +77,7 @@ namespace GamePlayScripts.CharacterMoves
                         Properties.MoveDirection.x = Properties.WalkForwardXSpeed;
                         return;
                     }
+                    
                     //Once grounded, begin recovery portion of the jump
                     if (Properties.IsGrounded)
                     {
@@ -82,6 +85,13 @@ namespace GamePlayScripts.CharacterMoves
                         Properties.CurrentState = CharacterProperties.CharacterState.LandingJumpForward;
                         return;
                     }
+                }
+                //In some cases we recover out of an action into a JumpForward state where ActionState is none;
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.None)
+                {
+                    ActionCounter = 4;
+                    FrameData.Update(ActionCounter);
+                    Properties.MoveDirection.x = Properties.WalkForwardXSpeed;
                 }
             }
             //Play out recovery
