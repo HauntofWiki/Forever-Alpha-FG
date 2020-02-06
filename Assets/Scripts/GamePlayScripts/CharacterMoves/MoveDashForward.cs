@@ -62,7 +62,6 @@ namespace GamePlayScripts.CharacterMoves
 
         public override void PerformAction(InputClass inputClass)
         {
-            Debug.Log(ActionCounter);
             //Detect input and proper state
             if (DetectMoveInput(inputClass))
             {

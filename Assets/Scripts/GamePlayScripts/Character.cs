@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GamePlayScripts.CharacterMoves;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -55,13 +56,11 @@ namespace GamePlayScripts
                 WalkBackwardXSpeed = 3.25f,
                 JumpYSpeed = 8f,
                 PersonalGravity = 15f,
-                DashForwardXSpeed = new float[] {3f, 8f, 2f},
-                AirDashForwardSpeed = new float[] {8.0f, 4.0f},
-                DashBackwardXSpeed = new float[] {1f, 20f, 3f},
+                DashForwardXSpeed = new float[] {5f, 8f, 3f},
+                AirDashForwardSpeed = new float[] {15.0f, 8.0f},
+                DashBackwardXSpeed = new float[] {15f, 15f, 8f},
                 IsAirborne = false,
                 IsIgnoringGravity = false,
-                JumpFrameCounter = 0,
-                DashFrameCounter = 0,
                 AttackFrameCounter = 0,
                 MoveDirection = new Vector3(0,0,0),
                 CurrentState = CharacterProperties.CharacterState.Stand,
@@ -133,24 +132,37 @@ namespace GamePlayScripts
         {
             if(!Properties.IsIgnoringGravity && Properties.IsGrounded == false)
                 Properties.MoveDirection.y -= Properties.PersonalGravity * Time.deltaTime;
-/*
+
+            /*
             //Keep character on the Z-Axis
             if (_controller.transform.position.z != 0)
-                Properties.MoveDirection.z = (0 - _controller.transform.position.z); */
+                Properties.MoveDirection.z = (0 - _characterObject.transform.position.z);
+            */
             
             Properties.MoveDirection.x *= currentOrientation;
-
-            if (_characterObject.transform.position.y < .01)
+            
+            //Keep Object above equator
+            if (_characterObject.transform.position.y < Constants.FloorBuffer)
             {
-                if (_characterObject.transform.position.y + Properties.MoveDirection.y <= 0)
+                if (_characterObject.transform.position.y + Properties.MoveDirection.y <= Constants.Floor)
                 {
-                    Properties.MoveDirection.y = 0 - _characterObject.transform.position.y;
+                    Properties.MoveDirection.y = Constants.Floor - _characterObject.transform.position.y;
+                }
+            }
+            //Keep characters within max range of each other
+            if (Math.Abs(_characterObject.transform.position.x - _opponent.transform.position.x) >
+                Constants.MaxDistance - Constants.MaxDistanceBufferSize)
+            {
+                if (_characterObject.transform.position.x + Properties.MoveDirection.x <= Constants.MaxDistance)
+                {
+                    Properties.MoveDirection.x = Constants.MaxDistance - _characterObject.transform.position.x;
                 }
             }
 
             _characterObject.transform.Translate(Properties.MoveDirection * Time.deltaTime,Space.World);
             
-            if (_characterObject.transform.position.y < .01)
+            
+            if (_characterObject.transform.position.y < Constants.FloorBuffer)
                 Properties.IsGrounded = true;
             else
                 Properties.IsGrounded = false;
@@ -211,8 +223,8 @@ namespace GamePlayScripts
 
         private bool CanSwitchOrientation()
         {
-            //May want to add statuses or handle more elegantly
-            return (Properties.CurrentState != Properties.LastState && Properties.CurrentState != CharacterProperties.CharacterState.JumpForward );
+            //TODO: make a list for different states, i.e grounded is usually fine, but a forward dash under a player should not instantly turn around
+            return Properties.IsGrounded;
         }
 
         public CharacterProperties GetCharacterProperties()

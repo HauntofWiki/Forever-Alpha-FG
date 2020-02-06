@@ -1,63 +1,66 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace GamePlayScripts.CharacterMoves
 {
     public class MoveDashBackward : CharacterMove
     {
-        private int _inputLimit;
-        private readonly int[] _movePattern = {-1,0,-1}; //Dash uses X-axis only
-        private readonly bool[] _patternMatch = {false, false, false};
-        private int _lastMove;
-        private int _moveDetectCounter;
-        
         public override void InitializeMove(ref CharacterProperties properties, Animator animator)
         {
-            Animator = animator;
             Properties = properties;
-            _lastMove = -1;
-            _moveDetectCounter = 0;
-            _inputLimit = 15;
-            FrameData = new FrameDataHandler(30);
+            Animator = animator;
+            FrameData = new FrameDataHandler(12);
             FrameData.SetFieldsZero();
-            FrameData.SetActionFrames(3,24);
-            FrameData.SetAirborneFrames(0,20);
-            //_properties.BackDashDuration = AttackStateFrames.Length;
+            FrameData.SetActionFrames(3, 6);
+            FrameData.SetAirborneFrames(0, 20);
+            ActionCounter = 0;
+            LastInput = -1;
+            InputLimit = 15;
+            InputCounter = 0;
+            MovePattern = new int[] {-1, 0, -1};
+            PatternMatch = new bool[] {false, false, false,};
         }
 
         public override bool DetectMoveInput(InputClass inputClass)
         {
-            _moveDetectCounter++;
-        
-            if (_moveDetectCounter >= _inputLimit)
+            InputCounter++;
+            //Determine if it has been too long to input the command
+            if (InputCounter >= InputLimit)
                 ResetInputDetect();
-        
-            if (_lastMove == inputClass.DPadNumPad)
+
+            if (LastInput == inputClass.DPadNumPad)
                 return false;
-            if (inputClass.DPadX == _movePattern[0] && !_patternMatch[0])
+            //First Input, also resets input counter
+            if (inputClass.DPadX == MovePattern[0] && !PatternMatch[0])
             {
-                _moveDetectCounter = 0;
-                _patternMatch[0] = true;            
+                InputCounter = 0;
+                PatternMatch[0] = true;
             }
-            if (inputClass.DPadX == _movePattern[1] && _patternMatch[0])
-                _patternMatch[1] = true;
-            if (inputClass.DPadX == _movePattern[2] && _patternMatch[1])
-                _patternMatch[2] = true;
-            if (_patternMatch[0] && _patternMatch[1] && _patternMatch[2])
+
+            //Second Input
+            if (inputClass.DPadX == MovePattern[1] && PatternMatch[0])
+                PatternMatch[1] = true;
+            //Third input
+            if (inputClass.DPadX == MovePattern[2] && PatternMatch[1])
+                PatternMatch[2] = true;
+            //Match found
+            if (PatternMatch[0] && PatternMatch[1] && PatternMatch[2])
             {
                 ResetInputDetect();
                 return true;
             }
-            _lastMove = inputClass.DPadNumPad;
+
+            LastInput = inputClass.DPadNumPad;
             return false;
         }
 
         private void ResetInputDetect()
         {
-            _lastMove = -1;
-            _moveDetectCounter = 0;
-            _patternMatch[0] = false;
-            _patternMatch[1] = false;
-            _patternMatch[2] = false;
+            LastInput = -1;
+            InputCounter = 0;
+            PatternMatch[0] = false;
+            PatternMatch[1] = false;
+            PatternMatch[2] = false;
         }
 
         public override bool DetectHoldInput(InputClass inputClass)
@@ -67,33 +70,57 @@ namespace GamePlayScripts.CharacterMoves
 
         public override void PerformAction(InputClass inputClass)
         {
-                //Play out BackDash animation
-                if (Properties.CurrentState == CharacterProperties.CharacterState.BackDash)
+            //Detect Input
+            if (DetectMoveInput(inputClass))
+            {
+                if (Properties.CurrentState == CharacterProperties.CharacterState.Stand ||
+                    Properties.CurrentState == CharacterProperties.CharacterState.Crouch)
                 {
-                    Properties.DashFrameCounter++;
-                    if (FrameData.ActionFrameState[Properties.DashFrameCounter] == FrameDataHandler.ActionFrameStates.Startup)
-                        Properties.MoveDirection.x = -Properties.DashBackwardXSpeed[1];
-                    else if (FrameData.ActionFrameState[Properties.DashFrameCounter] == FrameDataHandler.ActionFrameStates.Active)
-                        Properties.MoveDirection.x = -Properties.DashBackwardXSpeed[2];
-                    else if (FrameData.ActionFrameState[Properties.DashFrameCounter] == FrameDataHandler.ActionFrameStates.Recovery)
-                    {
-                        Properties.MoveDirection.x = 0;
-                        Properties.CurrentState = CharacterProperties.CharacterState.Stand;
-                    }
-
-                    FrameData.Update(Properties.DashFrameCounter);
+                    Animator.Play("DashBackward");
+                    ActionCounter = 0;
+                    FrameData.Update(ActionCounter);
+                    Properties.FrameDataHandler = FrameData;
+                    Properties.LastState = Properties.CurrentState;
+                    Properties.CurrentState = CharacterProperties.CharacterState.BackDash;
+                    Properties.MoveDirection = new Vector3(-Properties.DashBackwardXSpeed[0], 0, 0);
+                    return;
                 }
-                
-                
-                //Begin Dash Detection
-                if (!DetectMoveInput(inputClass)) return;
-                if (Properties.CurrentState != CharacterProperties.CharacterState.Stand) return;
-                Animator.Play("DashBackward");
-                Properties.DashFrameCounter = 0;
-                Properties.LastState = Properties.CurrentState;
-                Properties.CurrentState = CharacterProperties.CharacterState.BackDash;
-                Properties.MoveDirection = new Vector3(-Properties.DashBackwardXSpeed[0], 0, 0);
             }
-        
+
+            //Play out Back Dash Animation
+            if (Properties.CurrentState == CharacterProperties.CharacterState.BackDash)
+            {
+                //Startup
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Startup)
+                {
+                    FrameData.Update(ActionCounter++);
+                    Properties.MoveDirection = new Vector3(-Properties.DashBackwardXSpeed[0], 0, 0);
+                    return;
+                }
+
+                //Active
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Active)
+                {
+                    FrameData.Update(ActionCounter++);
+                    Properties.MoveDirection = new Vector3(-Properties.DashBackwardXSpeed[1], 0, 0);
+                    return;
+                }
+
+                //Recovery
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Recovery)
+                {
+                    FrameData.Update(ActionCounter++);
+                    Properties.MoveDirection = new Vector3(-Properties.DashBackwardXSpeed[2], 0, 0);
+                    return;
+                }
+
+                //Exit
+                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.None)
+                {
+                    Properties.CurrentState = CharacterProperties.CharacterState.Stand;
+                }
+
+            }
+        }
     }
 }
