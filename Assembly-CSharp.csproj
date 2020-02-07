@@ -60,7 +60,6 @@
      <Compile Include="Assets\Scripts\GameManagerScript.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CameraScript.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\Character.cs" />
-     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterControllerScript.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\CharacterMove.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\FrameDataHandler.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveAirDashForward.cs" />
@@ -81,6 +80,7 @@
      <Compile Include="Assets\Scripts\GamePlayScripts\Hitbox.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\HitStunManager.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\HurtBox.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\PushBox.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\UIManager.cs" />
      <Compile Include="Assets\Scripts\HitStunAnimationScript.cs" />
      <Compile Include="Assets\Scripts\InputClass.cs" />

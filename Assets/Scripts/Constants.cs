@@ -12,13 +12,11 @@ public static class Constants
     public const int SuperMeterCost = 50;
 
     //Max distance 2 characters can be on the screen on the X axis
-    public const float MaxDistance = 8.0f;
-    //A buffer for handling when max distance is corrected
-    public const float MaxDistanceBufferSize = 0.01f;
+    public const float MaxDistance = 4.0f;
+    //Max Size of the stage
+    public const float MaxStage = 8.0f;
     //Minimum value characters can be on the Y axis
     public const float Floor = 0.0f;
-    //A buffer for handling when the floor height is correct
-    public const float FloorBuffer = 0.01f;
-
-
+    //A buffer for handling with the positions float value
+    public const float FloorBuffer = 0.1f;
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using GamePlayScripts.CharacterMoves;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -10,6 +11,8 @@ namespace GamePlayScripts
     {
         //Define General objects and stats
         private GameObject _characterObject;
+        private float _leftScreenBarrier;
+        private float _rightScreenBarrier;
 
         private GameObject _opponent;
         //private CharacterController _controller;
@@ -21,11 +24,10 @@ namespace GamePlayScripts
         public CharacterProperties Properties;
         private List<CharacterMove> _characterMoves;
         
-        //Hurtboxes are vulnerable collision boxes
+        //Hurt Boxes are vulnerable collision boxes
         private List<HurtBox> _hurtBoxes;
         
-        
-        //Hitboxes are Offensive collision boxes
+        //Hit Boxes are Offensive collision boxes
         //Most of the time there is only one, but there will be occasions where there are multiple
         private List<Hitbox> _hitBoxes;
 
@@ -43,8 +45,6 @@ namespace GamePlayScripts
 
         public Character(GameObject characterGameObject, InputManager inputManager)
         {
-            //_controller = characterGameObject.GetComponent<CharacterController>();
-            //_controllerScript = characterGameObject.GetComponent<CharacterControllerScript>();
             _characterObject = characterGameObject;
             _animator = characterGameObject.GetComponent<Animator>();
             _inputManager = inputManager;
@@ -74,14 +74,16 @@ namespace GamePlayScripts
             _hitStunManager = new HitStunManager(_animator, ref Properties);
             
             //Define and populate collision boxes
+            //HurtBoxes - Boxes which receive attacks
             _hurtBoxes = new List<HurtBox>();
             _hurtBoxes.Add(new HurtBox(GameObject.Find("UpperBodyHurtBox").GetComponent<BoxCollider>(), HurtBox.HurtZone.UpperBody));
             _hurtBoxes.Add(new HurtBox(GameObject.Find("LowerBodyHurtBox").GetComponent<BoxCollider>(), HurtBox.HurtZone.LowerBody));
-            
+            //HitBoxes
             _hitBoxes = new List<Hitbox>();
             _hitBoxes.Add(new Hitbox(GameObject.Find("HitBox").GetComponent<BoxCollider>(),true));
+            //PushBox
             
-            //Debug.Log(_hitBoxes.Count);
+            
             
             _characterMoves = new List<CharacterMove>();
 
@@ -98,8 +100,6 @@ namespace GamePlayScripts
             _characterMoves.Add(new MoveLightAttack());
             _characterMoves.Add(new MoveMediumAttack());
         
-            //_animator = _controller.GetComponent<Animator>();
-            
             //Initialize moves.
             foreach (var move in _characterMoves)
             {
@@ -109,27 +109,29 @@ namespace GamePlayScripts
 
         public void Update()
         {
-            
-            
+            //Check if character was hit
             if (Properties.CurrentState == CharacterProperties.CharacterState.HitStun)
             {
                 _hitStunManager.Update();
             }
+            //Check if we need to switch orientation
             DeterminePlayerSide();
+            //Get Inputs
             _inputManager.Update(Properties.CharacterOrientation);
-            
+            //Update Moves
             foreach (var move in _characterMoves)
             {
                 move.PerformAction(_inputManager.CurrentInput);
             }
-            
+            //Move Character
             ApplyMovement(Properties.CharacterOrientation);
-            
+            //Reset NewHit
             Properties.NewHit = false;
         }
     
         private void ApplyMovement(int currentOrientation)
         {
+            //Apply gravity
             if(!Properties.IsIgnoringGravity && Properties.IsGrounded == false)
                 Properties.MoveDirection.y -= Properties.PersonalGravity * Time.deltaTime;
 
@@ -138,41 +140,56 @@ namespace GamePlayScripts
             if (_controller.transform.position.z != 0)
                 Properties.MoveDirection.z = (0 - _characterObject.transform.position.z);
             */
-            
+
+            var position = _characterObject.transform.position;
             Properties.MoveDirection.x *= currentOrientation;
             
-            //Keep Object above equator
-            if (_characterObject.transform.position.y < Constants.FloorBuffer)
+            //Keep Object above the floor
+            var potentialY = position.y + (Properties.MoveDirection.y * Time.deltaTime);
+            if (potentialY  <= Constants.Floor)
             {
-                if (_characterObject.transform.position.y + Properties.MoveDirection.y <= Constants.Floor)
-                {
-                    Properties.MoveDirection.y = Constants.Floor - _characterObject.transform.position.y;
-                }
-            }
-            //Keep characters within max range of each other
-            if (Math.Abs(_characterObject.transform.position.x - _opponent.transform.position.x) >
-                Constants.MaxDistance - Constants.MaxDistanceBufferSize)
-            {
-                if (_characterObject.transform.position.x + Properties.MoveDirection.x <= Constants.MaxDistance)
-                {
-                    Properties.MoveDirection.x = Constants.MaxDistance - _characterObject.transform.position.x;
-                }
+                Properties.MoveDirection.y = Constants.Floor - (position.y);
             }
 
-            _characterObject.transform.Translate(Properties.MoveDirection * Time.deltaTime,Space.World);
+            //Keep characters within screen boundaries
+            var center = (position.x + _opponent.transform.position.x) / 2;
+            _leftScreenBarrier = center - Constants.MaxDistance;
+            _rightScreenBarrier = center + Constants.MaxDistance;
+
+            var potentialX = position.x + (Properties.MoveDirection.x * Time.deltaTime);
+            if (potentialX <= _leftScreenBarrier)
+            {
+                Properties.MoveDirection.x = _leftScreenBarrier - (position.x);
+            }
+            else if (potentialX >= _rightScreenBarrier)
+            {
+                Properties.MoveDirection.x = _rightScreenBarrier - (position.x);
+            }
             
+            //Keep character within stage boundaries
+            var stageLeftBarrier = -Constants.MaxStage;
+            var stageRightBarrier = Constants.MaxStage;
             
-            if (_characterObject.transform.position.y < Constants.FloorBuffer)
-                Properties.IsGrounded = true;
-            else
-                Properties.IsGrounded = false;
+            if (potentialX <= stageLeftBarrier)
+            {
+                Properties.MoveDirection.x = stageLeftBarrier - (position.x);
+            }
+            else if (potentialX >= stageRightBarrier)
+            {
+                Properties.MoveDirection.x = stageRightBarrier - (position.x);
+            }
+            
+            //Actually move the character according to all the previous calculations
+            _characterObject.transform.position += (Properties.MoveDirection * Time.deltaTime);
+            
+            //Determine is character is grounded
+            Properties.IsGrounded = _characterObject.transform.position.y < Constants.FloorBuffer;
         }
 
         public bool DetectCollisions(List<HurtBox> hurtBoxes)
         {
             foreach (var v in _hitBoxes)
             {
-                
                 //If a local hitbox is not active than no collision
                 if (!Properties.LocalHitBoxActive && v.LocalHitBox) return false;
                 
@@ -181,10 +198,8 @@ namespace GamePlayScripts
                 
                 foreach (var w in hurtBoxes)
                 {
-                    
                     if (v.Intersects(w.GetHurtBoxBounds()))
                     {
-                        Debug.Log(_hitBoxes.Count);
                         Properties.ComboActive = true;
                         Properties.Collided = true;
                         return true;
