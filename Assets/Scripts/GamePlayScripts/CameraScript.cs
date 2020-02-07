@@ -12,8 +12,8 @@ namespace GamePlayScripts
         private float _heightOfCamera;
         private float _centerXBetweenCharacters;
         private Vector3 _moveCameraPosition;
-        private float _stageMaxX = -9;
-        private float _stageMinX = 9;
+        private float _stageMaxX = 4;
+        private float _stageMinX = -4;
         private float _stageMaxY;
         private float _stageMinY;
 
@@ -22,8 +22,6 @@ namespace GamePlayScripts
         {
             _player1 = GameObject.Find("Player1");
             _player2 = GameObject.Find("Player2");
-            _camera = GetComponent<Camera>();
-        
         }
 
         // Update is called once per frame
@@ -34,13 +32,20 @@ namespace GamePlayScripts
             if (_player2 == null)
                 _player2 = GameObject.Find("Player2");
             
-            _centerXBetweenCharacters = (_player1.transform.position.x + _player2.transform.position.x) / 2;
-        
             _heightOfCamera = ((_player1.transform.position.y + _player2.transform.position.y) / 2) + _cameraHeightOffset;
-     
-        
+            _centerXBetweenCharacters = ((_player1.transform.position.x + _player2.transform.position.x) / 2);
             _moveCameraPosition = new Vector3(_centerXBetweenCharacters,_heightOfCamera,_cameraDefaultZ);
-            transform.position = Vector3.Lerp(transform.position,_moveCameraPosition, 2.0f);
+
+//            if (_moveCameraPosition.x <= _stageMinX)
+//            {
+//                _moveCameraPosition.x = _stageMinX - transform.position.x;
+//            }
+//            else if (_moveCameraPosition.x >= _stageMaxX)
+//            {
+//                _moveCameraPosition.x = _stageMaxX - transform.position.x;
+//            }
+            Debug.Log(_moveCameraPosition.x);
+            transform.position = _moveCameraPosition;
         }
     }
 }

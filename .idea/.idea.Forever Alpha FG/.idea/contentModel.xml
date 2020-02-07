@@ -12,7 +12,6 @@
           <e p="GameplayScripts" t="Include">
             <e p="CameraScript.cs" t="Include" />
             <e p="Character.cs" t="Include" />
-            <e p="CharacterControllerScript.cs" t="Include" />
             <e p="CharacterMoves" t="Include">
               <e p="CharacterMove.cs" t="Include" />
               <e p="FrameDataHandler.cs" t="Include" />
@@ -35,6 +34,7 @@
             <e p="Hitbox.cs" t="Include" />
             <e p="HitStunManager.cs" t="Include" />
             <e p="HurtBox.cs" t="Include" />
+            <e p="PushBox.cs" t="Include" />
             <e p="UIManager.cs" t="Include" />
           </e>
           <e p="HitStunAnimationScript.cs" t="Include" />

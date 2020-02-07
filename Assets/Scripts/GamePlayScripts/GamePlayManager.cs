@@ -21,13 +21,6 @@ namespace GamePlayScripts
         public Character player2Character;
         public InputManager player1InputManager;
         public InputManager player2InputManager;
-        public float player1CurrentHealth;
-        public float player2CurrentHealth;
-        public float player1MaxHealth;
-        public float player2MaxHealth;
-        public float player1Meter;
-        public float player2Meter;
-
         public UIManager uiManager;
         
         //Define other values
@@ -50,7 +43,7 @@ namespace GamePlayScripts
             GameObject.Find("UpperBodyHurtBox").name = "P1UpperBodyHurtBox";
             GameObject.Find("LowerBodyHurtBox").name = "P1LowerBodyHurtBox";
             GameObject.Find("HitBox").name = "P1HitBox";
-            
+
             //Set Player 2 Objects
             characterPrefab = Resources.Load("Prefabs/Characters/Player");
             player2Object = (GameObject) GameObject.Instantiate(characterPrefab);
@@ -67,25 +60,15 @@ namespace GamePlayScripts
             player1Character.PostLoadSetup(player2Object);
             player2Character.PostLoadSetup(player1Object);
             
-            //Set Player Objects and Initial values
-            //Hardcoded values for now
             uiManager = new UIManager();
-            player1MaxHealth = 1000;
-            player1CurrentHealth = 1000;
-            player1Meter = 100;
-            player2MaxHealth = 1000;
-            player2CurrentHealth = 1000;
-            player2Meter = 100;
             
             frameCount = 0;
-            gameTime = 99;
+            gameTime = Constants.MaxGameClock;
         }
 
         // Update is called once per frame
         void Update()
         {
-            Debug.Log(player1Character.Properties.CurrentState + ", " + player1Character.Properties.FrameDataHandler.ActionState);
-
             //Update characters
             player1Character.Update();
             player2Character.Update();
@@ -99,6 +82,14 @@ namespace GamePlayScripts
                 
                 player2Character.ApplyCollision(player1Character.Properties.FrameDataHandler);
             }
+            if (player2Character.DetectCollisions(player1Character.GetHurtBoxes()))
+            {
+                player2Character.Properties.ComboCounter++;
+                player2Character.Properties.Collided = true;
+                player1Character.Properties.NewHit = true;
+                
+                player1Character.ApplyCollision(player1Character.Properties.FrameDataHandler);
+            }
 
             //Check to see if an Active Combo ended
             if (player1Character.Properties.ComboActive &&
@@ -106,6 +97,12 @@ namespace GamePlayScripts
             {
                 player1Character.Properties.ComboActive = false;
                 player1Character.Properties.ComboCounter = 0;
+            }
+            if (player2Character.Properties.ComboActive &&
+                player1Character.Properties.CurrentState == CharacterProperties.CharacterState.Stand)
+            {
+                player2Character.Properties.ComboActive = false;
+                player2Character.Properties.ComboCounter = 0;
             }
                 
             //Update game time
