@@ -6,46 +6,57 @@ namespace GamePlayScripts
     {
         private GameObject _player1;
         private GameObject _player2;
-        private Camera _camera;
-        private float _cameraHeightOffset = 0.8f;
-        private float _cameraDefaultZ = -9;
-        private float _heightOfCamera;
-        private float _centerXBetweenCharacters;
-        private Vector3 _moveCameraPosition;
-        private float _stageMaxX = 4;
-        private float _stageMinX = -4;
-        private float _stageMaxY;
-        private float _stageMinY;
 
         // Start is called before the first frame update
         void Start()
         {
             _player1 = GameObject.Find("Player1");
             _player2 = GameObject.Find("Player2");
+            
+            transform.position = new Vector3(0, Constants.CameraYOffset, Constants.CameraZ);
         }
 
         // Update is called once per frame
         void Update()
         {
+            //Find Players
             if (_player1 == null)
                 _player1 = GameObject.Find("Player1");
             if (_player2 == null)
                 _player2 = GameObject.Find("Player2");
-            
-            _heightOfCamera = ((_player1.transform.position.y + _player2.transform.position.y) / 2) + _cameraHeightOffset;
-            _centerXBetweenCharacters = ((_player1.transform.position.x + _player2.transform.position.x) / 2);
-            _moveCameraPosition = new Vector3(_centerXBetweenCharacters,_heightOfCamera,_cameraDefaultZ);
 
-//            if (_moveCameraPosition.x <= _stageMinX)
-//            {
-//                _moveCameraPosition.x = _stageMinX - transform.position.x;
-//            }
-//            else if (_moveCameraPosition.x >= _stageMaxX)
-//            {
-//                _moveCameraPosition.x = _stageMaxX - transform.position.x;
-//            }
-            Debug.Log(_moveCameraPosition.x);
-            transform.position = _moveCameraPosition;
+            var p1 = _player1.transform.position;
+            var p2 = _player2.transform.position;
+            const float minX = -Constants.MaxCameraStage;
+            const float maxX = Constants.MaxCameraStage;
+            var moveCamera = new Vector3(0, 0, 0);
+            var position = transform.position;
+            var potentialX = (((p1.x + p2.x) / 2)) - position.x;
+            var potentialY = (((p1.y + p2.y) / 2) + Constants.CameraYOffset) - position.y;
+            
+            //Detect Max Camera X bounds
+            if (position.x + potentialX <= minX)
+            {
+                //Stop at left Bound
+                moveCamera.x = minX - transform.position.x;
+            }
+            else if (position.x + potentialX >= maxX)
+            {
+                //Stop at Right Bound
+                moveCamera.x = maxX - transform.position.x;
+            }
+            else
+            {
+                //Move Camera normally
+                moveCamera.x = potentialX;
+            }
+            
+            //No bounding rules for Camera Y yet, may never be any
+            moveCamera.y = potentialY;
+            
+            //Debug.Log(transform.position.x + ", " + moveCamera.x + ", " + potentialX);
+            //Move Camera
+            transform.position += moveCamera;
         }
     }
 }

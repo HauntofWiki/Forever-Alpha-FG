@@ -2,7 +2,6 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - GamePlayScripts.CameraScript
-    - GamePlayScripts.CharacterControllerScript
     - GamePlayScripts.GamePlayManager
     Unity.RenderPipelines.Lightweight.Runtime.dll:
     - UnityEngine.Rendering.LWRP.ForwardRendererData
@@ -13,15 +12,15 @@ ScriptsOnlyBuild:
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
     UnityEngine.UI.dll:
+    - UnityEngine.EventSystems.EventSystem
+    - UnityEngine.EventSystems.StandaloneInputModule
     - UnityEngine.UI.CanvasScaler
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.Image
@@ -64,33 +63,35 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 108
       Script: {instanceID: 0}
-    - Class: 111
-      Script: {instanceID: 0}
     - Class: 114
       Script: {instanceID: 9822}
     - Class: 114
-      Script: {instanceID: 10122}
+      Script: {instanceID: 10120}
     - Class: 114
-      Script: {instanceID: 10200}
+      Script: {instanceID: 10198}
     - Class: 114
-      Script: {instanceID: 12008}
+      Script: {instanceID: 10878}
     - Class: 114
-      Script: {instanceID: 12024}
+      Script: {instanceID: 12010}
     - Class: 114
       Script: {instanceID: 12328}
     - Class: 114
+      Script: {instanceID: 12954}
+    - Class: 114
       Script: {instanceID: 13074}
     - Class: 114
-      Script: {instanceID: 23708}
+      Script: {instanceID: 15856}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
       Script: {instanceID: 0}
     - Class: 137
       Script: {instanceID: 0}
-    - Class: 143
-      Script: {instanceID: 0}
     - Class: 157
+      Script: {instanceID: 0}
+    - Class: 198
+      Script: {instanceID: 0}
+    - Class: 199
       Script: {instanceID: 0}
     - Class: 213
       Script: {instanceID: 0}
@@ -529,7 +530,7 @@ ScriptsOnlyBuild:
     className: VolumeComponent
   - hash:
       serializedVersion: 2
-      Hash: f8a77116c6cf51bacbb76baf39ee8187
+      Hash: 01e44394af5b95385a47e075475f83a1
     assemblyName: Assembly-CSharp.dll
     namespaceName: GamePlayScripts
     className: GamePlayManager
@@ -539,12 +540,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: TimelineAsset
-  - hash:
-      serializedVersion: 2
-      Hash: e8ae2ad17bcfece80fb9f44403718add
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: GamePlayScripts
-    className: CharacterControllerScript
   - hash:
       serializedVersion: 2
       Hash: 63bdc2cf3273aa9bf650350f19d2af61
