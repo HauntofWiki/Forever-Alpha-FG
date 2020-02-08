@@ -167,8 +167,8 @@ namespace GamePlayScripts
             }
             
             //Keep character within stage boundaries
-            var stageLeftBarrier = -Constants.MaxStage;
-            var stageRightBarrier = Constants.MaxStage;
+            var stageLeftBarrier = -Constants.MaxStageX;
+            var stageRightBarrier = Constants.MaxStageX;
             
             if (potentialX <= stageLeftBarrier)
             {
@@ -238,7 +238,7 @@ namespace GamePlayScripts
 
         private bool CanSwitchOrientation()
         {
-            //TODO: make a list for different states, i.e grounded is usually fine, but a forward dash under a player should not instantly turn around
+            //TODO: make a list of different states, i.e grounded is usually fine, but a forward dash under a player should not instantly turn around
             return Properties.IsGrounded;
         }
 

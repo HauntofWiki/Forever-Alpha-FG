@@ -164,7 +164,7 @@ public class InputManager
             Auxiliary8Button = KeyCode.None;
 
             SubmitButton = GetJoystickButton(joystickNumber, 0);
-            SubmitButton = GetJoystickButton(joystickNumber, 1);
+            CancelButton = GetJoystickButton(joystickNumber, 1);
 
 
         } 
@@ -194,7 +194,7 @@ public class InputManager
             Auxiliary8Button = GetJoystickButton(joystickNumber,13);
             
             SubmitButton = GetJoystickButton(joystickNumber, 1);
-            SubmitButton = GetJoystickButton(joystickNumber, 2);
+            CancelButton = GetJoystickButton(joystickNumber, 2);
         }
         else if (joystickName == "Keyboard")
         {
@@ -220,6 +220,9 @@ public class InputManager
             Auxiliary6Button = GetJoystickButton(joystickNumber,11);
             Auxiliary7Button = GetJoystickButton(joystickNumber,12);
             Auxiliary8Button = GetJoystickButton(joystickNumber,13);
+            
+            SubmitButton = GetJoystickButton(joystickNumber, 1);
+            CancelButton = GetJoystickButton(joystickNumber, 2);
         }
         else
         {
