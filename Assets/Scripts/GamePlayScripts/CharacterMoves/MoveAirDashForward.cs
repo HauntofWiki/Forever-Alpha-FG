@@ -5,11 +5,11 @@ namespace GamePlayScripts.CharacterMoves
 {
     public class MoveAirDashForward : CharacterMove
     {
-        public override void InitializeMove(ref CharacterProperties properties, Animator animator)
+        public override void InitializeMove(ref CharacterManager manager, Animator animator)
         {
-            Properties = properties;
+            Manager = manager;
             Animator = animator;
-            FrameData = new FrameDataHandler(18);
+            FrameData = new FrameDataManager(18);
             FrameData.SetFieldsZero();
             FrameData.SetActionFrames(3, 6);
             ActionCounter = 0;
@@ -64,51 +64,51 @@ namespace GamePlayScripts.CharacterMoves
         {
             if (DetectMoveInput(inputClass))
             {
-                if (Properties.CurrentState == CharacterProperties.CharacterState.Jump ||
-                    Properties.CurrentState == CharacterProperties.CharacterState.JumpForward ||
-                    Properties.CurrentState == CharacterProperties.CharacterState.JumpBackward)
+                if (Manager.CurrentState == CharacterManager.CharacterState.Jump ||
+                    Manager.CurrentState == CharacterManager.CharacterState.JumpForward ||
+                    Manager.CurrentState == CharacterManager.CharacterState.JumpBackward)
                 {
                     Animator.Play("AirDashForward");
                     ActionCounter = 0;
                     FrameData.Update(ActionCounter);
-                    Properties.LastState = Properties.CurrentState;
-                    Properties.CurrentState = CharacterProperties.CharacterState.AirDash;
-                    Properties.FrameDataHandler = FrameData;
-                    Properties.IgnoringGravity = true;
-                    Properties.MoveDirection = new Vector3(Properties.AirDashForwardSpeed[0],0,0);
+                    Manager.LastState = Manager.CurrentState;
+                    Manager.CurrentState = CharacterManager.CharacterState.AirDash;
+                    Manager.SetFrameDataManager(FrameData);
+                    Manager.IgnoringGravity = true;
+                    Manager.MoveDirection = new Vector3(Manager.AirDashForwardSpeed[0],0,0);
                     return;
                 }
             }
 
-            if (Properties.CurrentState == CharacterProperties.CharacterState.AirDash)
+            if (Manager.CurrentState == CharacterManager.CharacterState.AirDash)
             {
                 //Startup
-                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Startup)
+                if (FrameData.ActionState == FrameDataManager.ActionFrameStates.Startup)
                 {
                     FrameData.Update(ActionCounter++);
-                    Properties.MoveDirection = new Vector3(Properties.AirDashForwardSpeed[0],0,0);
+                    Manager.MoveDirection = new Vector3(Manager.AirDashForwardSpeed[0],0,0);
                     return;    
                 }
                 //Active
-                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Active)
+                if (FrameData.ActionState == FrameDataManager.ActionFrameStates.Active)
                 {
                     FrameData.Update(ActionCounter++);
-                    Properties.MoveDirection = new Vector3(Properties.AirDashForwardSpeed[1],0,0);
+                    Manager.MoveDirection = new Vector3(Manager.AirDashForwardSpeed[1],0,0);
                     return;
                 }
                 //Recovery
-                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Recovery)
+                if (FrameData.ActionState == FrameDataManager.ActionFrameStates.Recovery)
                 {
                         FrameData.Update(ActionCounter++);
-                        Properties.MoveDirection = new Vector3(Properties.AirDashForwardSpeed[1],0,0);
+                        Manager.MoveDirection = new Vector3(Manager.AirDashForwardSpeed[1],0,0);
                         return;
                 }
                 //Exit
-                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.None)
+                if (FrameData.ActionState == FrameDataManager.ActionFrameStates.None)
                 {
-                    Properties.IgnoringGravity = false;
-                    Properties.LastState = Properties.CurrentState;
-                    Properties.CurrentState = CharacterProperties.CharacterState.JumpForward;
+                    Manager.IgnoringGravity = false;
+                    Manager.LastState = Manager.CurrentState;
+                    Manager.CurrentState = CharacterManager.CharacterState.JumpForward;
                 }
             }
         }

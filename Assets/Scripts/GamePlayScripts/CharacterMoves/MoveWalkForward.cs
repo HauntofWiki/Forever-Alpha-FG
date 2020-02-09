@@ -4,12 +4,12 @@ namespace GamePlayScripts.CharacterMoves
 {
     public class MoveWalkForward : CharacterMove
     {
-        private CharacterProperties _properties;
+        private CharacterManager _manager;
         private Animator _animator;
-        public override void InitializeMove(ref CharacterProperties properties, Animator animator)
+        public override void InitializeMove(ref CharacterManager manager, Animator animator)
         {
             _animator = animator;
-            _properties = properties;
+            _manager = manager;
         }
 
         public override bool DetectMoveInput(InputClass inputClass)
@@ -25,12 +25,12 @@ namespace GamePlayScripts.CharacterMoves
         public override void PerformAction(InputClass inputClass)
         {
             if (!DetectMoveInput(inputClass)) return;
-            if (_properties.CurrentState != CharacterProperties.CharacterState.Crouch && _properties.CurrentState != CharacterProperties.CharacterState.Stand) return;
+            if (_manager.CurrentState != CharacterManager.CharacterState.Crouch && _manager.CurrentState != CharacterManager.CharacterState.Stand) return;
             //Debug.Log("WALK");
             _animator.Play("WalkForward");
-            _properties.LastState = _properties.CurrentState;
-            _properties.CurrentState = CharacterProperties.CharacterState.Stand;
-            _properties.MoveDirection = new Vector3(_properties.WalkForwardXSpeed, 0, 0);
+            _manager.LastState = _manager.CurrentState;
+            _manager.CurrentState = CharacterManager.CharacterState.Stand;
+            _manager.MoveDirection = new Vector3(_manager.WalkForwardXSpeed, 0, 0);
         }
     }
 }

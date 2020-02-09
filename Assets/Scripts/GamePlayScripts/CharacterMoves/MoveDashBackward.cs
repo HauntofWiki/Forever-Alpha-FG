@@ -5,11 +5,11 @@ namespace GamePlayScripts.CharacterMoves
 {
     public class MoveDashBackward : CharacterMove
     {
-        public override void InitializeMove(ref CharacterProperties properties, Animator animator)
+        public override void InitializeMove(ref CharacterManager manager, Animator animator)
         {
-            Properties = properties;
+            Manager = manager;
             Animator = animator;
-            FrameData = new FrameDataHandler(12);
+            FrameData = new FrameDataManager(12);
             FrameData.SetFieldsZero();
             FrameData.SetActionFrames(3, 6);
             FrameData.SetAirborneFrames(0, 20);
@@ -73,51 +73,51 @@ namespace GamePlayScripts.CharacterMoves
             //Detect Input
             if (DetectMoveInput(inputClass))
             {
-                if (Properties.CurrentState == CharacterProperties.CharacterState.Stand ||
-                    Properties.CurrentState == CharacterProperties.CharacterState.Crouch)
+                if (Manager.CurrentState == CharacterManager.CharacterState.Stand ||
+                    Manager.CurrentState == CharacterManager.CharacterState.Crouch)
                 {
                     Animator.Play("DashBackward");
                     ActionCounter = 0;
                     FrameData.Update(ActionCounter);
-                    Properties.FrameDataHandler = FrameData;
-                    Properties.LastState = Properties.CurrentState;
-                    Properties.CurrentState = CharacterProperties.CharacterState.BackDash;
-                    Properties.MoveDirection = new Vector3(-Properties.DashBackwardXSpeed[0], 0, 0);
+                    Manager.SetFrameDataManager(FrameData);
+                    Manager.LastState = Manager.CurrentState;
+                    Manager.CurrentState = CharacterManager.CharacterState.BackDash;
+                    Manager.MoveDirection = new Vector3(-Manager.DashBackwardXSpeed[0], 0, 0);
                     return;
                 }
             }
 
             //Play out Back Dash Animation
-            if (Properties.CurrentState == CharacterProperties.CharacterState.BackDash)
+            if (Manager.CurrentState == CharacterManager.CharacterState.BackDash)
             {
                 //Startup
-                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Startup)
+                if (FrameData.ActionState == FrameDataManager.ActionFrameStates.Startup)
                 {
                     FrameData.Update(ActionCounter++);
-                    Properties.MoveDirection = new Vector3(-Properties.DashBackwardXSpeed[0], 0, 0);
+                    Manager.MoveDirection = new Vector3(-Manager.DashBackwardXSpeed[0], 0, 0);
                     return;
                 }
 
                 //Active
-                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Active)
+                if (FrameData.ActionState == FrameDataManager.ActionFrameStates.Active)
                 {
                     FrameData.Update(ActionCounter++);
-                    Properties.MoveDirection = new Vector3(-Properties.DashBackwardXSpeed[1], 0, 0);
+                    Manager.MoveDirection = new Vector3(-Manager.DashBackwardXSpeed[1], 0, 0);
                     return;
                 }
 
                 //Recovery
-                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Recovery)
+                if (FrameData.ActionState == FrameDataManager.ActionFrameStates.Recovery)
                 {
                     FrameData.Update(ActionCounter++);
-                    Properties.MoveDirection = new Vector3(-Properties.DashBackwardXSpeed[2], 0, 0);
+                    Manager.MoveDirection = new Vector3(-Manager.DashBackwardXSpeed[2], 0, 0);
                     return;
                 }
 
                 //Exit
-                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.None)
+                if (FrameData.ActionState == FrameDataManager.ActionFrameStates.None)
                 {
-                    Properties.CurrentState = CharacterProperties.CharacterState.Stand;
+                    Manager.CurrentState = CharacterManager.CharacterState.Stand;
                 }
 
             }

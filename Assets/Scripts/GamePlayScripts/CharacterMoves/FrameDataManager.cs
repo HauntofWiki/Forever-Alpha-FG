@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace GamePlayScripts.CharacterMoves
 {
-    public class FrameDataHandler
+    public class FrameDataManager
     {
         public enum ActionFrameStates
         {
@@ -48,7 +49,7 @@ namespace GamePlayScripts.CharacterMoves
         public float HitStun = 0;
         public float BlockStun = 0;
 
-        public FrameDataHandler(int length)
+        public FrameDataManager(int length)
         {
             Length = length;
             ActionFrameState = new List<ActionFrameStates>();
@@ -126,7 +127,7 @@ namespace GamePlayScripts.CharacterMoves
 
         }
 
-        //Everything that isnt startup or Active is considered recovery
+        //Everything that isn't startup or Active is considered recovery
         public void SetActionFrames(int startUpFrames, int activeFrames)
         {
             for (var i = 0; i < Length; i++)

@@ -71,40 +71,41 @@ namespace GamePlayScripts
         // Update is called once per frame
         void Update()
         {
+            
             //Update characters
             player1Character.Update(player2Character);
             player2Character.Update(player1Character);
 
             //Check and Handle Collisions
-            if (player1Character.DetectCollisions(player2Character.Properties.CollisionManager))
+            if (player1Character.DetectCollisions(player2Character.LocalManager))
             {
-                player1Character.Properties.ComboCounter++;
-                player1Character.Properties.Collided = true;
-                player2Character.Properties.NewHit = true;
+                player1Character.LocalManager.ComboCounter++;
+                player1Character.LocalManager.Collided = true;
+                player2Character.LocalManager.NewHit = true;
                 
-                player2Character.ApplyCollision(player1Character.Properties.FrameDataHandler);
+                player2Character.ApplyCollision(player1Character.LocalManager.GetFrameDataManager());
             }
-            if (player2Character.DetectCollisions(player1Character.Properties.CollisionManager))
+            if (player2Character.DetectCollisions(player1Character.LocalManager))
             {
-                player2Character.Properties.ComboCounter++;
-                player2Character.Properties.Collided = true;
-                player1Character.Properties.NewHit = true;
+                player2Character.LocalManager.ComboCounter++;
+                player2Character.LocalManager.Collided = true;
+                player1Character.LocalManager.NewHit = true;
                 
-                player1Character.ApplyCollision(player2Character.Properties.FrameDataHandler);
+                player1Character.ApplyCollision(player2Character.LocalManager.GetFrameDataManager());
             }
 
             //Check to see if an Active Combo ended
-            if (player1Character.Properties.ComboActive &&
-                player2Character.Properties.CurrentState == CharacterProperties.CharacterState.Stand)
+            if (player1Character.LocalManager.ComboActive &&
+                player2Character.LocalManager.CurrentState == CharacterManager.CharacterState.Stand)
             {
-                player1Character.Properties.ComboActive = false;
-                player1Character.Properties.ComboCounter = 0;
+                player1Character.LocalManager.ComboActive = false;
+                player1Character.LocalManager.ComboCounter = 0;
             }
-            if (player2Character.Properties.ComboActive &&
-                player1Character.Properties.CurrentState == CharacterProperties.CharacterState.Stand)
+            if (player2Character.LocalManager.ComboActive &&
+                player1Character.LocalManager.CurrentState == CharacterManager.CharacterState.Stand)
             {
-                player2Character.Properties.ComboActive = false;
-                player2Character.Properties.ComboCounter = 0;
+                player2Character.LocalManager.ComboActive = false;
+                player2Character.LocalManager.ComboCounter = 0;
             }
             
             //Update game time
@@ -112,7 +113,7 @@ namespace GamePlayScripts
             {
                 gameTime--;
             }
-            uiManager.Update(gameTime,player1Character.Properties, player2Character.Properties);
+            uiManager.Update(gameTime,player1Character.LocalManager, player2Character.LocalManager);
             frameCount++;
             
         }

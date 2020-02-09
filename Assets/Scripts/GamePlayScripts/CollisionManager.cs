@@ -10,26 +10,25 @@ namespace GamePlayScripts
         public List<PushBox> PushBoxes { get; }
         
         private Animator _animator;
-        private CharacterProperties _properties;
+        private CharacterManager _manager;
         private AnimationClip[] _animationClip;
 
         private int _counter = 0;
-        public float PushBack { get; set; }
 
-        public CollisionManager(Animator animator, ref CharacterProperties properties)
+        public CollisionManager(Animator animator, ref CharacterManager manager)
         {
             HurtBoxes = new List<HurtBox>();
             HitBoxes = new List<HitBox>();
             PushBoxes = new List<PushBox>();
             
             _animator = animator;
-            _properties = properties;
+            _manager = manager;
             
         }
         
-        public void Update()
+        public void Update(float pushBack)
         {
-            if (_properties.NewHit)
+            if (_manager.NewHit)
                 _counter = 0;
             
             if (_counter == 0)
@@ -37,17 +36,17 @@ namespace GamePlayScripts
                 _animator.SetFloat("HitStunAmount",1);
                 _animator.Play("HitStunBlendTree");
                 
-                _properties.MoveDirection = new Vector3(PushBack,0,0);
+                _manager.MoveDirection = new Vector3(_manager.GetPushBack(),0,0);
             }
 
-            if (_counter > 0 && _counter <= _properties.FrameDataHandler.HitStun)
+            if (_counter > 0 && _counter <= _manager.GetHitStun())
             {
-                _properties.MoveDirection = new Vector3(PushBack,0,0);
+                _manager.MoveDirection = new Vector3(pushBack,0,0);
             }
 
-            if (_counter >= _properties.FrameDataHandler.HitStun)
+            if (_counter >= _manager.GetHitStun())
             {
-                _properties.CurrentState = CharacterProperties.CharacterState.Stand;
+                _manager.CurrentState = CharacterManager.CharacterState.Stand;
                 _counter = 0;
                 return;
             }
@@ -84,8 +83,5 @@ namespace GamePlayScripts
         {
             PushBoxes.Remove(box);
         }
-
-        
-        
     }
 }
