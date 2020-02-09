@@ -74,7 +74,7 @@ namespace GamePlayScripts.CharacterMoves
                     Properties.LastState = Properties.CurrentState;
                     Properties.CurrentState = CharacterProperties.CharacterState.AirDash;
                     Properties.FrameDataHandler = FrameData;
-                    Properties.IsIgnoringGravity = true;
+                    Properties.IgnoringGravity = true;
                     Properties.MoveDirection = new Vector3(Properties.AirDashForwardSpeed[0],0,0);
                     return;
                 }
@@ -106,7 +106,7 @@ namespace GamePlayScripts.CharacterMoves
                 //Exit
                 if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.None)
                 {
-                    Properties.IsIgnoringGravity = false;
+                    Properties.IgnoringGravity = false;
                     Properties.LastState = Properties.CurrentState;
                     Properties.CurrentState = CharacterProperties.CharacterState.JumpForward;
                 }

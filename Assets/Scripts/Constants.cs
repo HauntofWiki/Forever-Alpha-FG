@@ -2,6 +2,11 @@
 
 public static class Constants
 {
+    //Debug Options
+    //TODO Add Debug options into UI/Game
+    public const bool ShowCollisionBoxes = false;
+    public const bool ShowPositionInfo = false;
+    
     //prefab path constants
     public const string PrefabPlayer = "Prefabs/Characters/Player";
     
@@ -25,4 +30,5 @@ public static class Constants
     public const float FloorBuffer = 0.1f;
     public const float MaxStageX = 8.0f;
     public const float MaxStageY = 100;
+    
 }

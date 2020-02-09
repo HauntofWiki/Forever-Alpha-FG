@@ -19,7 +19,6 @@ namespace GamePlayScripts
         //private CharacterControllerScript _controllerScript;
         private Animator _animator;
         private Player _player;
-        private HitStunManager _hitStunManager;
         private InputManager _inputManager;
         public CharacterProperties Properties;
         private List<CharacterMove> _characterMoves;
@@ -29,7 +28,10 @@ namespace GamePlayScripts
         
         //Hit Boxes are Offensive collision boxes
         //Most of the time there is only one, but there will be occasions where there are multiple
-        private List<Hitbox> _hitBoxes;
+        private List<HitBox> _hitBoxes;
+        
+        //Push Box is a box that doesnt let characters pass through one another
+        private PushBox _pushBox;
 
         //Define Character Moves
         private CharacterMove _moveStandIdle;
@@ -60,7 +62,7 @@ namespace GamePlayScripts
                 AirDashForwardSpeed = new float[] {15.0f, 8.0f},
                 DashBackwardXSpeed = new float[] {15f, 15f, 8f},
                 IsAirborne = false,
-                IsIgnoringGravity = false,
+                IgnoringGravity = false,
                 AttackFrameCounter = 0,
                 MoveDirection = new Vector3(0,0,0),
                 CurrentState = CharacterProperties.CharacterState.Stand,
@@ -69,21 +71,15 @@ namespace GamePlayScripts
                 CancellableState = CharacterProperties.CancellableStates.None
             };
             
+            Properties.CollisionManager = new CollisionManager(_animator, ref Properties);
             characterGameObject.GetComponentInChildren<Camera>().targetTexture =
                 (RenderTexture) Resources.Load("Textures/Player 1 Render Texture");
-            _hitStunManager = new HitStunManager(_animator, ref Properties);
             
             //Define and populate collision boxes
-            //HurtBoxes - Boxes which receive attacks
-            _hurtBoxes = new List<HurtBox>();
-            _hurtBoxes.Add(new HurtBox(GameObject.Find("UpperBodyHurtBox").GetComponent<BoxCollider>(), HurtBox.HurtZone.UpperBody));
-            _hurtBoxes.Add(new HurtBox(GameObject.Find("LowerBodyHurtBox").GetComponent<BoxCollider>(), HurtBox.HurtZone.LowerBody));
-            //HitBoxes
-            _hitBoxes = new List<Hitbox>();
-            _hitBoxes.Add(new Hitbox(GameObject.Find("HitBox").GetComponent<BoxCollider>(),true));
-            //PushBox
-            
-            
+            Properties.CollisionManager.Add(new HurtBox(GameObject.Find("UpperBodyHurtBox").GetComponent<BoxCollider>(), HurtBox.HurtZone.UpperBody));
+            Properties.CollisionManager.Add(new HurtBox(GameObject.Find("LowerBodyHurtBox").GetComponent<BoxCollider>(), HurtBox.HurtZone.LowerBody));
+            Properties.CollisionManager.Add(new HitBox(GameObject.Find("HitBox").GetComponent<BoxCollider>(),true));
+            Properties.CollisionManager.Add(new PushBox(GameObject.Find("PushBox").GetComponent<BoxCollider>()));
             
             _characterMoves = new List<CharacterMove>();
 
@@ -107,12 +103,12 @@ namespace GamePlayScripts
             }
         }
 
-        public void Update()
+        public void Update(Character opponent)
         {
             //Check if character was hit
             if (Properties.CurrentState == CharacterProperties.CharacterState.HitStun)
             {
-                _hitStunManager.Update();
+                Properties.CollisionManager.Update();
             }
             //Check if we need to switch orientation
             DeterminePlayerSide();
@@ -123,6 +119,9 @@ namespace GamePlayScripts
             {
                 move.PerformAction(_inputManager.CurrentInput);
             }
+            
+            //Detect Push
+            DetectPush(opponent);
             //Move Character
             ApplyMovement(Properties.CharacterOrientation);
             //Reset NewHit
@@ -132,15 +131,9 @@ namespace GamePlayScripts
         private void ApplyMovement(int currentOrientation)
         {
             //Apply gravity
-            if(!Properties.IsIgnoringGravity && Properties.IsGrounded == false)
+            if(!Properties.IgnoringGravity && Properties.Grounded == false)
                 Properties.MoveDirection.y -= Properties.PersonalGravity * Time.deltaTime;
-
-            /*
-            //Keep character on the Z-Axis
-            if (_controller.transform.position.z != 0)
-                Properties.MoveDirection.z = (0 - _characterObject.transform.position.z);
-            */
-
+            
             var position = _characterObject.transform.position;
             Properties.MoveDirection.x *= currentOrientation;
             
@@ -150,13 +143,15 @@ namespace GamePlayScripts
             {
                 Properties.MoveDirection.y = Constants.Floor - (position.y);
             }
+            
+            var potentialX = position.x + (Properties.MoveDirection.x * Time.deltaTime);
 
             //Keep characters within screen boundaries
             var center = (position.x + _opponent.transform.position.x) / 2;
             _leftScreenBarrier = center - Constants.MaxDistance;
             _rightScreenBarrier = center + Constants.MaxDistance;
 
-            var potentialX = position.x + (Properties.MoveDirection.x * Time.deltaTime);
+            
             if (potentialX <= _leftScreenBarrier)
             {
                 Properties.MoveDirection.x = _leftScreenBarrier - (position.x);
@@ -183,23 +178,26 @@ namespace GamePlayScripts
             _characterObject.transform.position += (Properties.MoveDirection * Time.deltaTime);
             
             //Determine is character is grounded
-            Properties.IsGrounded = _characterObject.transform.position.y < Constants.FloorBuffer;
+            Properties.Grounded =_characterObject.transform.position.y < Constants.FloorBuffer;
         }
 
-        public bool DetectCollisions(List<HurtBox> hurtBoxes)
+        public bool DetectCollisions(CollisionManager opponentCollisionManager)
         {
-            foreach (var v in _hitBoxes)
+            //Detect HitBox Collisions
+            var hurtBoxes = opponentCollisionManager.HurtBoxes;
+            foreach (var hitBox in Properties.CollisionManager.HitBoxes)
             {
-                //If a local hitbox is not active than no collision
-                if (!Properties.LocalHitBoxActive && v.LocalHitBox) return false;
-                
+                //If a local HitBox is not active than no collision
+                if (!Properties.LocalHitBoxActive && hitBox.LocalHitBox) return false;
+
                 //Move already collided
                 if (Properties.Collided) return false;
-                
-                foreach (var w in hurtBoxes)
+
+                foreach (var hurtBox in hurtBoxes)
                 {
-                    if (v.Intersects(w.GetHurtBoxBounds()))
+                    if (hitBox.Intersects(hurtBox))
                     {
+                        //Debug.Log("hit");
                         Properties.ComboActive = true;
                         Properties.Collided = true;
                         return true;
@@ -210,18 +208,38 @@ namespace GamePlayScripts
             return false;
         }
 
+        public void DetectPush(Character opponent)
+        {
+            //Check for PushBox collision
+            foreach (var localPushBox in Properties.CollisionManager.PushBoxes)
+            {
+                foreach (var opponentPushBox in opponent.Properties.CollisionManager.PushBoxes)
+                {
+                    if (localPushBox.Intersects(opponentPushBox))
+                    {
+                        Debug.Log(Properties.MoveDirection.x + ", " + opponent.Properties.MoveDirection.x);
+                        opponent.Push(Properties.MoveDirection.x);
+                    }
+                }
+            }
+        }
+
+        public void Push(float directionX)
+        {
+            Properties.MoveDirection.x = directionX;
+        }
+
         public void ApplyCollision(FrameDataHandler handler)
         {
             Properties.CurrentHealth -= handler.Damage;
             Properties.CurrentState = CharacterProperties.CharacterState.HitStun;
             Properties.FrameDataHandler.HitStun = handler.HitStun;
-            _hitStunManager.PushBack = handler.PushBack;
+            Properties.CollisionManager.PushBack = handler.PushBack;
         }
         
         //Determine which side the player is on
         public void DeterminePlayerSide()
         {
-            
             if (_characterObject.transform.position.x > _opponent.transform.position.x && CanSwitchOrientation())
             {
                 var flipModel = new Vector3(-1,1,1);
@@ -239,7 +257,7 @@ namespace GamePlayScripts
         private bool CanSwitchOrientation()
         {
             //TODO: make a list of different states, i.e grounded is usually fine, but a forward dash under a player should not instantly turn around
-            return Properties.IsGrounded;
+            return Properties.Grounded;
         }
 
         public CharacterProperties GetCharacterProperties()

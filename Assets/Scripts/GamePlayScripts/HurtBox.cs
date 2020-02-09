@@ -5,10 +5,13 @@ using UnityEngine;
 public class HurtBox
 {
     public GameObject HurtBoxObject;
+    public GameObject DebugHurtBox;
     public BoxCollider Collider;
+    public Bounds Bounds;
     
     public enum HurtZone
     {
+        General,
         UpperBody,
         LowerBody,
         Head,
@@ -21,10 +24,19 @@ public class HurtBox
     {
         Collider = hurtBox.GetComponent<BoxCollider>();
         Zone = zone;
+
+    }
+    
+    public HurtBox(Bounds bounds, HurtZone zone)
+    {
+        Bounds = bounds;
+        Zone = zone;
     }
 
     public Bounds GetHurtBoxBounds()
     {
         return Collider.bounds;
     }
+
+
 }

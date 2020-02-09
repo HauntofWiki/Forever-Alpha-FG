@@ -43,6 +43,7 @@ namespace GamePlayScripts
             GameObject.Find("UpperBodyHurtBox").name = "P1UpperBodyHurtBox";
             GameObject.Find("LowerBodyHurtBox").name = "P1LowerBodyHurtBox";
             GameObject.Find("HitBox").name = "P1HitBox";
+            GameObject.Find("PushBox").name = "P1PushBox";
 
             //Set Player 2 Objects
             characterPrefab = Resources.Load("Prefabs/Characters/Player");
@@ -56,6 +57,7 @@ namespace GamePlayScripts
             GameObject.Find("UpperBodyHurtBox").name = "P2UpperBodyHurtBox";
             GameObject.Find("LowerBodyHurtBox").name = "P2LowerBodyHurtBox";
             GameObject.Find("HitBox").name = "P2HitBox";
+            GameObject.Find("PushBox").name = "P2PushBox";
 
             player1Character.PostLoadSetup(player2Object);
             player2Character.PostLoadSetup(player1Object);
@@ -70,11 +72,11 @@ namespace GamePlayScripts
         void Update()
         {
             //Update characters
-            player1Character.Update();
-            player2Character.Update();
+            player1Character.Update(player2Character);
+            player2Character.Update(player1Character);
 
             //Check and Handle Collisions
-            if (player1Character.DetectCollisions(player2Character.GetHurtBoxes()))
+            if (player1Character.DetectCollisions(player2Character.Properties.CollisionManager))
             {
                 player1Character.Properties.ComboCounter++;
                 player1Character.Properties.Collided = true;
@@ -82,13 +84,13 @@ namespace GamePlayScripts
                 
                 player2Character.ApplyCollision(player1Character.Properties.FrameDataHandler);
             }
-            if (player2Character.DetectCollisions(player1Character.GetHurtBoxes()))
+            if (player2Character.DetectCollisions(player1Character.Properties.CollisionManager))
             {
                 player2Character.Properties.ComboCounter++;
                 player2Character.Properties.Collided = true;
                 player1Character.Properties.NewHit = true;
                 
-                player1Character.ApplyCollision(player1Character.Properties.FrameDataHandler);
+                player1Character.ApplyCollision(player2Character.Properties.FrameDataHandler);
             }
 
             //Check to see if an Active Combo ended
@@ -104,7 +106,7 @@ namespace GamePlayScripts
                 player2Character.Properties.ComboActive = false;
                 player2Character.Properties.ComboCounter = 0;
             }
-                
+            
             //Update game time
             if (frameCount % 60 == 0)
             {
