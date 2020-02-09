@@ -1,10 +1,14 @@
-﻿using GamePlayScripts.CharacterMoves;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace GamePlayScripts
 {
-    public class HitStunManager
+    public class CollisionManager
     {
+        public List<HurtBox> HurtBoxes { get; }
+        public List<HitBox> HitBoxes { get; }
+        public List<PushBox> PushBoxes { get; }
+        
         private Animator _animator;
         private CharacterProperties _properties;
         private AnimationClip[] _animationClip;
@@ -12,10 +16,15 @@ namespace GamePlayScripts
         private int _counter = 0;
         public float PushBack { get; set; }
 
-        public HitStunManager(Animator animator, ref CharacterProperties properties)
+        public CollisionManager(Animator animator, ref CharacterProperties properties)
         {
+            HurtBoxes = new List<HurtBox>();
+            HitBoxes = new List<HitBox>();
+            PushBoxes = new List<PushBox>();
+            
             _animator = animator;
             _properties = properties;
+            
         }
         
         public void Update()
@@ -45,5 +54,38 @@ namespace GamePlayScripts
 
             _counter++;
         }
+        
+        public void Add(HurtBox box)
+        {
+            HurtBoxes.Add(box);
+        }
+        
+        public void Remove(HurtBox box)
+        {
+            HurtBoxes.Remove(box);
+        }
+        
+        public void Add(HitBox box)
+        {
+            HitBoxes.Add(box);
+        }
+        
+        public void Remove(HitBox box)
+        {
+            HitBoxes.Remove(box);
+        }
+        
+        public void Add(PushBox box)
+        {
+            PushBoxes.Add(box);
+        }
+        
+        public void Remove(PushBox box)
+        {
+            PushBoxes.Remove(box);
+        }
+
+        
+        
     }
 }

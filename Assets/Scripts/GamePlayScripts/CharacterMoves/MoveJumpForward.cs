@@ -36,7 +36,7 @@ namespace GamePlayScripts.CharacterMoves
                 if (Properties.CurrentState == CharacterProperties.CharacterState.Stand ||
                     Properties.CurrentState == CharacterProperties.CharacterState.Crouch)
                 {
-                    if (Properties.IsGrounded)
+                    if (Properties.Grounded)
                     {
                         ActionCounter = 0;
                         FrameData.Update(ActionCounter);
@@ -71,7 +71,7 @@ namespace GamePlayScripts.CharacterMoves
                 if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Recovery)
                 {
                     //Continue forward momentum after jump starts
-                    if (!Properties.IsGrounded)
+                    if (!Properties.Grounded)
                     {
                         FrameData.Update(ActionCounter);
                         Properties.MoveDirection.x = Properties.WalkForwardXSpeed;
@@ -79,7 +79,7 @@ namespace GamePlayScripts.CharacterMoves
                     }
                     
                     //Once grounded, begin recovery portion of the jump
-                    if (Properties.IsGrounded)
+                    if (Properties.Grounded)
                     {
                         FrameData.Update(ActionCounter++);
                         Properties.CurrentState = CharacterProperties.CharacterState.LandingJumpForward;

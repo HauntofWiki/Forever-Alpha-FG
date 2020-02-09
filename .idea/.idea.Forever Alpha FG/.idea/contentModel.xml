@@ -29,15 +29,13 @@
             </e>
             <e p="CharacterProperties.cs" t="Include" />
             <e p="CollisionBoxProperties.cs" t="Include" />
-            <e p="CollisionInformation.cs" t="Include" />
+            <e p="CollisionManager.cs" t="Include" />
             <e p="GamePlayManager.cs" t="Include" />
             <e p="Hitbox.cs" t="Include" />
-            <e p="HitStunManager.cs" t="Include" />
             <e p="HurtBox.cs" t="Include" />
             <e p="PushBox.cs" t="Include" />
             <e p="UIManager.cs" t="Include" />
           </e>
-          <e p="HitStunAnimationScript.cs" t="Include" />
           <e p="InputClass.cs" t="Include" />
           <e p="InputManager.cs" t="Include" />
           <e p="MenuScripts" t="Include">

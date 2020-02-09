@@ -75,14 +75,12 @@
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveWalkForward.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterProperties.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CollisionBoxProperties.cs" />
-     <Compile Include="Assets\Scripts\GamePlayScripts\CollisionInformation.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CollisionManager.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\GamePlayManager.cs" />
-     <Compile Include="Assets\Scripts\GamePlayScripts\Hitbox.cs" />
-     <Compile Include="Assets\Scripts\GamePlayScripts\HitStunManager.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\HitBox.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\HurtBox.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\PushBox.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\UIManager.cs" />
-     <Compile Include="Assets\Scripts\HitStunAnimationScript.cs" />
      <Compile Include="Assets\Scripts\InputClass.cs" />
      <Compile Include="Assets\Scripts\InputManager.cs" />
      <Compile Include="Assets\Scripts\MenuScripts\CharacterSelect\SideSelect.cs" />

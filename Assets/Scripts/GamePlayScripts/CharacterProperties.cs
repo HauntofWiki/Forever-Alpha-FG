@@ -1,4 +1,5 @@
-﻿using GamePlayScripts.CharacterMoves;
+﻿using System.Collections.Generic;
+using GamePlayScripts.CharacterMoves;
 using UnityEngine;
 
 namespace GamePlayScripts
@@ -16,9 +17,14 @@ namespace GamePlayScripts
         public float[] AirDashBackwardSpeed;
 
         public bool IsAirborne = false;
-        public bool IsIgnoringGravity = false;
+        public bool IgnoringGravity = false;
+        public bool IgnoringPushBox = false;
         public bool LocalHitBoxActive = false;
-        public bool IsGrounded = false;
+        public bool Grounded = false;
+        
+        //Collision Detection
+        public CollisionManager CollisionManager;
+        
         
         //Collided checks if an attack has already collided to not trigger further actions
         public bool Collided = false;
