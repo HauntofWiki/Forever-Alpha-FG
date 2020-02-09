@@ -58,7 +58,7 @@ public class UIManager
         player2HealthBarFull.fillAmount = 1f;
     }
 
-    public void Update(int gameTime, CharacterProperties p1, CharacterProperties p2)
+    public void Update(int gameTime, CharacterManager p1, CharacterManager p2)
     {
         SetClock(gameTime);
         SetHealthBars(p1, p2);
@@ -77,7 +77,7 @@ public class UIManager
             gameTimer.text = time.ToString();
     }
 
-    private void SetHealthBars(CharacterProperties p1, CharacterProperties p2)
+    private void SetHealthBars(CharacterManager p1, CharacterManager p2)
     {
         //Player 1 health bars
         if (p1.CurrentHealth / p1.MaxHealth <= 0.25)

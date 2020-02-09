@@ -60,8 +60,9 @@
      <Compile Include="Assets\Scripts\GameManagerScript.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CameraScript.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\Character.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterManager.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\CharacterMove.cs" />
-     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\FrameDataHandler.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\FrameDataManager.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveAirDashForward.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveDashBackward.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveDashForward.cs" />
@@ -73,7 +74,6 @@
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveStandIdle.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveWalkBackward.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveWalkForward.cs" />
-     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterProperties.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CollisionBoxProperties.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CollisionManager.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\GamePlayManager.cs" />

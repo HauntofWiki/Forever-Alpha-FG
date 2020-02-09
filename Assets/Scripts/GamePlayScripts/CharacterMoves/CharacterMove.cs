@@ -4,9 +4,9 @@ namespace GamePlayScripts.CharacterMoves
 {
     public abstract class CharacterMove
     {
-        protected CharacterProperties Properties;
+        protected CharacterManager Manager;
         protected Animator Animator;
-        protected FrameDataHandler FrameData;
+        protected FrameDataManager FrameData;
         //Counter tracks the animation frames to sync with frame data;
         protected int ActionCounter = 0;
         //LastInput is used to protect against repeated inputs from holding for a fraction of a second
@@ -21,7 +21,7 @@ namespace GamePlayScripts.CharacterMoves
         protected bool[] PatternMatch;
         
         
-        public abstract void InitializeMove(ref CharacterProperties properties, Animator animator);
+        public abstract void InitializeMove(ref CharacterManager manager, Animator animator);
         public abstract bool DetectMoveInput(InputClass inputClass);
         public abstract bool DetectHoldInput(InputClass inputClass);
         public abstract void PerformAction(InputClass inputClass);

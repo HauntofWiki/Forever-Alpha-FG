@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -212,7 +212,7 @@ GameObject:
   - component: {fileID: 247974220}
   - component: {fileID: 247974219}
   m_Layer: 0
-  m_Name: Plane (1)
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -286,11 +286,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 247974218}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: -0.7071068}
-  m_LocalPosition: {x: -0.5, y: 4.28, z: 6.9}
-  m_LocalScale: {x: 5, y: 1, z: 1}
+  m_LocalPosition: {x: -0.5, y: 3.4, z: 19}
+  m_LocalScale: {x: 5, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 270, y: 0, z: 0}
 --- !u!1 &498090043
 GameObject:
@@ -5101,7 +5101,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &557591420
 GameObject:
@@ -5151,7 +5151,7 @@ GameObject:
   - component: {fileID: 583148241}
   - component: {fileID: 583148240}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5386,7 +5386,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &1066622386 stripped
 Camera:
@@ -5464,7 +5464,7 @@ PrefabInstance:
     - target: {fileID: 7091478060275373711, guid: 4edaf275eab4a7245b9fdb79e7f7c365,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7091478060275373711, guid: 4edaf275eab4a7245b9fdb79e7f7c365,
         type: 3}
@@ -5645,7 +5645,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

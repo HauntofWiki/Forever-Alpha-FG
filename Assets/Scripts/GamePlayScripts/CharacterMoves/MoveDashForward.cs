@@ -4,13 +4,13 @@ namespace GamePlayScripts.CharacterMoves
 {
     public class MoveDashForward : CharacterMove
     {
-        public override void InitializeMove(ref CharacterProperties properties, Animator animator)
+        public override void InitializeMove(ref CharacterManager manager, Animator animator)
         {
-            Properties = properties;
+            Manager = manager;
             Animator = animator;
             //Forward dash is special because length doesnt matter because you can hold the input
             //Basically you just have startup and recovery
-            FrameData = new FrameDataHandler(7);
+            FrameData = new FrameDataManager(7);
             FrameData.SetFieldsZero();
             FrameData.SetActionFrames(3,1);
             ActionCounter = 0;
@@ -65,38 +65,38 @@ namespace GamePlayScripts.CharacterMoves
             //Detect input and proper state
             if (DetectMoveInput(inputClass))
             {
-                if (Properties.CurrentState == CharacterProperties.CharacterState.Stand ||
-                    Properties.CurrentState == CharacterProperties.CharacterState.Crouch)
+                if (Manager.CurrentState == CharacterManager.CharacterState.Stand ||
+                    Manager.CurrentState == CharacterManager.CharacterState.Crouch)
                 {
                     //Start animation
                     ActionCounter = 0;
                     Animator.Play("DashForward");
                     FrameData.Update(ActionCounter);
-                    Properties.FrameDataHandler = FrameData;
-                    Properties.LastState = Properties.CurrentState;
-                    Properties.CurrentState = CharacterProperties.CharacterState.Dash;
+                    Manager.SetFrameDataManager(FrameData);
+                    Manager.LastState = Manager.CurrentState;
+                    Manager.CurrentState = CharacterManager.CharacterState.Dash;
                     return;
                 }
             }
             
             //Play out dash animation
-            if (Properties.CurrentState == CharacterProperties.CharacterState.Dash)
+            if (Manager.CurrentState == CharacterManager.CharacterState.Dash)
             {
                 //Move at startup speed
-                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Startup)
+                if (FrameData.ActionState == FrameDataManager.ActionFrameStates.Startup)
                 {
                     FrameData.Update(ActionCounter++);
-                    Properties.MoveDirection = new Vector3(Properties.DashForwardXSpeed[0], 0, 0);
+                    Manager.MoveDirection = new Vector3(Manager.DashForwardXSpeed[0], 0, 0);
                     return;
                 }
 
                 //Check for a held input for a long dash, do not advance ActionCounter
-                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Active)
+                if (FrameData.ActionState == FrameDataManager.ActionFrameStates.Active)
                 {
                     if (DetectHoldInput(inputClass))
                     {
-                        Properties.LastState = Properties.CurrentState;
-                        Properties.MoveDirection = new Vector3(Properties.DashForwardXSpeed[1], 0, 0);
+                        Manager.LastState = Manager.CurrentState;
+                        Manager.MoveDirection = new Vector3(Manager.DashForwardXSpeed[1], 0, 0);
                         return;
                     }
 
@@ -104,20 +104,20 @@ namespace GamePlayScripts.CharacterMoves
                 }
 
                 //Recovery, this is also the minimum dash distance
-                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.Recovery)
+                if (FrameData.ActionState == FrameDataManager.ActionFrameStates.Recovery)
                 {
                     FrameData.Update(ActionCounter++);
                     Animator.Play("DashForwardBrake");
-                    Properties.MoveDirection = new Vector3(Properties.DashForwardXSpeed[2], 0, 0);
-                    Properties.LastState = Properties.CurrentState;
+                    Manager.MoveDirection = new Vector3(Manager.DashForwardXSpeed[2], 0, 0);
+                    Manager.LastState = Manager.CurrentState;
                     return;
                 }
 
                 //Exit Dash action
-                if (FrameData.ActionState == FrameDataHandler.ActionFrameStates.None)
+                if (FrameData.ActionState == FrameDataManager.ActionFrameStates.None)
                 {
-                    Properties.LastState = Properties.CurrentState;
-                    Properties.CurrentState = CharacterProperties.CharacterState.Stand;
+                    Manager.LastState = Manager.CurrentState;
+                    Manager.CurrentState = CharacterManager.CharacterState.Stand;
                 }
             }
         }
