@@ -12,7 +12,7 @@ namespace GamePlayScripts.CharacterMoves
             Manager = manager;
             FrameData = new FrameDataManager(15)
             {
-                Damage = 35.0f,
+                Damage = 500f,
                 Dizzy = 10.0f,
                 HitStun = 5.0f,
                 BlockStun = 10.0f,

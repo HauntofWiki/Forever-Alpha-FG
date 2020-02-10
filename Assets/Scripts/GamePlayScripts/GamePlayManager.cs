@@ -26,6 +26,22 @@ namespace GamePlayScripts
         //Define other values
         public int gameTime;
         public int frameCount;
+        public int Player1WinCount = 0;
+        public int Player2WinCount = 0;
+        public int RoundCount = 0;
+        
+        
+        //Define Game-States
+        public enum GameStates
+        {
+            PreRound,
+            RoundActive,
+            PostRound,
+            PauseMenu,
+            PostMatch
+        }
+
+        public GameStates GameState;
         
         // Start is called before the first frame update
         void Start()
@@ -66,55 +82,171 @@ namespace GamePlayScripts
             
             frameCount = 0;
             gameTime = Constants.MaxGameClock;
+
+            GameState = GameStates.PreRound;
         }
 
         // Update is called once per frame
         void Update()
-        { 
-          //Debug.Log(player2Object.transform.position);  
-            //Update characters
-            player1Character.Update(player2Character);
-            player2Character.Update(player1Character);
+        {
+            Debug.Log(GameState + ", " + Player1WinCount + ", " + Player2WinCount);
+            if (GameState == GameStates.PreRound)
+            {
+                //Character Intros, Announcer and UI stuff
+                uiManager.Reset();
+                uiManager.Update(GameState,frameCount);
+                RoundCount++;
 
-            //Check and Handle Collisions
-            if (player1Character.DetectCollisions(player2Character.CharManager))
-            {
-                player1Character.CharManager.ComboCounter++;
-                player1Character.CharManager.Collided = true;
-                player2Character.CharManager.NewHit = true;
-                
-                player2Character.ApplyCollision(player1Character.CharManager.GetFrameDataManager());
-            }
-            if (player2Character.DetectCollisions(player1Character.CharManager))
-            {
-                player2Character.CharManager.ComboCounter++;
-                player2Character.CharManager.Collided = true;
-                player1Character.CharManager.NewHit = true;
-                
-                player1Character.ApplyCollision(player2Character.CharManager.GetFrameDataManager());
-            }
+                if (frameCount >= 150)
+                {
+                    uiManager.Reset();
+                    GameState = GameStates.RoundActive;
+                }
 
-            //Check to see if an Active Combo ended
-            if (player1Character.CharManager.ComboActive &&
-                player2Character.CharManager.CurrentState == CharacterManager.CharacterState.Stand)
-            {
-                player1Character.CharManager.ComboActive = false;
-                player1Character.CharManager.ComboCounter = 0;
+                frameCount++;
             }
-            if (player2Character.CharManager.ComboActive &&
-                player1Character.CharManager.CurrentState == CharacterManager.CharacterState.Stand)
+            else if (GameState == GameStates.RoundActive)
             {
-                player2Character.CharManager.ComboActive = false;
-                player2Character.CharManager.ComboCounter = 0;
+                //Update characters
+                player1Character.Update(player2Character);
+                player2Character.Update(player1Character);
+
+                //Check and Handle Collisions
+                if (player1Character.DetectCollisions(player2Character.CharManager))
+                {
+                    player1Character.CharManager.ComboCounter++;
+                    player1Character.CharManager.Collided = true;
+                    player2Character.CharManager.NewHit = true;
+
+                    player2Character.ApplyCollision(player1Character.CharManager.GetFrameDataManager());
+                }
+
+                if (player2Character.DetectCollisions(player1Character.CharManager))
+                {
+                    player2Character.CharManager.ComboCounter++;
+                    player2Character.CharManager.Collided = true;
+                    player1Character.CharManager.NewHit = true;
+
+                    player1Character.ApplyCollision(player2Character.CharManager.GetFrameDataManager());
+                }
+
+                //Check to see if an Active Combo ended
+                if (player1Character.CharManager.ComboActive &&
+                    player2Character.CharManager.CurrentState == CharacterManager.CharacterState.Stand)
+                {
+                    player1Character.CharManager.ComboActive = false;
+                    player1Character.CharManager.ComboCounter = 0;
+                }
+
+                if (player2Character.CharManager.ComboActive &&
+                    player1Character.CharManager.CurrentState == CharacterManager.CharacterState.Stand)
+                {
+                    player2Character.CharManager.ComboActive = false;
+                    player2Character.CharManager.ComboCounter = 0;
+                }
+
+                //Update game time
+                if (frameCount % 60 == 0)
+                {
+                    gameTime--;
+                }
+
+                uiManager.Update(gameTime, player1Character.CharManager, player2Character.CharManager);
+                frameCount++;
+
+                if (gameTime <= 0)
+                {
+                    if (player1Character.CharManager.CurrentHealth > player2Character.CharManager.CurrentHealth)
+                    {
+                        Player1WinCount++;
+                        frameCount = 0;
+                    }
+                    else if (player2Character.CharManager.CurrentHealth > player2Character.CharManager.CurrentHealth)
+                    {
+                        Player2WinCount++;
+                        frameCount = 0;
+                    }
+                    else if (player1Character.CharManager.CurrentHealth == player2Character.CharManager.CurrentHealth)
+                    {
+                        Player1WinCount++;
+                        Player2WinCount++;
+                        frameCount = 0;
+                    }
+                    GameState = GameStates.PostRound;
+                }
+
+                if (player1Character.CharManager.CurrentHealth <= 0 && player2Character.CharManager.CurrentHealth <= 0)
+                {
+                    Player1WinCount++;
+                    Player2WinCount++;
+                    frameCount = 0;
+                    GameState = GameStates.PostRound;
+                }
+                else if (player1Character.CharManager.CurrentHealth <= 0)
+                {
+                    Player2WinCount++;
+                    frameCount = 0;
+                    GameState = GameStates.PostRound;
+                }
+                else if (player2Character.CharManager.CurrentHealth <= 0)
+                {
+                    Player1WinCount++;
+                    frameCount = 0;
+                    GameState = GameStates.PostRound;
+                }
             }
-            
-            //Update game time
-            if (frameCount % 60 == 0)
+            else if (GameState == GameStates.PostRound)
             {
-                gameTime--;
+                //Between rounds, Win poses, Announcer and UI stuff
+                uiManager.Update(GameState,frameCount);
+                
+                if (Player1WinCount == 2)
+                {
+                    GameState = GameStates.PostMatch;
+                }
+
+                if (Player2WinCount == 2)
+                {
+                    GameState = GameStates.PostMatch;
+                }
+                
+                if (frameCount >= 150)
+                {
+                    //Reset settings
+                    Reset();
+                    uiManager.Reset();
+                    player1Character.Reset();
+                    player2Character.Reset();
+                    GameState = GameStates.PreRound;
+                }
+                
+                frameCount++;
             }
-            uiManager.Update(gameTime,player1Character.CharManager, player2Character.CharManager);
-            frameCount++;
+            else if (GameState == GameStates.PauseMenu)
+            {
+                //Pause Menu
+                
+                //Options
+                //Button Config
+                //Move List
+                //Character Select
+                //Stage Select
+                //Quit
+            }
+            else if (GameState == GameStates.PostMatch)
+            {
+                //Display scores
+                
+                //Rematch -> GameState to PreRound
+                
+                //Character Select -> Go to Character Select Scene
+                
+                //Exit -> Go to Main Menu
+            }
+        }
+
+        public void Reset()
+        {
             
         }
         
