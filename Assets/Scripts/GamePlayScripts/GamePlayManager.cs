@@ -59,8 +59,8 @@ namespace GamePlayScripts
             GameObject.Find("HitBox").name = "P2HitBox";
             GameObject.Find("PushBox").name = "P2PushBox";
 
-            player1Character.PostLoadSetup(player2Object);
-            player2Character.PostLoadSetup(player1Object);
+            player1Character.PostLoadSetup(player2Object, player2Character);
+            player2Character.PostLoadSetup(player1Object, player1Character);
             
             uiManager = new UIManager();
             
@@ -70,42 +70,42 @@ namespace GamePlayScripts
 
         // Update is called once per frame
         void Update()
-        {
-            
+        { 
+          //Debug.Log(player2Object.transform.position);  
             //Update characters
             player1Character.Update(player2Character);
             player2Character.Update(player1Character);
 
             //Check and Handle Collisions
-            if (player1Character.DetectCollisions(player2Character.LocalManager))
+            if (player1Character.DetectCollisions(player2Character.CharManager))
             {
-                player1Character.LocalManager.ComboCounter++;
-                player1Character.LocalManager.Collided = true;
-                player2Character.LocalManager.NewHit = true;
+                player1Character.CharManager.ComboCounter++;
+                player1Character.CharManager.Collided = true;
+                player2Character.CharManager.NewHit = true;
                 
-                player2Character.ApplyCollision(player1Character.LocalManager.GetFrameDataManager());
+                player2Character.ApplyCollision(player1Character.CharManager.GetFrameDataManager());
             }
-            if (player2Character.DetectCollisions(player1Character.LocalManager))
+            if (player2Character.DetectCollisions(player1Character.CharManager))
             {
-                player2Character.LocalManager.ComboCounter++;
-                player2Character.LocalManager.Collided = true;
-                player1Character.LocalManager.NewHit = true;
+                player2Character.CharManager.ComboCounter++;
+                player2Character.CharManager.Collided = true;
+                player1Character.CharManager.NewHit = true;
                 
-                player1Character.ApplyCollision(player2Character.LocalManager.GetFrameDataManager());
+                player1Character.ApplyCollision(player2Character.CharManager.GetFrameDataManager());
             }
 
             //Check to see if an Active Combo ended
-            if (player1Character.LocalManager.ComboActive &&
-                player2Character.LocalManager.CurrentState == CharacterManager.CharacterState.Stand)
+            if (player1Character.CharManager.ComboActive &&
+                player2Character.CharManager.CurrentState == CharacterManager.CharacterState.Stand)
             {
-                player1Character.LocalManager.ComboActive = false;
-                player1Character.LocalManager.ComboCounter = 0;
+                player1Character.CharManager.ComboActive = false;
+                player1Character.CharManager.ComboCounter = 0;
             }
-            if (player2Character.LocalManager.ComboActive &&
-                player1Character.LocalManager.CurrentState == CharacterManager.CharacterState.Stand)
+            if (player2Character.CharManager.ComboActive &&
+                player1Character.CharManager.CurrentState == CharacterManager.CharacterState.Stand)
             {
-                player2Character.LocalManager.ComboActive = false;
-                player2Character.LocalManager.ComboCounter = 0;
+                player2Character.CharManager.ComboActive = false;
+                player2Character.CharManager.ComboCounter = 0;
             }
             
             //Update game time
@@ -113,7 +113,7 @@ namespace GamePlayScripts
             {
                 gameTime--;
             }
-            uiManager.Update(gameTime,player1Character.LocalManager, player2Character.LocalManager);
+            uiManager.Update(gameTime,player1Character.CharManager, player2Character.CharManager);
             frameCount++;
             
         }

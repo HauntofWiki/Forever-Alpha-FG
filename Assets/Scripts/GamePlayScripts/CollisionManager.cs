@@ -7,7 +7,7 @@ namespace GamePlayScripts
     {
         public List<HurtBox> HurtBoxes { get; }
         public List<HitBox> HitBoxes { get; }
-        public List<PushBox> PushBoxes { get; }
+        public PushBox PushBox { get; set; }
         
         private Animator _animator;
         private CharacterManager _manager;
@@ -19,7 +19,6 @@ namespace GamePlayScripts
         {
             HurtBoxes = new List<HurtBox>();
             HitBoxes = new List<HitBox>();
-            PushBoxes = new List<PushBox>();
             
             _animator = animator;
             _manager = manager;
@@ -72,16 +71,6 @@ namespace GamePlayScripts
         public void Remove(HitBox box)
         {
             HitBoxes.Remove(box);
-        }
-        
-        public void Add(PushBox box)
-        {
-            PushBoxes.Add(box);
-        }
-        
-        public void Remove(PushBox box)
-        {
-            PushBoxes.Remove(box);
         }
     }
 }

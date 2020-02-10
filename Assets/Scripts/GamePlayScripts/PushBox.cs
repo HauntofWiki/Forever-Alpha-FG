@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
 namespace GamePlayScripts
@@ -6,15 +7,10 @@ namespace GamePlayScripts
     public class PushBox
     {
         public BoxCollider Collider;
-        
-        public PushBox(BoxCollider pushBox)
-        {
-            Collider = pushBox;
-        }
 
-        public bool Intersects(PushBox pushBox)
+        public PushBox(BoxCollider boxCollider)
         {
-            return Collider.bounds.Intersects(pushBox.Collider.bounds);
+            Collider = boxCollider;
         }
     }
 }
