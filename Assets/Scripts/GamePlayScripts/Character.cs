@@ -4,20 +4,22 @@ using System.Threading;
 using GamePlayScripts.CharacterMoves;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SocialPlatforms;
 
 /*******************************************************
- *
+ * Parent class of the each character's more specific class
  ******************************************************/
 namespace GamePlayScripts
 {
     public class Character
     {
         //Define General objects and stats
-        public CharacterManager LocalManager;
+        public CharacterManager CharManager;
         private GameObject _characterObject;
         private GameObject _opponent;
         private Animator _animator;
         private InputManager _inputManager;
+        private Character _opponentCharacter;
         
         private List<CharacterMove> _characterMoves;
         
@@ -38,7 +40,7 @@ namespace GamePlayScripts
             _characterObject = characterGameObject;
             _animator = characterGameObject.GetComponent<Animator>();
             _inputManager = inputManager;
-            LocalManager = new CharacterManager
+            CharManager = new CharacterManager
             {
                 MaxHealth = 1000,
                 CurrentHealth = 1000,
@@ -49,6 +51,8 @@ namespace GamePlayScripts
                 DashForwardXSpeed = new float[] {5f, 8f, 3f},
                 AirDashForwardSpeed = new float[] {15.0f, 8.0f},
                 DashBackwardXSpeed = new float[] {15f, 15f, 8f},
+                Height = 1.5f,
+                Push = 0.0f,
                 IsAirborne = false,
                 IgnoringGravity = false,
                 MoveDirection = new Vector3(0,0,0),
@@ -58,15 +62,15 @@ namespace GamePlayScripts
                 CancellableState = CharacterManager.CancellableStates.None
             };
             
-            LocalManager.SetCollisionManager( new CollisionManager(_animator, ref LocalManager));
+            CharManager.SetCollisionManager( new CollisionManager(_animator, ref CharManager));
             characterGameObject.GetComponentInChildren<Camera>().targetTexture =
                 (RenderTexture) Resources.Load("Textures/Player 1 Render Texture");
             
             //Define and populate collision boxes
-            LocalManager.Add(new HurtBox(GameObject.Find("UpperBodyHurtBox").GetComponent<BoxCollider>(), HurtBox.HurtZone.UpperBody));
-            LocalManager.Add(new HurtBox(GameObject.Find("LowerBodyHurtBox").GetComponent<BoxCollider>(), HurtBox.HurtZone.LowerBody));
-            LocalManager.Add(new HitBox(GameObject.Find("HitBox").GetComponent<BoxCollider>(),true));
-            //Add Pushbox
+            CharManager.Add(new HurtBox(GameObject.Find("UpperBodyHurtBox").GetComponent<BoxCollider>(), HurtBox.HurtZone.UpperBody));
+            CharManager.Add(new HurtBox(GameObject.Find("LowerBodyHurtBox").GetComponent<BoxCollider>(), HurtBox.HurtZone.LowerBody));
+            CharManager.Add(new HitBox(GameObject.Find("HitBox").GetComponent<BoxCollider>(),true));
+            CharManager.SetPushBox(new PushBox(GameObject.Find("PushBox").GetComponent<BoxCollider>()));
             
             _characterMoves = new List<CharacterMove>();
 
@@ -86,21 +90,21 @@ namespace GamePlayScripts
             //Initialize moves.
             foreach (var move in _characterMoves)
             {
-                move.InitializeMove(ref LocalManager, _animator);
+                move.InitializeMove(ref CharManager, _animator);
             }
         }
 
         public void Update(Character opponent)
         {
             //Check if character was hit
-            if (LocalManager.CurrentState == CharacterManager.CharacterState.HitStun)
+            if (CharManager.CurrentState == CharacterManager.CharacterState.HitStun)
             {
-                LocalManager.UpdateCollision();
+                CharManager.UpdateCollision();
             }
             //Check if we need to switch orientation
             DeterminePlayerSide();
             //Get Inputs
-            _inputManager.Update(LocalManager.CharacterOrientation);
+            _inputManager.Update(CharManager.CharacterOrientation);
             //Update Moves
             foreach (var move in _characterMoves)
             {
@@ -108,29 +112,69 @@ namespace GamePlayScripts
             }
 
             //Move Character
-            ApplyMovement(LocalManager.CharacterOrientation);
+            ApplyMovement(CharManager.CharacterOrientation);
             //Reset NewHit
-            LocalManager.NewHit = false;
+            CharManager.NewHit = false;
         }
     
         private void ApplyMovement(int currentOrientation)
         {
             //Apply gravity
-            if(!LocalManager.IgnoringGravity && LocalManager.Grounded == false)
-                LocalManager.MoveDirection.y -= LocalManager.PersonalGravity * Time.deltaTime;
+            if(!CharManager.IgnoringGravity && CharManager.Grounded == false)
+                CharManager.MoveDirection.y -= CharManager.PersonalGravity * Time.deltaTime;
             
+            //Apply directions based on which side the character is on
+            CharManager.MoveDirection.x *= currentOrientation;
             var position = _characterObject.transform.position;
-            LocalManager.MoveDirection.x *= currentOrientation;
             
             //Keep Object above the floor
-            var potentialY = position.y + (LocalManager.MoveDirection.y * Time.deltaTime);
+            var potentialY = position.y + (CharManager.MoveDirection.y * Time.deltaTime);
             if (potentialY  <= Constants.Floor)
             {
-                LocalManager.MoveDirection.y = Constants.Floor - (position.y);
+                CharManager.MoveDirection.y = Constants.Floor - (position.y);
             }
             
-            var potentialX = position.x + (LocalManager.MoveDirection.x * Time.deltaTime);
+            var potentialX = position.x + (CharManager.MoveDirection.x * Time.deltaTime);
+            int trueOrientation = 0;
+            if (position.x < _opponent.transform.position.x)
+                trueOrientation = 1;
+            if (position.x > _opponent.transform.position.x)
+                trueOrientation = -1;
 
+          
+            //Use Push Box to maintain minimum distance
+            if (CharManager.GetPushBox().Collider.bounds
+                .Intersects(_opponentCharacter.CharManager.GetPushBox().Collider.bounds))
+            {
+                if (CharManager.MoveDirection.x * trueOrientation > 0)
+                {
+                    _opponentCharacter.CharManager.Push = CharManager.MoveDirection.x;
+                }
+
+                if (CharManager.MoveDirection.x * trueOrientation == 0 && CharManager.Push * trueOrientation == 0)
+                {
+                    CharManager.MoveDirection.x = -1f * trueOrientation;
+                }
+            }
+            else
+            {
+                _opponentCharacter.CharManager.Push = 0;
+            }
+            
+            //Keep characters from move through one another
+            if (potentialX >= _opponent.transform.position.x && potentialY <= _opponentCharacter.CharManager.Height && trueOrientation == 1)
+            {
+                //_opponentCharacter.LocalManager.Push = LocalManager.MoveDirection.x;
+                CharManager.MoveDirection.x = _opponent.transform.position.x - (position.x);
+            }
+            else if (potentialX <= _opponent.transform.position.x && potentialY <= _opponentCharacter.CharManager.Height && trueOrientation == -1)
+            {
+                //_opponentCharacter.LocalManager.Push = LocalManager.MoveDirection.x;
+                CharManager.MoveDirection.x = _opponent.transform.position.x - (position.x);
+            }
+            
+            //Apply any push forces
+            CharManager.MoveDirection.x += CharManager.Push;
 
             //Keep characters within screen boundaries
             var center = (position.x + _opponent.transform.position.x) / 2;
@@ -139,11 +183,11 @@ namespace GamePlayScripts
             
             if (potentialX <= leftScreenBarrier)
             {
-                LocalManager.MoveDirection.x = leftScreenBarrier - (position.x);
+                CharManager.MoveDirection.x = leftScreenBarrier - (position.x);
             }
             else if (potentialX >= rightScreenBarrier)
             {
-                LocalManager.MoveDirection.x = rightScreenBarrier - (position.x);
+                CharManager.MoveDirection.x = rightScreenBarrier - (position.x);
             }
             
             //Keep character within stage boundaries
@@ -152,39 +196,45 @@ namespace GamePlayScripts
             
             if (potentialX <= stageLeftBarrier)
             {
-                LocalManager.MoveDirection.x = stageLeftBarrier - (position.x);
+                CharManager.MoveDirection.x = stageLeftBarrier - (position.x);
             }
             else if (potentialX >= stageRightBarrier)
             {
-                LocalManager.MoveDirection.x = stageRightBarrier - (position.x);
+                CharManager.MoveDirection.x = stageRightBarrier - (position.x);
             }
             
+            //Check if character is against the corner
+            if (position.x <= stageLeftBarrier || position.x >= stageRightBarrier)
+                CharManager.Cornered = true;
+            else
+                CharManager.Cornered = false;
+
             //Actually move the character according to all the previous calculations
-            _characterObject.transform.position += (LocalManager.MoveDirection * Time.deltaTime);
+            _characterObject.transform.position += (CharManager.MoveDirection * Time.deltaTime);
             
             //Determine is character is grounded
-            LocalManager.Grounded =_characterObject.transform.position.y < Constants.FloorBuffer;
+            CharManager.Grounded =_characterObject.transform.position.y < Constants.FloorBuffer;
         }
 
         public bool DetectCollisions(CharacterManager opponentManager)
         {
             //Detect HitBox Collisions
             var hurtBoxes = opponentManager.GetHurtBoxes();
-            foreach (var hitBox in LocalManager.GetHitBoxes())
+            foreach (var hitBox in CharManager.GetHitBoxes())
             {
                 //If a local HitBox is not active than no collision
-                if (!LocalManager.LocalHitBoxActive && hitBox.LocalHitBox) return false;
+                if (!CharManager.LocalHitBoxActive && hitBox.LocalHitBox) return false;
 
                 //Move already collided
-                if (LocalManager.Collided) return false;
+                if (CharManager.Collided) return false;
 
                 foreach (var hurtBox in hurtBoxes)
                 {
                     if (hitBox.Intersects(hurtBox))
                     {
                         Debug.Log("hit");
-                        LocalManager.ComboActive = true;
-                        LocalManager.Collided = true;
+                        CharManager.ComboActive = true;
+                        CharManager.Collided = true;
                         return true;
                     }
                 }
@@ -193,17 +243,12 @@ namespace GamePlayScripts
             return false;
         }
 
-        public void Push(float directionX)
-        {
-            LocalManager.MoveDirection.x = directionX;
-        }
-
         public void ApplyCollision(FrameDataManager manager)
         {
-            LocalManager.CurrentHealth -= manager.Damage;
-            LocalManager.CurrentState = CharacterManager.CharacterState.HitStun;
-            LocalManager.SetHitStun(manager.HitStun);
-            LocalManager.SetPushBack(manager.PushBack);
+            CharManager.CurrentHealth -= manager.Damage;
+            CharManager.CurrentState = CharacterManager.CharacterState.HitStun;
+            CharManager.SetHitStun(manager.HitStun);
+            CharManager.SetPushBack(manager.PushBack);
         }
         
         //Determine which side the player is on
@@ -212,13 +257,13 @@ namespace GamePlayScripts
             if (_characterObject.transform.position.x > _opponent.transform.position.x && CanSwitchOrientation())
             {
                 var flipModel = new Vector3(-1,1,1);
-                LocalManager.CharacterOrientation = -1;
+                CharManager.CharacterOrientation = -1;
                 _characterObject.transform.localScale = Vector3.Lerp(_characterObject.transform.localScale,flipModel, 2.0f);
             }
             else if (_characterObject.transform.position.x < _opponent.transform.position.x && CanSwitchOrientation())
             {
                 var flipModel = new Vector3(1,1,1);
-                LocalManager.CharacterOrientation = 1;
+                CharManager.CharacterOrientation = 1;
                 _characterObject.transform.localScale = Vector3.Lerp(_characterObject.transform.localScale,flipModel, 2.0f);
             }
         }
@@ -226,16 +271,17 @@ namespace GamePlayScripts
         private bool CanSwitchOrientation()
         {
             //TODO: make a list of different states, i.e grounded is usually fine, but a forward dash under a player should not instantly turn around
-            return LocalManager.Grounded;
+            return CharManager.Grounded;
         }
 
         public CharacterManager GetCharacterProperties()
         {
-            return LocalManager;
+            return CharManager;
         }
 
-        public void PostLoadSetup(GameObject opponent)
+        public void PostLoadSetup(GameObject opponent, Character opponentCharacter)
         {
+            _opponentCharacter = opponentCharacter;
             _opponent = opponent;
             DeterminePlayerSide();
         }

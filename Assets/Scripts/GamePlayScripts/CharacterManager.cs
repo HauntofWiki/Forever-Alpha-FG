@@ -30,7 +30,10 @@ namespace GamePlayScripts
         public bool IgnoringPushBox = false;
         //Collided checks if an attack has already collided to not trigger further actions
         public bool Collided = false;
-    
+        public float Height;
+        public float Push;
+        public bool Cornered;
+
         //Vector3 which is used for moving the Character around;
         public Vector3 MoveDirection;
 
@@ -151,6 +154,16 @@ namespace GamePlayScripts
             return _collisionManager.HitBoxes;
         }
 
+        public PushBox GetPushBox()
+        {
+            return _collisionManager.PushBox;
+        }
+
+        public void SetPushBox(PushBox pushBox)
+        {
+            _collisionManager.PushBox = pushBox;
+        }
+
         public void SetFrameDataManager(FrameDataManager frameDataManager)
         {
             _frameDataManager = frameDataManager;
@@ -175,7 +188,6 @@ namespace GamePlayScripts
         {
             return _frameDataManager.HitStun;
         }
-        
         
         public void SetHitStun(float hitStun)
         {
