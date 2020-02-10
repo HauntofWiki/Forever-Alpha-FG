@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using GamePlayScripts;
 using GamePlayScripts.CharacterMoves;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.UI;
 
 public class UIManager 
 {
-    //Define UI elements
+    //Background UI
     public Image player1HealthBarEmpty;
     public Image player1HealthBarDifferential;
     public Image player1HealthBarLow;
@@ -23,6 +24,17 @@ public class UIManager
     public Text gameTimer;
     public Image leftPanel;
     public Image rightPanel;
+
+    public int RoundCount = 0;
+    
+    //Foreground UI
+    public Text KO;
+    public Text PreRound;
+    public List<string> Round1Quotes;
+    public List<string> RoundNQuotes;
+    public bool QuoteSet = false;
+    public string Text = "";
+    
 
     public UIManager()
     {
@@ -44,7 +56,10 @@ public class UIManager
         leftPanel.material = (Material) Resources.Load("Materials/Portrait Camera Player 1");
         rightPanel = GameObject.Find("Panel Portrait Right").GetComponent<Image>();
         rightPanel.material = (Material) Resources.Load("Materials/Portrait Camera Player 1");
-        
+        KO = GameObject.Find("TextKO").GetComponent<Text>();
+        KO.enabled = false;
+        PreRound = GameObject.Find("TextRoundStart").GetComponent<Text>();
+
         //Set initial Health Bar values
         player1HealthBarEmpty.fillAmount = 1f;
         player1HealthBarDifferential.fillAmount = 1f;
@@ -56,8 +71,47 @@ public class UIManager
         player2HealthBarLow.fillAmount = 0.25f;
         player2HealthBarMiddle.fillAmount = 0.99f;
         player2HealthBarFull.fillAmount = 1f;
+
+        Round1Quotes = new List<string>
+        {
+            "File RageQuit.exe not found.",
+            "TakeTheThrow.exe",
+            "WatchYourToes is not a recognized command.",
+            "sudo ./HoldBackToBLock",
+            "Out of disk space on /excuses volume"
+        };
+
     }
 
+    public void Update(GamePlayManager.GameStates gameState, int frameCount)
+    {
+        
+        if (gameState == GamePlayManager.GameStates.PreRound)
+        {
+            PreRound.enabled = true;
+            string quote;
+            if (!QuoteSet)
+            {
+                var pretext = "Round " + RoundCount + " Loading...\r\n";
+                quote = (pretext + Round1Quotes[Random.Range(0, Round1Quotes.Count)]);
+                QuoteSet = true;
+            }
+            else quote = Round1Quotes[0];
+
+            PreRoundRoutine(frameCount, quote.ToCharArray());
+        }
+        if (gameState == GamePlayManager.GameStates.PostRound)
+        {
+            KoRoutine(frameCount);
+        }
+
+        if (gameState == GamePlayManager.GameStates.RoundActive)
+        {
+            PreRound.enabled = false;
+            KO.enabled = false;
+        }
+    }
+    
     public void Update(int gameTime, CharacterManager p1, CharacterManager p2)
     {
         SetClock(gameTime);
@@ -73,8 +127,7 @@ public class UIManager
 
     private void SetClock(int time)
     {
-
-            gameTimer.text = time.ToString();
+        gameTimer.text = time.ToString();
     }
 
     private void SetHealthBars(CharacterManager p1, CharacterManager p2)
@@ -129,5 +182,33 @@ public class UIManager
     private void DisplayComboCounter()
     {
         
+    }
+
+    public void Reset()
+    {
+        PreRound.enabled = false;
+        KO.enabled = false;
+    }
+
+    public void KoRoutine(int frameCount)
+    {
+        KO.enabled = true;
+        if (frameCount % 32 == 0)
+        {
+            KO.text = "K.O. ";
+        }
+        if (frameCount % 32 == 16)
+        {
+            KO.text = "K.O._";
+        }
+    }
+
+    public void PreRoundRoutine(int frameCount, char[] quote)
+    {
+        if (frameCount < quote.Length)
+            Text += quote[frameCount];
+
+        PreRound.text = Text;
+
     }
 }

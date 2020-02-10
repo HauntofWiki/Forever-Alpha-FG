@@ -285,5 +285,11 @@ namespace GamePlayScripts
             _opponent = opponent;
             DeterminePlayerSide();
         }
+
+        public void Reset()
+        {
+            CharManager.CurrentHealth = CharManager.MaxHealth;
+            
+        }
     }
 }
