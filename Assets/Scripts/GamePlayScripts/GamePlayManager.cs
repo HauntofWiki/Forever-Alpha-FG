@@ -213,6 +213,7 @@ namespace GamePlayScripts
                 if (frameCount >= 150)
                 {
                     //Reset settings
+                    frameCount = 0;
                     Reset();
                     uiManager.Reset();
                     player1Character.Reset();

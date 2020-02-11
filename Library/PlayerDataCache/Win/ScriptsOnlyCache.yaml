@@ -522,7 +522,7 @@ ScriptsOnlyBuild:
     className: VolumeComponent
   - hash:
       serializedVersion: 2
-      Hash: 01e44394af5b95385a47e075475f83a1
+      Hash: 3a95589fce380b261b76c3258acc5892
     assemblyName: Assembly-CSharp.dll
     namespaceName: GamePlayScripts
     className: GamePlayManager

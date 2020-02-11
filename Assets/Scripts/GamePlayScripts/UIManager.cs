@@ -178,6 +178,11 @@ public class UIManager
         if (!p1.ComboActive)
             player2HealthBarDifferential.fillAmount = p2.CurrentHealth / p2.MaxHealth;
     }
+
+    public void StartMenu()
+    {
+        
+    }
     
     private void DisplayComboCounter()
     {
