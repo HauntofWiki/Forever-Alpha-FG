@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GamePlayScripts;
 using GamePlayScripts.CharacterMoves;
+using MenuScripts.GamePlay;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.UI;
@@ -28,6 +29,8 @@ public class UIManager
     public int RoundCount = 0;
     
     //Foreground UI
+    public GameObject PauseMenuObject;
+    public PauseMenu PauseMenu;
     public Text KO;
     public Text PreRound;
     public List<string> Round1Quotes;
@@ -56,6 +59,8 @@ public class UIManager
         leftPanel.material = (Material) Resources.Load("Materials/Portrait Camera Player 1");
         rightPanel = GameObject.Find("Panel Portrait Right").GetComponent<Image>();
         rightPanel.material = (Material) Resources.Load("Materials/Portrait Camera Player 1");
+        PauseMenuObject = GameObject.Find("PauseMenu");
+        PauseMenu = new PauseMenu();
         KO = GameObject.Find("TextKO").GetComponent<Text>();
         KO.enabled = false;
         PreRound = GameObject.Find("TextRoundStart").GetComponent<Text>();
@@ -99,16 +104,19 @@ public class UIManager
             else quote = Round1Quotes[0];
 
             PreRoundRoutine(frameCount, quote.ToCharArray());
-        }
-        if (gameState == GamePlayManager.GameStates.PostRound)
+        } 
+        else if (gameState == GamePlayManager.GameStates.PostRound)
         {
             KoRoutine(frameCount);
-        }
-
-        if (gameState == GamePlayManager.GameStates.RoundActive)
+        } 
+        else if (gameState == GamePlayManager.GameStates.RoundActive)
         {
             PreRound.enabled = false;
             KO.enabled = false;
+        }
+        else if (gameState == GamePlayManager.GameStates.PauseMenu)
+        {
+            
         }
     }
     

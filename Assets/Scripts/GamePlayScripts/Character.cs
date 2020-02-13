@@ -15,10 +15,10 @@ namespace GamePlayScripts
     {
         //Define General objects and stats
         public CharacterManager CharManager;
+        public InputManager InputManager { get; }
         private GameObject _characterObject;
         private GameObject _opponent;
         private Animator _animator;
-        private InputManager _inputManager;
         private Character _opponentCharacter;
         
         private List<CharacterMove> _characterMoves;
@@ -39,7 +39,7 @@ namespace GamePlayScripts
         {
             _characterObject = characterGameObject;
             _animator = characterGameObject.GetComponent<Animator>();
-            _inputManager = inputManager;
+            InputManager = inputManager;
             CharManager = new CharacterManager
             {
                 MaxHealth = 1000,
@@ -104,11 +104,11 @@ namespace GamePlayScripts
             //Check if we need to switch orientation
             DeterminePlayerSide();
             //Get Inputs
-            _inputManager.Update(CharManager.CharacterOrientation);
+            InputManager.GetInput(CharManager.CharacterOrientation);
             //Update Moves
             foreach (var move in _characterMoves)
             {
-                move.PerformAction(_inputManager.CurrentInput);
+                move.PerformAction(InputManager.CurrentInput);
             }
 
             //Move Character

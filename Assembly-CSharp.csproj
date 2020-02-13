@@ -84,6 +84,8 @@
      <Compile Include="Assets\Scripts\InputClass.cs" />
      <Compile Include="Assets\Scripts\InputManager.cs" />
      <Compile Include="Assets\Scripts\MenuScripts\CharacterSelect\SideSelect.cs" />
+     <Compile Include="Assets\Scripts\MenuScripts\GamePlay\PauseMenu.cs" />
+     <Compile Include="Assets\Scripts\MenuScripts\MenuOption.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>C:/Users/Richard/GameDev/Forever Alpha FG/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

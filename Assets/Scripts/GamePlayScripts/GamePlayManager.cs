@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using GamePlayScripts.CharacterMoves;
 using JetBrains.Annotations;
+using MenuScripts.GamePlay;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.Serialization;
@@ -12,23 +13,25 @@ namespace GamePlayScripts
 {
     public class GamePlayManager : MonoBehaviour
     {
-        public UnityEngine.Object characterPrefab;
-        
         //Define Players and stats
         public GameObject player1Object;
         public GameObject player2Object;
         public Character player1Character;
         public Character player2Character;
+        public Character pauseOwner;
         public InputManager player1InputManager;
         public InputManager player2InputManager;
         public UIManager uiManager;
+        public PauseMenu pauseMenu;
+        public bool pauseAble;
+        public bool longPause;
         
         //Define other values
         public int gameTime;
         public int frameCount;
-        public int Player1WinCount = 0;
-        public int Player2WinCount = 0;
-        public int RoundCount = 0;
+        public int player1WinCount = 0;
+        public int player2WinCount = 0;
+        public int roundCount = 0;
         
         
         //Define Game-States
@@ -41,14 +44,14 @@ namespace GamePlayScripts
             PostMatch
         }
 
-        public GameStates GameState;
+        public GameStates gameState;
         
         // Start is called before the first frame update
         void Start()
         {
             //Prefabs/Characters/Player will be replaced by the actual models sent over from character select
             //The player GameObjects should be named Player1 and Player2
-            characterPrefab = Resources.Load("Prefabs/Characters/Player");
+            var characterPrefab = Resources.Load("Prefabs/Characters/Player");
             player1Object = (GameObject) GameObject.Instantiate(characterPrefab);
             player1Object.name = "Player1";
             player1Object.transform.position = new Vector3(-3, 0, 0);
@@ -79,34 +82,48 @@ namespace GamePlayScripts
             player2Character.PostLoadSetup(player1Object, player1Character);
             
             uiManager = new UIManager();
+            pauseMenu = new PauseMenu();
+            //Hide PauseMenu from UI
+            pauseMenu.Disable();
             
             frameCount = 0;
             gameTime = Constants.MaxGameClock;
 
-            GameState = GameStates.PreRound;
+            gameState = GameStates.PreRound;
         }
 
         // Update is called once per frame
         void Update()
         {
-            Debug.Log(GameState + ", " + Player1WinCount + ", " + Player2WinCount);
-            if (GameState == GameStates.PreRound)
+            //Debug.Log(gameState + ", " + player1WinCount + ", " + player2WinCount);
+            if (gameState == GameStates.PreRound)
             {
                 //Character Intros, Announcer and UI stuff
                 uiManager.Reset();
-                uiManager.Update(GameState,frameCount);
-                RoundCount++;
+                uiManager.Update(gameState,frameCount);
+                roundCount++;
 
                 if (frameCount >= 150)
                 {
                     uiManager.Reset();
-                    GameState = GameStates.RoundActive;
+                    gameState = GameStates.RoundActive;
                 }
 
                 frameCount++;
             }
-            else if (GameState == GameStates.RoundActive)
+            else if (gameState == GameStates.RoundActive)
             {
+                if (player1Character.InputManager.GetInput(0).StartButtonDown == 1)
+                {
+                    pauseOwner = player1Character;
+                    gameState = GameStates.PauseMenu;
+                }
+                if (player2Character.InputManager.GetInput(0).StartButtonDown == 1)
+                {
+                    pauseOwner = player2Character;
+                    gameState = GameStates.PauseMenu;
+                }
+                
                 //Update characters
                 player1Character.Update(player2Character);
                 player2Character.Update(player1Character);
@@ -158,56 +175,56 @@ namespace GamePlayScripts
                 {
                     if (player1Character.CharManager.CurrentHealth > player2Character.CharManager.CurrentHealth)
                     {
-                        Player1WinCount++;
+                        player1WinCount++;
                         frameCount = 0;
                     }
                     else if (player2Character.CharManager.CurrentHealth > player2Character.CharManager.CurrentHealth)
                     {
-                        Player2WinCount++;
+                        player2WinCount++;
                         frameCount = 0;
                     }
                     else if (player1Character.CharManager.CurrentHealth == player2Character.CharManager.CurrentHealth)
                     {
-                        Player1WinCount++;
-                        Player2WinCount++;
+                        player1WinCount++;
+                        player2WinCount++;
                         frameCount = 0;
                     }
-                    GameState = GameStates.PostRound;
+                    gameState = GameStates.PostRound;
                 }
 
                 if (player1Character.CharManager.CurrentHealth <= 0 && player2Character.CharManager.CurrentHealth <= 0)
                 {
-                    Player1WinCount++;
-                    Player2WinCount++;
+                    player1WinCount++;
+                    player2WinCount++;
                     frameCount = 0;
-                    GameState = GameStates.PostRound;
+                    gameState = GameStates.PostRound;
                 }
                 else if (player1Character.CharManager.CurrentHealth <= 0)
                 {
-                    Player2WinCount++;
+                    player2WinCount++;
                     frameCount = 0;
-                    GameState = GameStates.PostRound;
+                    gameState = GameStates.PostRound;
                 }
                 else if (player2Character.CharManager.CurrentHealth <= 0)
                 {
-                    Player1WinCount++;
+                    player1WinCount++;
                     frameCount = 0;
-                    GameState = GameStates.PostRound;
+                    gameState = GameStates.PostRound;
                 }
             }
-            else if (GameState == GameStates.PostRound)
+            else if (gameState == GameStates.PostRound)
             {
                 //Between rounds, Win poses, Announcer and UI stuff
-                uiManager.Update(GameState,frameCount);
+                uiManager.Update(gameState,frameCount);
                 
-                if (Player1WinCount == 2)
+                if (player1WinCount == 2)
                 {
-                    GameState = GameStates.PostMatch;
+                    gameState = GameStates.PostMatch;
                 }
 
-                if (Player2WinCount == 2)
+                if (player2WinCount == 2)
                 {
-                    GameState = GameStates.PostMatch;
+                    gameState = GameStates.PostMatch;
                 }
                 
                 if (frameCount >= 150)
@@ -218,23 +235,53 @@ namespace GamePlayScripts
                     uiManager.Reset();
                     player1Character.Reset();
                     player2Character.Reset();
-                    GameState = GameStates.PreRound;
+                    gameState = GameStates.PreRound;
                 }
                 
                 frameCount++;
             }
-            else if (GameState == GameStates.PauseMenu)
+            else if (gameState == GameStates.PauseMenu)
             {
-                //Pause Menu
+                //Show menu
+                pauseMenu.Enable();
                 
-                //Options
-                //Button Config
-                //Move List
-                //Character Select
-                //Stage Select
-                //Quit
+                //Unpause
+                if (pauseOwner.InputManager.GetInput(0).StartButtonDown == 1 || pauseOwner.InputManager.CurrentInput.CancelButtonDown)
+                {
+                    pauseMenu.Disable();
+                    gameState = GameStates.RoundActive;
+                }
+                
+                //Check menu state every frame
+                PauseMenu.MenuOptions state = pauseMenu.Update(pauseOwner.InputManager.CurrentInput);
+                Debug.Log(state);
+                if (pauseOwner.InputManager.GetInput(0).SubmitButtonDown)
+                {
+                    switch (state)
+                    {
+                        case PauseMenu.MenuOptions.Close:
+                            pauseMenu.Disable();
+                            gameState = GameStates.RoundActive;
+                            break;
+                        case PauseMenu.MenuOptions.ButtonConfig:
+                            //ToDo ButtonConfig menu
+                            break;
+                        case PauseMenu.MenuOptions.MoveList:
+                            //ToDo Show MoveList
+                            break;
+                        case PauseMenu.MenuOptions.CharacterSelect:
+                            //ToDo Go to Character Select
+                            break;
+                        case PauseMenu.MenuOptions.StageSelect:
+                            //ToDo Go to StageSelect
+                            break;
+                        case PauseMenu.MenuOptions.Exit:
+                            //ToDo Exit Game
+                            break;
+                    }
+                }
             }
-            else if (GameState == GameStates.PostMatch)
+            else if (gameState == GameStates.PostMatch)
             {
                 //Display scores
                 

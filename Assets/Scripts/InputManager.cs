@@ -58,7 +58,7 @@ public class InputManager
     }
     
     //Inserts inputs into Queue once per frame - inputs are currently set up for Playstation controller via project settings
-    public InputClass Update(int characterOrientation)
+    public InputClass GetInput(int characterOrientation)
     {
         //if (characterOrientation == 0)
             //Debug.Log("CharacterOrientation is 0");
