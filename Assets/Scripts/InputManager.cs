@@ -115,7 +115,7 @@ public class InputManager
         CurrentInput.Auxiliary3AxisDown = Input.GetAxis(_auxiliaryButton3AxisName);
         CurrentInput.Auxiliary4AxisDown = Input.GetAxis(_auxiliaryButton4AxisName);
         
-        //Read ButtonDown commands
+        //Read ButtonUp commands
         CurrentInput.LightAttackButtonDown = Input.GetKeyUp(LightAttackButton) ? 1 : 0;
         CurrentInput.MediumAttackButtonDown = Input.GetKeyUp(MediumAttackButton) ? 1 : 0;
         CurrentInput.HeavyAttackButtonDown = Input.GetKeyUp(HeavyAttackButton) ? 1 : 0;

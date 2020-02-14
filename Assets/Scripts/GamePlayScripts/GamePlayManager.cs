@@ -18,7 +18,7 @@ namespace GamePlayScripts
         public GameObject player2Object;
         public Character player1Character;
         public Character player2Character;
-        public Character pauseOwner;
+        public InputManager pauseOwner;
         public InputManager player1InputManager;
         public InputManager player2InputManager;
         public UIManager uiManager;
@@ -52,7 +52,7 @@ namespace GamePlayScripts
             //Prefabs/Characters/Player will be replaced by the actual models sent over from character select
             //The player GameObjects should be named Player1 and Player2
             var characterPrefab = Resources.Load("Prefabs/Characters/Player");
-            player1Object = (GameObject) GameObject.Instantiate(characterPrefab);
+            player1Object = (GameObject) Instantiate(characterPrefab);
             player1Object.name = "Player1";
             player1Object.transform.position = new Vector3(-3, 0, 0);
             player1InputManager = new InputManager(1,Input.GetJoystickNames()[1]);//still hardcoded
@@ -115,12 +115,12 @@ namespace GamePlayScripts
             {
                 if (player1Character.InputManager.GetInput(0).StartButtonDown == 1)
                 {
-                    pauseOwner = player1Character;
+                    pauseOwner = player1InputManager;
                     gameState = GameStates.PauseMenu;
                 }
                 if (player2Character.InputManager.GetInput(0).StartButtonDown == 1)
                 {
-                    pauseOwner = player2Character;
+                    pauseOwner = player2InputManager;
                     gameState = GameStates.PauseMenu;
                 }
                 
@@ -246,16 +246,16 @@ namespace GamePlayScripts
                 pauseMenu.Enable();
                 
                 //Unpause
-                if (pauseOwner.InputManager.GetInput(0).StartButtonDown == 1 || pauseOwner.InputManager.CurrentInput.CancelButtonDown)
+                if (pauseOwner.GetInput(1).StartButtonDown == 1 || pauseOwner.GetInput(1).CancelButtonDown)
                 {
                     pauseMenu.Disable();
                     gameState = GameStates.RoundActive;
                 }
                 
                 //Check menu state every frame
-                PauseMenu.MenuOptions state = pauseMenu.Update(pauseOwner.InputManager.CurrentInput);
-                Debug.Log(state);
-                if (pauseOwner.InputManager.GetInput(0).SubmitButtonDown)
+                PauseMenu.MenuOptions state = pauseMenu.Update(pauseOwner.CurrentInput);
+                Debug.Log(pauseOwner.CurrentInput.SubmitButtonDown);
+                if (pauseOwner.GetInput(1).SubmitButtonDown)
                 {
                     switch (state)
                     {
@@ -276,7 +276,7 @@ namespace GamePlayScripts
                             //ToDo Go to StageSelect
                             break;
                         case PauseMenu.MenuOptions.Exit:
-                            //ToDo Exit Game
+                            Application.Quit();
                             break;
                     }
                 }

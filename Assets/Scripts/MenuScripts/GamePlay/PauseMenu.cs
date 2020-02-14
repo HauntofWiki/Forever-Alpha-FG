@@ -6,8 +6,12 @@ namespace MenuScripts.GamePlay
 {
     public class PauseMenu
     {
-        private readonly GameObject _pauseMenuObject;
-        
+        private readonly GameObject _menuObject;
+        private Image _imageClose;
+        private Image _imageExit;
+        private Text _optionClose;
+        private Text _optionExit;
+
         private int _highlightedIndex = 0;
         private float _lastInput;
 
@@ -23,27 +27,23 @@ namespace MenuScripts.GamePlay
         };
 
         private MenuOptions _highlightedMenuOption;
-        private readonly List<MenuOption> _menuOptions;
+        private readonly List<MenuOptions> _menuOptions;
 
         public PauseMenu()
         {
-            _pauseMenuObject = GameObject.Find("PauseMenu");
-
-            var prefab = Resources.Load("Prefabs/UI/PanelMenuOption");
-            _menuOptions = new List<MenuOption>()
+            _menuObject = GameObject.Find("PauseMenu");
+            _imageClose = GameObject.Find("PanelClose").GetComponent<Image>();
+            _imageExit = GameObject.Find("PanelExit").GetComponent<Image>();
+            
+            _menuOptions = new List<MenuOptions>()
             {
-                new MenuOption(_pauseMenuObject, MenuOptions.Close),
-                new MenuOption(_pauseMenuObject, MenuOptions.ButtonConfig),
-                new MenuOption(_pauseMenuObject, MenuOptions.MoveList),
-                new MenuOption(_pauseMenuObject, MenuOptions.CharacterSelect),
-                new MenuOption(_pauseMenuObject, MenuOptions.StageSelect),
-                new MenuOption(_pauseMenuObject, MenuOptions.Exit)
+                MenuOptions.Close,
+                MenuOptions.Exit
             };
         }
 
         public MenuOptions Update(InputClass inputClass)
         {
-            //Debug.Log(_highlightedIndex);
             if (_lastInput != inputClass.DPadY)
             {
                 if (inputClass.DPadY < 0)
@@ -65,48 +65,49 @@ namespace MenuScripts.GamePlay
                     }
                 }
             }
-            
-            var select = new Color(3,137,209,100);
-            var unSelect = new Color(255,255,255,100);
-            //_optionClose.color = unSelect;
+
+            var select = new Color(.03f,.3f,.8f,.8f);
+            var unSelect = new Color(1,1,1,.8f);
+            _imageClose.color = unSelect;
+            _imageExit.color = unSelect;
             //Debug.Log(_menuOptionsList[_highlightedIndex]);
-            switch (_menuOptions[_highlightedIndex].MenuOptionType)
+            switch (_menuOptions[_highlightedIndex])
             {
                 case MenuOptions.Close:
-                    //_optionClose.color = select;
+                    _imageClose.color = select;
                     break;
                 case MenuOptions.ButtonConfig:
-                    //_optionButtonConfig.color = select;
+                    //_imageClose.color = select;
                     break;
                 case MenuOptions.MoveList:
-                    //_optionMoveList.color = select;
+                    //_imageClose.color = select;
                     break;
                 case MenuOptions.CharacterSelect:
-                    //_optionCharacterSelect.color = select;
+                    //_imageClose.color = select;
                     break;
                 case MenuOptions.StageSelect:
-                   // _optionStageSelect.color = select;
+                   // _imageClose.color = select;
                     break;
                 case MenuOptions.Exit:
-                    //_optionExit.color = select;
+                    _imageExit.color = select;
                     break;
                 default:
-                    //_optionClose.color = select;
+                    _imageClose.color = select;
                     break;
             }
 
             _lastInput = inputClass.DPadY;
-            return _menuOptions[_highlightedIndex].MenuOptionType;
+            return _menuOptions[_highlightedIndex];
         }
 
         public void Enable()
         {
-            _pauseMenuObject.SetActive(true);
+            _menuObject.SetActive(true);
         }
         
         public void Disable()
         {
-            _pauseMenuObject.SetActive(false);
+            _menuObject.SetActive(false);
         }
     }
 }

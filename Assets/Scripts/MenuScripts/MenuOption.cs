@@ -6,16 +6,20 @@ namespace MenuScripts
 {
     public class MenuOption
     {
-        private readonly GameObject _menuOptionObject;
-        private Image _menuOptionImage { get; set; }
+        private GameObject _menuOption;
+        private Image _menuOptionImage;
         private readonly Text _menuOptionText;
         public PauseMenu.MenuOptions MenuOptionType { get; }
 
-        public MenuOption(GameObject menuOptionObject, PauseMenu.MenuOptions type)
+        public MenuOption(PauseMenu.MenuOptions type)
         {
-            _menuOptionObject = menuOptionObject;
-            _menuOptionImage = _menuOptionObject.GetComponent<Image>();
-            _menuOptionText = _menuOptionObject.GetComponentInChildren<Text>();
+            var prefab = Resources.Load("Prefabs/UI/PanelMenuOption");
+            var menuContent = GameObject.Find("MenuContent");
+            _menuOption = (GameObject) Object.Instantiate(prefab, menuContent.transform);
+            _menuOptionImage = _menuOption.GetComponent<Image>();
+            _menuOptionText = _menuOption.GetComponentInChildren<Text>();
+            //_menuOptionImage.rectTransform.
+            
 
             switch (type)
             {
@@ -48,6 +52,18 @@ namespace MenuScripts
                     _menuOptionText.text = "None";
                     break;
             }
+            
+            
+        }
+
+        public void Select()
+        {
+            
+        }
+
+        public void Deselect()
+        {
+            
         }
     }
 }
