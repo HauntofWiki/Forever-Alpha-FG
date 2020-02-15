@@ -59,7 +59,7 @@ namespace MenuScripts.CharacterSelect
             //For each device determine if the DPAD moved to the left or right and assign the appropriate side
             for (var i = 0; i < _players.Count; i++)
             {
-                _players[i].CurrentXInput = _players[i].InputManager.Update(1).DPadX;
+                _players[i].CurrentXInput = _players[i].InputManager.GetInput(1).DPadX;
 
                 //Compare X input to prevent jumping across the menu too fast
                 if (_players[i].CurrentXInput != _players[i].LastXInput)
@@ -107,12 +107,12 @@ namespace MenuScripts.CharacterSelect
                 }
 
                 //Detect confirm or cancel to advance to the next screen or go back
-                if (_players[i].InputManager.Update(1).SubmitButtonDown)
+                if (_players[i].InputManager.GetInput(1).SubmitButtonDown)
                 {
                     //Confirmed Side, select Over
                 }
 
-                if (_players[i].InputManager.Update(1).CancelButtonDown)
+                if (_players[i].InputManager.GetInput(1).CancelButtonDown)
                 {
                     //Return to previous scene
                 }

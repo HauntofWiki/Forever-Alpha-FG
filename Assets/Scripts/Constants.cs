@@ -1,4 +1,5 @@
-﻿using UnityEngine.Rendering;
+﻿using GamePlayScripts;
+using UnityEngine.Rendering;
 
 public static class Constants
 {
@@ -6,6 +7,8 @@ public static class Constants
     //TODO Add Debug options into UI/Game
     public const bool ShowCollisionBoxes = false;
     public const bool ShowPositionInfo = false;
+    public const bool DebugFixedGameState = false;
+    public const GamePlayManager.GameStates DebugGameState = GamePlayManager.GameStates.PreRound;
     
     //prefab path constants
     public const string PrefabPlayer = "Prefabs/Characters/Player";

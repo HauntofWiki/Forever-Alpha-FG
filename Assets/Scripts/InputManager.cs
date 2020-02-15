@@ -53,12 +53,13 @@ public class InputManager
     {
         _inputQueueSize = 50;
         _numberOfInputs = 10;
+        JoystickName = joystickName;
         //Debug.Log("Joy" + joystickNumber + ", " + Input.GetJoystickNames()[joystickNumber]);
         SetDefaultMapping(joystickNumber + 1,joystickName);
     }
     
     //Inserts inputs into Queue once per frame - inputs are currently set up for Playstation controller via project settings
-    public InputClass Update(int characterOrientation)
+    public InputClass GetInput(int characterOrientation)
     {
         //if (characterOrientation == 0)
             //Debug.Log("CharacterOrientation is 0");
@@ -115,7 +116,7 @@ public class InputManager
         CurrentInput.Auxiliary3AxisDown = Input.GetAxis(_auxiliaryButton3AxisName);
         CurrentInput.Auxiliary4AxisDown = Input.GetAxis(_auxiliaryButton4AxisName);
         
-        //Read ButtonDown commands
+        //Read ButtonUp commands
         CurrentInput.LightAttackButtonDown = Input.GetKeyUp(LightAttackButton) ? 1 : 0;
         CurrentInput.MediumAttackButtonDown = Input.GetKeyUp(MediumAttackButton) ? 1 : 0;
         CurrentInput.HeavyAttackButtonDown = Input.GetKeyUp(HeavyAttackButton) ? 1 : 0;
@@ -126,12 +127,12 @@ public class InputManager
         CurrentInput.Auxiliary4ButtonDown = Input.GetKeyUp(Auxiliary4Button) ? 1 : 0;
         CurrentInput.StartButtonDown = Input.GetKeyUp(StartButton) ? 1 : 0;
         CurrentInput.SelectButtonDown = Input.GetKeyUp(SelectButton) ? 1 : 0;
-
+        //Submit and Cancel buttons
         CurrentInput.SubmitButtonDown = Input.GetKeyDown(SubmitButton);
-        CurrentInput.SubmitButtonDown = Input.GetKeyDown(CancelButton);
+        CurrentInput.CancelButtonDown = Input.GetKeyDown(CancelButton);
         
         
-        //Debug.Log(CurrentInput.DPadNumPad + ", " + CurrentInput.DPadX);
+        //Debug.Log(CurrentInput.SubmitButtonDown);
 
         return CurrentInput;
     }

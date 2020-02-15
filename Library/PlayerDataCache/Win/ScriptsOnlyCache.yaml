@@ -74,11 +74,11 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12006}
     - Class: 114
-      Script: {instanceID: 12322}
+      Script: {instanceID: 12326}
     - Class: 114
-      Script: {instanceID: 12950}
+      Script: {instanceID: 12954}
     - Class: 114
-      Script: {instanceID: 13070}
+      Script: {instanceID: 13074}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -522,7 +522,7 @@ ScriptsOnlyBuild:
     className: VolumeComponent
   - hash:
       serializedVersion: 2
-      Hash: 01e44394af5b95385a47e075475f83a1
+      Hash: 0c8923ce1facedcd8c8fc186e7c19ada
     assemblyName: Assembly-CSharp.dll
     namespaceName: GamePlayScripts
     className: GamePlayManager
