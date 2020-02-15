@@ -25,15 +25,15 @@ namespace GamePlayScripts
         public PauseMenu pauseMenu;
         public bool pauseAble;
         public bool longPause;
-        
+
         //Define other values
         public int gameTime;
         public int frameCount;
         public int player1WinCount = 0;
         public int player2WinCount = 0;
         public int roundCount = 0;
-        
-        
+
+
         //Define Game-States
         public enum GameStates
         {
@@ -44,8 +44,19 @@ namespace GamePlayScripts
             PostMatch
         }
 
+        public enum GameMode
+        {
+            None,
+            Arcade,
+            Versus,
+            Training,
+            Network,
+            Debug
+        }
+
         public GameStates gameState;
-        
+        public GameMode gameMode;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -55,9 +66,9 @@ namespace GamePlayScripts
             player1Object = (GameObject) Instantiate(characterPrefab);
             player1Object.name = "Player1";
             player1Object.transform.position = new Vector3(-3, 0, 0);
-            player1InputManager = new InputManager(1,Input.GetJoystickNames()[1]);//still hardcoded
+            player1InputManager = new InputManager(1, Input.GetJoystickNames()[1]); //still hardcoded
             player1Character = new Character(player1Object, player1InputManager);
-            
+
             //Set Player 1 Collision Detection Boxes
             GameObject.Find("UpperBodyHurtBox").name = "P1UpperBodyHurtBox";
             GameObject.Find("LowerBodyHurtBox").name = "P1LowerBodyHurtBox";
@@ -69,9 +80,9 @@ namespace GamePlayScripts
             player2Object = (GameObject) GameObject.Instantiate(characterPrefab);
             player2Object.name = "Player2";
             player2Object.transform.position = new Vector3(3, 0, 0);
-            player2InputManager = new InputManager(0,Input.GetJoystickNames()[0]);//still hardcoded
+            player2InputManager = new InputManager(0, Input.GetJoystickNames()[0]); //still hardcoded
             player2Character = new Character(player2Object, player2InputManager);
-            
+
             //Set Player 2 Collision Detection Boxes
             GameObject.Find("UpperBodyHurtBox").name = "P2UpperBodyHurtBox";
             GameObject.Find("LowerBodyHurtBox").name = "P2LowerBodyHurtBox";
@@ -80,31 +91,36 @@ namespace GamePlayScripts
 
             player1Character.PostLoadSetup(player2Object, player2Character);
             player2Character.PostLoadSetup(player1Object, player1Character);
-            
+
             uiManager = new UIManager();
             pauseMenu = new PauseMenu();
             //Hide PauseMenu from UI
             pauseMenu.Disable();
-            
+
             frameCount = 0;
             gameTime = Constants.MaxGameClock;
 
             gameState = GameStates.PreRound;
+            gameMode = GameMode.Debug;
         }
 
         // Update is called once per frame
         void Update()
         {
-            //Debug.Log(gameState + ", " + player1WinCount + ", " + player2WinCount);
+            //Debug.Log(player2Character.CharManager.CurrentState);
             if (gameState == GameStates.PreRound)
             {
+                if (gameMode == GameMode.Debug)
+                    gameState = GameStates.RoundActive;
+                
                 //Character Intros, Announcer and UI stuff
                 uiManager.Reset();
-                uiManager.Update(gameState,frameCount);
+                uiManager.Update(gameState, frameCount);
                 roundCount++;
 
                 if (frameCount >= 150)
                 {
+                    frameCount = 0;
                     uiManager.Reset();
                     gameState = GameStates.RoundActive;
                 }
@@ -123,7 +139,7 @@ namespace GamePlayScripts
 //                    pauseOwner = player2InputManager;
 //                    gameState = GameStates.PauseMenu;
 //                }
-                
+
                 //Update characters
                 player1Character.Update(player2Character);
                 player2Character.Update(player1Character);
@@ -189,6 +205,7 @@ namespace GamePlayScripts
                         player2WinCount++;
                         frameCount = 0;
                     }
+
                     gameState = GameStates.PostRound;
                 }
 
@@ -214,46 +231,49 @@ namespace GamePlayScripts
             }
             else if (gameState == GameStates.PostRound)
             {
-                //Between rounds, Win poses, Announcer and UI stuff
-                uiManager.Update(gameState,frameCount);
-                
-                if (player1WinCount == 2)
+                if (gameMode != GameMode.Debug)
                 {
-                    gameState = GameStates.PostMatch;
-                }
+                    //Between rounds, Win poses, Announcer and UI stuff
+                    uiManager.Update(gameState, frameCount);
 
-                if (player2WinCount == 2)
-                {
-                    gameState = GameStates.PostMatch;
+                    if (player1WinCount == 2)
+                    {
+                        gameState = GameStates.PostMatch;
+                    }
+
+                    if (player2WinCount == 2)
+                    {
+                        gameState = GameStates.PostMatch;
+                    }
+
+                    if (frameCount >= 150)
+                    {
+                        //Reset settings
+                        //frameCount = 0;
+                        Reset();
+                        uiManager.Reset();
+                        player1Character.Reset();
+                        player2Character.Reset();
+                        gameState = GameStates.PreRound;
+                    }
+
+                    frameCount++;
                 }
-                
-                if (frameCount >= 150)
-                {
-                    //Reset settings
-                    frameCount = 0;
-                    Reset();
-                    uiManager.Reset();
-                    player1Character.Reset();
-                    player2Character.Reset();
-                    gameState = GameStates.PreRound;
-                }
-                
-                frameCount++;
             }
             else if (gameState == GameStates.PauseMenu)
             {
                 var input = pauseOwner.GetInput(1);
-                
+
                 //Show menu
                 pauseMenu.Enable();
-                
+
                 //Unpause
                 if (input.StartButtonDown == 1 || input.CancelButtonDown)
                 {
                     pauseMenu.Disable();
                     gameState = GameStates.RoundActive;
                 }
-                
+
                 //Check menu state every frame
                 PauseMenu.MenuOptions state = pauseMenu.Update(pauseOwner.CurrentInput);
                 Debug.Log(input.SubmitButtonDown);
@@ -286,19 +306,17 @@ namespace GamePlayScripts
             else if (gameState == GameStates.PostMatch)
             {
                 //Display scores
-                
+
                 //Rematch -> GameState to PreRound
-                
+
                 //Character Select -> Go to Character Select Scene
-                
+
                 //Exit -> Go to Main Menu
             }
         }
 
         public void Reset()
         {
-            
         }
-        
     }
 }

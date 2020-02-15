@@ -17,6 +17,7 @@
               <e p="CharacterMove.cs" t="Include" />
               <e p="FrameDataManager.cs" t="Include" />
               <e p="MoveAirDashForward.cs" t="Include" />
+              <e p="MoveCrouch.cs" t="Include" />
               <e p="MoveDashBackward.cs" t="Include" />
               <e p="MoveDashForward.cs" t="Include" />
               <e p="MoveJumpBackward.cs" t="Include" />
