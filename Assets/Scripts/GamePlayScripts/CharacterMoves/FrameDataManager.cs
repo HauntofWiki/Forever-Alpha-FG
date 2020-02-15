@@ -43,6 +43,7 @@ namespace GamePlayScripts.CharacterMoves
         public int Length;
         
         public float Damage = 0;
+        public float ChipDamage = 0;
         public float Dizzy = 0;
         public float MeterGain = 0;
         public float PushBack = 0;

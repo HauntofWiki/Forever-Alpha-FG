@@ -23,18 +23,6 @@ namespace GamePlayScripts
         
         private List<CharacterMove> _characterMoves;
         
-        //Define Character Moves
-        private CharacterMove _moveStandIdle;
-        private CharacterMove _moveWalkForward;
-        private CharacterMove _moveWalkBackward;
-        private CharacterMove _moveJumpNeutral;
-        private CharacterMove _moveJumpForward;
-        private CharacterMove _moveJumpBackward;
-        private CharacterMove _moveDashForward;
-        private CharacterMove _moveDashBackward;
-        private CharacterMove _moveAirDashForward;
-        private CharacterMove _moveLightAttack;
-
         public Character(GameObject characterGameObject, InputManager inputManager)
         {
             _characterObject = characterGameObject;
@@ -76,6 +64,7 @@ namespace GamePlayScripts
 
             //Add Moves to List. Order can effect priority.
             _characterMoves.Add(new MoveStandIdle());
+            _characterMoves.Add(new MoveCrouch());
             _characterMoves.Add(new MoveWalkForward());
             _characterMoves.Add(new MoveWalkBackward());
             _characterMoves.Add(new MoveJumpForward());
@@ -97,7 +86,7 @@ namespace GamePlayScripts
         public void Update(Character opponent)
         {
             //Check if character was hit
-            if (CharManager.CurrentState == CharacterManager.CharacterState.HitStun)
+            if (CharManager.CurrentState == CharacterManager.CharacterState.HitStun || CharManager.CurrentState == CharacterManager.CharacterState.StandingBlockStun)
             {
                 CharManager.UpdateCollision();
             }
@@ -245,10 +234,31 @@ namespace GamePlayScripts
 
         public void ApplyCollision(FrameDataManager manager)
         {
-            CharManager.CurrentHealth -= manager.Damage;
-            CharManager.CurrentState = CharacterManager.CharacterState.HitStun;
-            CharManager.SetHitStun(manager.HitStun);
-            CharManager.SetPushBack(manager.PushBack);
+            if (InputManager.CurrentInput.DPadX == -1)
+            {
+                if (CharManager.CurrentState == CharacterManager.CharacterState.Stand)
+                {
+                    CharManager.CurrentHealth -= manager.ChipDamage;
+                    CharManager.CurrentState = CharacterManager.CharacterState.StandingBlockStun;
+                    CharManager.SetHitStun(manager.HitStun);
+                    CharManager.SetPushBack(manager.PushBack);
+                }
+
+                if (CharManager.CurrentState == CharacterManager.CharacterState.Crouch)
+                {
+                    CharManager.CurrentHealth -= manager.ChipDamage;
+                    CharManager.CurrentState = CharacterManager.CharacterState.CrouchingBlockStun;
+                    CharManager.SetHitStun(manager.HitStun);
+                    CharManager.SetPushBack(manager.PushBack);
+                }
+            }
+            else
+            {
+                CharManager.CurrentHealth -= manager.Damage;
+                CharManager.CurrentState = CharacterManager.CharacterState.HitStun;
+                CharManager.SetHitStun(manager.HitStun);
+                CharManager.SetPushBack(manager.PushBack);
+            }
         }
         
         //Determine which side the player is on

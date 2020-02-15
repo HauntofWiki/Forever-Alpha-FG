@@ -32,10 +32,30 @@ namespace GamePlayScripts
             
             if (_counter == 0)
             {
-                _animator.SetFloat("HitStunAmount",1);
-                _animator.Play("HitStunBlendTree");
+                if (_manager.CurrentState == CharacterManager.CharacterState.HitStun)
+                {
+                    _animator.SetFloat("HitStunAmount", 1);
+                    _animator.Play("HitStunBlendTree");
+
+                    _manager.MoveDirection = new Vector3(_manager.GetPushBack(), 0, 0);
+                }
+
+                if (_manager.CurrentState == CharacterManager.CharacterState.StandingBlockStun)
+                {
+                    //_animator.SetFloat("HitStunAmount", 1);
+                    _animator.Play("Block");
+
+                    _manager.MoveDirection = new Vector3(_manager.GetPushBack(), 0, 0);
+                }
                 
-                _manager.MoveDirection = new Vector3(_manager.GetPushBack(),0,0);
+                if (_manager.CurrentState == CharacterManager.CharacterState.CrouchingBlockStun)
+                {
+                    //_animator.SetFloat("HitStunAmount", 1);
+                    _animator.Play("CrouchBlock");
+
+                    _manager.MoveDirection = new Vector3(_manager.GetPushBack(), 0, 0);
+                }
+                Debug.Log(_manager.CurrentState);
             }
 
             if (_counter > 0 && _counter <= _manager.GetHitStun())
@@ -49,7 +69,7 @@ namespace GamePlayScripts
                 _counter = 0;
                 return;
             }
-
+            //Debug.Log(_manager.CurrentState);
             _counter++;
         }
         

@@ -2,7 +2,7 @@
 
 namespace GamePlayScripts.CharacterMoves
 {
-    public class MoveStandIdle : CharacterMove
+    public class MoveCrouch : CharacterMove
     {
         private CharacterManager _manager;
         private Animator _animator;
@@ -14,7 +14,7 @@ namespace GamePlayScripts.CharacterMoves
         
         public override bool DetectMoveInput(InputClass inputClass)
         {
-            return inputClass.DPadNumPad == 5;
+            return inputClass.DPadY == -1;
         }
 
         public override bool DetectHoldInput(InputClass inputClass)
@@ -28,9 +28,9 @@ namespace GamePlayScripts.CharacterMoves
             if (_manager.CurrentState != CharacterManager.CharacterState.Crouch && _manager.CurrentState != CharacterManager.CharacterState.Stand) return;
 
             _manager.LastState = _manager.CurrentState;
-            if (_manager.LastState == CharacterManager.CharacterState.Crouch)
-                _animator.Play("CrouchStand");
-            _manager.CurrentState = CharacterManager.CharacterState.Stand;
+            _manager.CurrentState = CharacterManager.CharacterState.Crouch;
+            if (_manager.LastState != CharacterManager.CharacterState.Crouch)
+                _animator.Play("Crouch");
             _manager.MoveDirection = new Vector3(0, 0, 0);
         }
         
