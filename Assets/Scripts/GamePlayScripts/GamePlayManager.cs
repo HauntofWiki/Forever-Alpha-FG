@@ -18,9 +18,9 @@ namespace GamePlayScripts
         public GameObject player2Object;
         public Character player1Character;
         public Character player2Character;
-        public InputManager pauseOwner;
         public InputManager player1InputManager;
         public InputManager player2InputManager;
+        public InputManager pauseOwner;
         public UIManager uiManager;
         public PauseMenu pauseMenu;
         public bool pauseAble;
@@ -118,11 +118,11 @@ namespace GamePlayScripts
                     pauseOwner = player1InputManager;
                     gameState = GameStates.PauseMenu;
                 }
-                if (player2Character.InputManager.GetInput(0).StartButtonDown == 1)
-                {
-                    pauseOwner = player2InputManager;
-                    gameState = GameStates.PauseMenu;
-                }
+//                if (player2Character.InputManager.GetInput(0).StartButtonDown == 1)
+//                {
+//                    pauseOwner = player2InputManager;
+//                    gameState = GameStates.PauseMenu;
+//                }
                 
                 //Update characters
                 player1Character.Update(player2Character);
@@ -242,11 +242,13 @@ namespace GamePlayScripts
             }
             else if (gameState == GameStates.PauseMenu)
             {
+                var input = pauseOwner.GetInput(1);
+                
                 //Show menu
                 pauseMenu.Enable();
                 
                 //Unpause
-                if (pauseOwner.GetInput(1).StartButtonDown == 1 || pauseOwner.GetInput(1).CancelButtonDown)
+                if (input.StartButtonDown == 1 || input.CancelButtonDown)
                 {
                     pauseMenu.Disable();
                     gameState = GameStates.RoundActive;
@@ -254,8 +256,8 @@ namespace GamePlayScripts
                 
                 //Check menu state every frame
                 PauseMenu.MenuOptions state = pauseMenu.Update(pauseOwner.CurrentInput);
-                Debug.Log(pauseOwner.CurrentInput.SubmitButtonDown);
-                if (pauseOwner.GetInput(1).SubmitButtonDown)
+                Debug.Log(input.SubmitButtonDown);
+                if (input.SubmitButtonDown)
                 {
                     switch (state)
                     {

@@ -53,6 +53,7 @@ public class InputManager
     {
         _inputQueueSize = 50;
         _numberOfInputs = 10;
+        JoystickName = joystickName;
         //Debug.Log("Joy" + joystickNumber + ", " + Input.GetJoystickNames()[joystickNumber]);
         SetDefaultMapping(joystickNumber + 1,joystickName);
     }
@@ -126,12 +127,12 @@ public class InputManager
         CurrentInput.Auxiliary4ButtonDown = Input.GetKeyUp(Auxiliary4Button) ? 1 : 0;
         CurrentInput.StartButtonDown = Input.GetKeyUp(StartButton) ? 1 : 0;
         CurrentInput.SelectButtonDown = Input.GetKeyUp(SelectButton) ? 1 : 0;
-
+        //Submit and Cancel buttons
         CurrentInput.SubmitButtonDown = Input.GetKeyDown(SubmitButton);
-        CurrentInput.SubmitButtonDown = Input.GetKeyDown(CancelButton);
+        CurrentInput.CancelButtonDown = Input.GetKeyDown(CancelButton);
         
         
-        //Debug.Log(CurrentInput.DPadNumPad + ", " + CurrentInput.DPadX);
+        //Debug.Log(CurrentInput.SubmitButtonDown);
 
         return CurrentInput;
     }
