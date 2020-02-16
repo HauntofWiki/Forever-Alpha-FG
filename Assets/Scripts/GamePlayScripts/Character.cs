@@ -92,6 +92,7 @@ namespace GamePlayScripts
             DeterminePlayerSide();
             //Get Inputs
             InputManager.GetInput(CharManager.CharacterOrientation);
+            Debug.Log(_characterObject.transform.name + ", " + InputManager.CurrentInput.DPadX);
             //Update Moves
             foreach (var move in _characterMoves)
             {

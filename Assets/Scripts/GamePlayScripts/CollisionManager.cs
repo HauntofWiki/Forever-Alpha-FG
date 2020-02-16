@@ -109,7 +109,7 @@ namespace GamePlayScripts
                 
             }
             
-            if (_counter >= 60)
+            if (_manager.Grounded && _counter >= 20)
             {
                 _manager.CurrentState = CharacterManager.CharacterState.HardKnockDown;
             }

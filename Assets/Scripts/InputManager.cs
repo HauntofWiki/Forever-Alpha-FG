@@ -96,10 +96,34 @@ public class InputManager
             CurrentInput.DPadNumPad = 5;
         else CurrentInput.DPadNumPad = 5;
         
+        //Debug.Log(Input.GetAxis(_digitalAxisXAccessName));
         //Read direction inputs into tradition X/Y Axes
-        CurrentInput.DPadX = Input.GetAxis(_digitalAxisXAccessName) * characterOrientation;
-        CurrentInput.DPadY = Input.GetAxis(_digitalAxisYAccessName);
-        
+        if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation > 0)
+        {
+            CurrentInput.DPadX = 1;
+        } 
+        else if (Input.GetAxis(_digitalAxisXAccessName) * characterOrientation < 0)
+        {
+            CurrentInput.DPadX = -1;
+        }
+        else
+        {
+            CurrentInput.DPadX = 0;
+        }
+        //Y Axis
+        if (Input.GetAxis(_digitalAxisYAccessName) > 0)
+        {
+            CurrentInput.DPadY = 1;
+        } 
+        else if (Input.GetAxis(_digitalAxisYAccessName) < 0)
+        {
+            CurrentInput.DPadY = -1;
+        }
+        else
+        {
+            CurrentInput.DPadY = 0;
+        }
+
         //Read ButtonDown commands
         CurrentInput.LightAttackButtonDown = Input.GetKeyDown(LightAttackButton) ? 1 : 0;
         CurrentInput.MediumAttackButtonDown = Input.GetKeyDown(MediumAttackButton) ? 1 : 0;
@@ -199,31 +223,31 @@ public class InputManager
         }
         else if (joystickName == "Keyboard")
         {
-            _digitalAxisXAccessName = GetJoystickAccessName(joystickNumber, 7);
-            _digitalAxisYAccessName = GetJoystickAccessName(joystickNumber, 8);
-            _analogLeftAxisXName = "Horizontal";
-            _analogLeftAxisYName = "Vertical";
-            _analogRightAxisXName = GetJoystickAccessName(joystickNumber, 3);
-            _analogRightAxisYName = GetJoystickAccessName(joystickNumber, 4);
-            _auxiliaryButton3AxisName = GetJoystickAccessName(joystickNumber, 5);
-            _auxiliaryButton4AxisName = GetJoystickAccessName(joystickNumber, 6);
-            LightAttackButton = GetJoystickButton(joystickNumber,0);
-            MediumAttackButton = GetJoystickButton(joystickNumber,3);
-            HeavyAttackButton = GetJoystickButton(joystickNumber,2);
-            SpecialAttackButton = GetJoystickButton(joystickNumber,1);
-            StartButton = GetJoystickButton(joystickNumber,9);
-            SelectButton = GetJoystickButton(joystickNumber,8);
-            Auxiliary1Button = GetJoystickButton(joystickNumber,4);
-            Auxiliary2Button = GetJoystickButton(joystickNumber,5);
-            Auxiliary3Button = GetJoystickButton(joystickNumber,6);
-            Auxiliary4Button = GetJoystickButton(joystickNumber,7);
-            Auxiliary5Button = GetJoystickButton(joystickNumber,10);
-            Auxiliary6Button = GetJoystickButton(joystickNumber,11);
-            Auxiliary7Button = GetJoystickButton(joystickNumber,12);
-            Auxiliary8Button = GetJoystickButton(joystickNumber,13);
-            
-            SubmitButton = GetJoystickButton(joystickNumber, 1);
-            CancelButton = GetJoystickButton(joystickNumber, 2);
+            _digitalAxisXAccessName = "Horizontal";
+            _digitalAxisYAccessName = "Vertical";
+            _analogLeftAxisXName = "None";
+            _analogLeftAxisYName = "None";
+            _analogRightAxisXName = "None";
+            _analogRightAxisYName = "None";
+            _auxiliaryButton3AxisName = "None";
+            _auxiliaryButton4AxisName = "None";
+            LightAttackButton = KeyCode.H;
+            MediumAttackButton = KeyCode.J;
+            HeavyAttackButton = KeyCode.K;
+            SpecialAttackButton = KeyCode.L;
+            StartButton = KeyCode.Escape;
+            SelectButton = KeyCode.None;
+            Auxiliary1Button = KeyCode.None;;
+            Auxiliary2Button = KeyCode.None;;
+            Auxiliary3Button = KeyCode.None;;
+            Auxiliary4Button = KeyCode.None;;
+            Auxiliary5Button = KeyCode.None;;
+            Auxiliary6Button = KeyCode.None;;
+            Auxiliary7Button = KeyCode.None;;
+            Auxiliary8Button = KeyCode.None;
+
+            SubmitButton = KeyCode.Return;
+            CancelButton = KeyCode.Escape;
         }
         else
         {
