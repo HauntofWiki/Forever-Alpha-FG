@@ -18,8 +18,10 @@
               <e p="FrameDataManager.cs" t="Include" />
               <e p="MoveAirDashForward.cs" t="Include" />
               <e p="MoveCrouch.cs" t="Include" />
+              <e p="MoveCrouchHeavyAttack.cs" t="Include" />
               <e p="MoveDashBackward.cs" t="Include" />
               <e p="MoveDashForward.cs" t="Include" />
+              <e p="MoveHeavyAttack.cs" t="Include" />
               <e p="MoveJumpBackward.cs" t="Include" />
               <e p="MoveJumpForward.cs" t="Include" />
               <e p="MoveJumpNeutral.cs" t="Include" />

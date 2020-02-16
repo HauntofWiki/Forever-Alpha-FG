@@ -12,8 +12,10 @@ ScriptsOnlyBuild:
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
@@ -72,13 +74,13 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10876}
     - Class: 114
-      Script: {instanceID: 12006}
+      Script: {instanceID: 12008}
     - Class: 114
-      Script: {instanceID: 12326}
+      Script: {instanceID: 12328}
     - Class: 114
-      Script: {instanceID: 12954}
+      Script: {instanceID: 12956}
     - Class: 114
-      Script: {instanceID: 13074}
+      Script: {instanceID: 13076}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -522,7 +524,7 @@ ScriptsOnlyBuild:
     className: VolumeComponent
   - hash:
       serializedVersion: 2
-      Hash: 0c8923ce1facedcd8c8fc186e7c19ada
+      Hash: bd2b3cf7deb679f40d6d74f3d75f3d84
     assemblyName: Assembly-CSharp.dll
     namespaceName: GamePlayScripts
     className: GamePlayManager

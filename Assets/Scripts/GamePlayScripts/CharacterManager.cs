@@ -41,6 +41,7 @@ namespace GamePlayScripts
         public float MaxHealth;
         public float CurrentHealth;
         public int Meter;
+        public int KnockDownDuration;
         public bool ComboActive = false;
         public int ComboCounter = 0;
         public bool NewHit = true;
@@ -70,7 +71,9 @@ namespace GamePlayScripts
             DoubleJump,
             StandingBlockStun,
             CrouchingBlockStun,
-            KnockDown,
+            Juggle,
+            SoftKnockDown,
+            HardKnockDown,
             HitStun,
             StandingHitStun,
             CrouchingHitStun,
@@ -123,7 +126,27 @@ namespace GamePlayScripts
 
         public void UpdateCollision()
         {
-            _collisionManager.Update(_frameDataManager.PushBack);
+            if (CurrentState == CharacterState.HitStun
+                || CurrentState == CharacterState.CrouchingBlockStun
+                || CurrentState == CharacterState.StandingHitStun)
+            {
+                _collisionManager.UpdateHitStun(_frameDataManager.PushBack);
+            }
+
+            if (CurrentState == CharacterState.Juggle)
+            {
+                _collisionManager.UpdateJuggle();
+            }
+
+            if (CurrentState == CharacterState.SoftKnockDown)
+            {
+                _collisionManager.UpdateSoftKnockDown();
+            }
+
+            if (CurrentState == CharacterState.HardKnockDown)
+            {
+                _collisionManager.UpdateHardKnockDown();
+            }
         }
         public void Add(HurtBox box)
         {

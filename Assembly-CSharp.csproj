@@ -65,8 +65,10 @@
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\FrameDataManager.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveAirDashForward.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveCrouch.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveCrouchHeavyAttack.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveDashBackward.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveDashForward.cs" />
+     <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveHeavyAttack.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveJumpBackward.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveJumpForward.cs" />
      <Compile Include="Assets\Scripts\GamePlayScripts\CharacterMoves\MoveJumpNeutral.cs" />

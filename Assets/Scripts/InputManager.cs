@@ -117,22 +117,22 @@ public class InputManager
         CurrentInput.Auxiliary4AxisDown = Input.GetAxis(_auxiliaryButton4AxisName);
         
         //Read ButtonUp commands
-        CurrentInput.LightAttackButtonDown = Input.GetKeyUp(LightAttackButton) ? 1 : 0;
-        CurrentInput.MediumAttackButtonDown = Input.GetKeyUp(MediumAttackButton) ? 1 : 0;
-        CurrentInput.HeavyAttackButtonDown = Input.GetKeyUp(HeavyAttackButton) ? 1 : 0;
-        CurrentInput.SpecialAttackButtonDown = Input.GetKeyUp(SpecialAttackButton) ? 1 : 0;
-        CurrentInput.Auxiliary1ButtonDown = Input.GetKeyUp(Auxiliary1Button) ? 1 : 0;
-        CurrentInput.Auxiliary2ButtonDown = Input.GetKeyUp(Auxiliary2Button) ? 1 : 0;
-        CurrentInput.Auxiliary3ButtonDown = Input.GetKeyUp(Auxiliary3Button) ? 1 : 0;
-        CurrentInput.Auxiliary4ButtonDown = Input.GetKeyUp(Auxiliary4Button) ? 1 : 0;
-        CurrentInput.StartButtonDown = Input.GetKeyUp(StartButton) ? 1 : 0;
-        CurrentInput.SelectButtonDown = Input.GetKeyUp(SelectButton) ? 1 : 0;
+        CurrentInput.LightAttackButtonUp = Input.GetKeyUp(LightAttackButton) ? 1 : 0;
+        CurrentInput.MediumAttackButtonUp = Input.GetKeyUp(MediumAttackButton) ? 1 : 0;
+        CurrentInput.HeavyAttackButtonUp = Input.GetKeyUp(HeavyAttackButton) ? 1 : 0;
+        CurrentInput.SpecialAttackButtonUp = Input.GetKeyUp(SpecialAttackButton) ? 1 : 0;
+        CurrentInput.Auxiliary1ButtonUp = Input.GetKeyUp(Auxiliary1Button) ? 1 : 0;
+        CurrentInput.Auxiliary2ButtonUp = Input.GetKeyUp(Auxiliary2Button) ? 1 : 0;
+        CurrentInput.Auxiliary3ButtonUp = Input.GetKeyUp(Auxiliary3Button) ? 1 : 0;
+        CurrentInput.Auxiliary4ButtonUp = Input.GetKeyUp(Auxiliary4Button) ? 1 : 0;
+        CurrentInput.StartButtonUp = Input.GetKeyUp(StartButton) ? 1 : 0;
+        CurrentInput.SelectButtonUp = Input.GetKeyUp(SelectButton) ? 1 : 0;
         //Submit and Cancel buttons
-        CurrentInput.SubmitButtonDown = Input.GetKeyDown(SubmitButton);
-        CurrentInput.CancelButtonDown = Input.GetKeyDown(CancelButton);
+        CurrentInput.SubmitButtonUp = Input.GetKeyDown(SubmitButton);
+        CurrentInput.CancelButtonUp = Input.GetKeyDown(CancelButton);
         
         
-        //Debug.Log(CurrentInput.SubmitButtonDown);
+        //showsDebug.Log(CurrentInput.SubmitButtonDown);
 
         return CurrentInput;
     }
@@ -181,7 +181,7 @@ public class InputManager
             _auxiliaryButton4AxisName = GetJoystickAccessName(joystickNumber, 6);
             LightAttackButton = GetJoystickButton(joystickNumber,0);
             MediumAttackButton = GetJoystickButton(joystickNumber,3);
-            HeavyAttackButton = GetJoystickButton(joystickNumber,2);
+            HeavyAttackButton = GetJoystickButton(joystickNumber,5);
             SpecialAttackButton = GetJoystickButton(joystickNumber,1);
             StartButton = GetJoystickButton(joystickNumber,9);
             SelectButton = GetJoystickButton(joystickNumber,8);

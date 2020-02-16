@@ -39,6 +39,7 @@ namespace GamePlayScripts
                 DashForwardXSpeed = new float[] {5f, 8f, 3f},
                 AirDashForwardSpeed = new float[] {15.0f, 8.0f},
                 DashBackwardXSpeed = new float[] {15f, 15f, 8f},
+                KnockDownDuration = 30,
                 Height = 1.5f,
                 Push = 0.0f,
                 IsAirborne = false,
@@ -75,6 +76,8 @@ namespace GamePlayScripts
             _characterMoves.Add(new MoveAirDashForward());
             _characterMoves.Add(new MoveLightAttack());
             _characterMoves.Add(new MoveMediumAttack());
+            _characterMoves.Add(new MoveHeavyAttack());
+            _characterMoves.Add(new MoveCrouchHeavyAttack());
         
             //Initialize moves.
             foreach (var move in _characterMoves)
@@ -85,11 +88,6 @@ namespace GamePlayScripts
 
         public void Update(Character opponent)
         {
-            //Check if character was hit
-            if (CharManager.CurrentState == CharacterManager.CharacterState.HitStun || CharManager.CurrentState == CharacterManager.CharacterState.StandingBlockStun)
-            {
-                CharManager.UpdateCollision();
-            }
             //Check if we need to switch orientation
             DeterminePlayerSide();
             //Get Inputs
@@ -98,6 +96,17 @@ namespace GamePlayScripts
             foreach (var move in _characterMoves)
             {
                 move.PerformAction(InputManager.CurrentInput);
+            }
+            //Check if character was hit
+            if (CharManager.CurrentState == CharacterManager.CharacterState.HitStun
+                || CharManager.CurrentState == CharacterManager.CharacterState.CrouchingHitStun
+                || CharManager.CurrentState == CharacterManager.CharacterState.StandingBlockStun 
+                || CharManager.CurrentState == CharacterManager.CharacterState.CrouchingBlockStun
+                || CharManager.CurrentState == CharacterManager.CharacterState.Juggle
+                || CharManager.CurrentState == CharacterManager.CharacterState.SoftKnockDown 
+                || CharManager.CurrentState == CharacterManager.CharacterState.HardKnockDown)
+            {
+                CharManager.UpdateCollision();
             }
 
             //Move Character
@@ -234,30 +243,74 @@ namespace GamePlayScripts
 
         public void ApplyCollision(FrameDataManager manager)
         {
-            if (InputManager.CurrentInput.DPadX == -1)
+            //Check for block
+            if (InputManager.CurrentInput.DPadX < 0)
             {
+                //Standing Block
                 if (CharManager.CurrentState == CharacterManager.CharacterState.Stand)
                 {
-                    CharManager.CurrentHealth -= manager.ChipDamage;
-                    CharManager.CurrentState = CharacterManager.CharacterState.StandingBlockStun;
-                    CharManager.SetHitStun(manager.HitStun);
-                    CharManager.SetPushBack(manager.PushBack);
+                    if (manager.HitLevel == FrameDataManager.HitLevels.Mid
+                        || manager.HitLevel == FrameDataManager.HitLevels.High)
+                    {
+                        CharManager.CurrentHealth -= manager.ChipDamage;
+                        CharManager.CurrentState = CharacterManager.CharacterState.StandingBlockStun;
+                        CharManager.SetHitStun(manager.BlockStun);
+                        CharManager.SetPushBack(manager.PushBack);
+                    }
                 }
-
+                //Crouching block
                 if (CharManager.CurrentState == CharacterManager.CharacterState.Crouch)
                 {
-                    CharManager.CurrentHealth -= manager.ChipDamage;
-                    CharManager.CurrentState = CharacterManager.CharacterState.CrouchingBlockStun;
-                    CharManager.SetHitStun(manager.HitStun);
-                    CharManager.SetPushBack(manager.PushBack);
+                    if (manager.HitLevel == FrameDataManager.HitLevels.Mid
+                        || manager.HitLevel == FrameDataManager.HitLevels.Low)
+                    {
+                        CharManager.CurrentHealth -= manager.ChipDamage;
+                        CharManager.CurrentState = CharacterManager.CharacterState.CrouchingBlockStun;
+                        CharManager.SetHitStun(manager.BlockStun);
+                        CharManager.SetPushBack(manager.PushBack);
+                    }
                 }
             }
             else
             {
-                CharManager.CurrentHealth -= manager.Damage;
-                CharManager.CurrentState = CharacterManager.CharacterState.HitStun;
-                CharManager.SetHitStun(manager.HitStun);
-                CharManager.SetPushBack(manager.PushBack);
+                //Determine the type of hit to apply
+                //HitStun
+                if (manager.HitType == FrameDataManager.HitTypes.HitStun)
+                {
+                    if (CharManager.CurrentState == CharacterManager.CharacterState.Stand)
+                    {
+                        CharManager.CurrentHealth -= manager.Damage;
+                        CharManager.CurrentState = CharacterManager.CharacterState.HitStun;
+                        CharManager.SetHitStun(manager.HitStun);
+                        CharManager.SetPushBack(manager.PushBack);
+                    }
+                
+                    if (CharManager.CurrentState == CharacterManager.CharacterState.Crouch)
+                    {
+                        CharManager.CurrentHealth -= manager.Damage;
+                        CharManager.CurrentState = CharacterManager.CharacterState.CrouchingHitStun;
+                        CharManager.SetHitStun(manager.HitStun);
+                        CharManager.SetPushBack(manager.PushBack);
+                    }
+                }
+                //Juggle
+                if (manager.HitType == FrameDataManager.HitTypes.Juggle)
+                {
+                    CharManager.CurrentHealth -= manager.Damage;
+                    CharManager.CurrentState = CharacterManager.CharacterState.Juggle;
+                }
+                //SoftKnockDown
+                if (manager.HitType == FrameDataManager.HitTypes.SoftKnockDown)
+                {
+                    CharManager.CurrentHealth -= manager.Damage;
+                    CharManager.CurrentState = CharacterManager.CharacterState.SoftKnockDown;
+                }
+                //HardKnockDown
+                if (manager.HitType == FrameDataManager.HitTypes.HardKnockDown)
+                {
+                    CharManager.CurrentHealth -= manager.Damage;
+                    CharManager.CurrentState = CharacterManager.CharacterState.HardKnockDown;
+                }
             }
         }
         

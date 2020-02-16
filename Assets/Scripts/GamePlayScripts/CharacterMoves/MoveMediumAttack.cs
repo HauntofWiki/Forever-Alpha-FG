@@ -16,7 +16,9 @@ namespace GamePlayScripts.CharacterMoves
                 HitStun = 10.0f,
                 BlockStun = 10.0f,
                 MeterGain = 10.0f,
-                PushBack = -3f
+                PushBack = -3f,
+                HitLevel = FrameDataManager.HitLevels.Mid,
+                HitType = FrameDataManager.HitTypes.HitStun
             };
             FrameData.SetActionFrames(6, 4);
             FrameData.SetCancellableFrames(6, 20, FrameDataManager.CancellabilityStates.Normal);

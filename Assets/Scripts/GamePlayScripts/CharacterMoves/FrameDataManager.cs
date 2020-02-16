@@ -32,13 +32,31 @@ namespace GamePlayScripts.CharacterMoves
             Throw,
         }
 
+        public enum HitLevels
+        {
+            Low,
+            Mid,
+            High
+        }
+
+        public enum HitTypes
+        {
+            None,
+            HitStun,
+            Juggle,
+            SoftKnockDown,
+            HardKnockDown
+        }
+
         public List<ActionFrameStates> ActionFrameState;
         public List<CancellabilityStates> Cancellability;
         public List<InvincibilityStates> Invincibility;
         public List<bool> AirborneFrames;
         public ActionFrameStates ActionState;
         public CancellabilityStates Cancellable;
-        public InvincibilityStates Invinsible;
+        public InvincibilityStates Invincible;
+        public HitLevels HitLevel;
+        public HitTypes HitType;
         public bool Airborne;
         public int Length;
         
@@ -110,16 +128,16 @@ namespace GamePlayScripts.CharacterMoves
             switch (Invincibility[frameCounter])
             {
                 case InvincibilityStates.UpperBody:
-                    Invinsible = InvincibilityStates.UpperBody;
+                    Invincible = InvincibilityStates.UpperBody;
                     break;
                 case InvincibilityStates.LowerBody:
-                    Invinsible = InvincibilityStates.LowerBody;
+                    Invincible = InvincibilityStates.LowerBody;
                     break;
                 case InvincibilityStates.Full:
-                    Invinsible = InvincibilityStates.Full;
+                    Invincible = InvincibilityStates.Full;
                     break;
                 case InvincibilityStates.Throw:
-                    Invinsible = InvincibilityStates.Throw;
+                    Invincible = InvincibilityStates.Throw;
                     break;
             }
 

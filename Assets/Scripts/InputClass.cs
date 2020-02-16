@@ -36,5 +36,7 @@ public class InputClass
     public float Auxiliary4ButtonUp;
     public int StartButtonUp;
     public int SelectButtonUp;
+    public bool SubmitButtonUp;
+    public bool CancelButtonUp;
 
 }

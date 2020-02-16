@@ -15,9 +15,11 @@ namespace GamePlayScripts.CharacterMoves
                 Damage = 35f,
                 Dizzy = 10.0f,
                 HitStun = 5.0f,
-                BlockStun = 10.0f,
+                BlockStun = 8.0f,
                 MeterGain = 10.0f,
-                PushBack = -2.5f
+                PushBack = -2.5f,
+                HitLevel = FrameDataManager.HitLevels.Mid,
+                HitType = FrameDataManager.HitTypes.HitStun
             };
 
             FrameData.SetActionFrames(3, 4);
