@@ -66,7 +66,7 @@ namespace GamePlayScripts
             player1Object = (GameObject) Instantiate(characterPrefab);
             player1Object.name = "Player1";
             player1Object.transform.position = new Vector3(-3, 0, 0);
-            player1InputManager = new InputManager(1, Input.GetJoystickNames()[1]); //still hardcoded
+            player1InputManager = new InputManager(0, "Keyboard");//(1, Input.GetJoystickNames()[1]); //still hardcoded
             player1Character = new Character(player1Object, player1InputManager);
 
             //Set Player 1 Collision Detection Boxes
@@ -80,7 +80,7 @@ namespace GamePlayScripts
             player2Object = (GameObject) GameObject.Instantiate(characterPrefab);
             player2Object.name = "Player2";
             player2Object.transform.position = new Vector3(3, 0, 0);
-            player2InputManager = new InputManager(0, Input.GetJoystickNames()[0]); //still hardcoded
+            player2InputManager = new InputManager(1, Input.GetJoystickNames()[0]); //still hardcoded
             player2Character = new Character(player2Object, player2InputManager);
 
             //Set Player 2 Collision Detection Boxes
@@ -107,7 +107,7 @@ namespace GamePlayScripts
         // Update is called once per frame
         void Update()
         {
-            //Debug.Log(player2Character.CharManager.CurrentState);
+            //Debug.Log(player1InputManager.CurrentInput.DPadX + ", " + player1InputManager.CurrentInput.DPadNumPad);
             if (gameState == GameStates.PreRound)
             {
                 if (gameMode == GameMode.Debug)
@@ -129,7 +129,7 @@ namespace GamePlayScripts
             }
             else if (gameState == GameStates.RoundActive)
             {
-                Debug.Log(player1Character.CharManager.CurrentState + ", " + player1Character.InputManager.GetInput(1).DPadX);
+                //Debug.Log(player1Character.CharManager.CurrentState + ", " + player1Character.InputManager.GetInput(1).DPadX);
                 
                 
                 if (player1Character.InputManager.GetInput(0).StartButtonDown == 1)
