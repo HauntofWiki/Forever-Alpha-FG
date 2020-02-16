@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor.Experimental;
 using UnityEngine;
 
 namespace GamePlayScripts
@@ -25,7 +26,7 @@ namespace GamePlayScripts
             
         }
         
-        public void Update(float pushBack)
+        public void UpdateHitStun(float pushBack)
         {
             if (_manager.NewHit)
                 _counter = 0;
@@ -40,6 +41,13 @@ namespace GamePlayScripts
                     _manager.MoveDirection = new Vector3(_manager.GetPushBack(), 0, 0);
                 }
 
+                if (_manager.CurrentState == CharacterManager.CharacterState.CrouchingHitStun)
+                {
+                    _animator.Play("CrouchHitStun");
+
+                    _manager.MoveDirection = new Vector3(_manager.GetPushBack(), 0, 0);
+                }
+                
                 if (_manager.CurrentState == CharacterManager.CharacterState.StandingBlockStun)
                 {
                     //_animator.SetFloat("HitStunAmount", 1);
@@ -50,12 +58,11 @@ namespace GamePlayScripts
                 
                 if (_manager.CurrentState == CharacterManager.CharacterState.CrouchingBlockStun)
                 {
-                    //_animator.SetFloat("HitStunAmount", 1);
                     _animator.Play("CrouchBlock");
 
                     _manager.MoveDirection = new Vector3(_manager.GetPushBack(), 0, 0);
                 }
-                Debug.Log(_manager.CurrentState);
+                //Debug.Log(_manager.CurrentState);
             }
 
             if (_counter > 0 && _counter <= _manager.GetHitStun())
@@ -65,11 +72,73 @@ namespace GamePlayScripts
 
             if (_counter >= _manager.GetHitStun())
             {
-                _manager.CurrentState = CharacterManager.CharacterState.Stand;
+                switch (_manager.CurrentState)
+                {
+                    case CharacterManager.CharacterState.StandingBlockStun:
+                        _manager.CurrentState = CharacterManager.CharacterState.Stand;
+                        break;
+                    case CharacterManager.CharacterState.CrouchingBlockStun:
+                        _manager.CurrentState = CharacterManager.CharacterState.Crouch;
+                        break;
+                    case CharacterManager.CharacterState.HitStun:
+                        _manager.CurrentState = CharacterManager.CharacterState.Stand;
+                        break;
+                    case CharacterManager.CharacterState.CrouchingHitStun:
+                        _manager.CurrentState = CharacterManager.CharacterState.Crouch;
+                        break;
+                }
+                
                 _counter = 0;
                 return;
             }
             //Debug.Log(_manager.CurrentState);
+            _counter++;
+        }
+
+        public void UpdateJuggle()
+        {
+            if (_manager.NewHit)
+            {
+                _counter = 0;
+            }
+
+            if (_counter == 0)
+            {
+                _animator.Play("Juggle");
+                _manager.MoveDirection = new Vector3(0,5,0);
+                
+            }
+            
+            if (_counter >= 60)
+            {
+                _manager.CurrentState = CharacterManager.CharacterState.HardKnockDown;
+            }
+
+            _counter++;
+        }
+
+        public void UpdateSoftKnockDown()
+        {
+
+        }
+
+        public void UpdateHardKnockDown()
+        {
+            if (_manager.NewHit)
+            {
+                _counter = 0;
+            }
+
+            if (_counter == 0)
+            {
+                _animator.Play("KnockDown");
+            }
+
+            if (_counter >= _manager.KnockDownDuration)
+            {
+                _manager.CurrentState = CharacterManager.CharacterState.Stand;
+            }
+
             _counter++;
         }
         

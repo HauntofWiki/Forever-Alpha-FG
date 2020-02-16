@@ -6616,6 +6616,7 @@ MonoBehaviour:
   player2WinCount: 0
   roundCount: 0
   gameState: 0
+  gameMode: 0
 --- !u!4 &1753857111
 Transform:
   m_ObjectHideFlags: 0

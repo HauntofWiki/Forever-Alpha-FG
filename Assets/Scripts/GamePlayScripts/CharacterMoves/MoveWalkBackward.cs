@@ -25,7 +25,7 @@ namespace GamePlayScripts.CharacterMoves
         public override void PerformAction(InputClass inputClass)
         {
             if (!DetectMoveInput(inputClass)) return;
-            if (_manager.CurrentState != CharacterManager.CharacterState.Crouch && _manager.CurrentState != CharacterManager.CharacterState.Stand) return;
+            if (_manager.CurrentState != CharacterManager.CharacterState.Stand && _manager.CurrentState != CharacterManager.CharacterState.Crouch) return;
 
             _animator.Play("WalkBackward");
             _manager.LastState = _manager.CurrentState;

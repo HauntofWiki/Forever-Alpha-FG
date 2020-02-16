@@ -129,16 +129,19 @@ namespace GamePlayScripts
             }
             else if (gameState == GameStates.RoundActive)
             {
+                Debug.Log(player1Character.CharManager.CurrentState + ", " + player1Character.InputManager.GetInput(1).DPadX);
+                
+                
                 if (player1Character.InputManager.GetInput(0).StartButtonDown == 1)
                 {
                     pauseOwner = player1InputManager;
                     gameState = GameStates.PauseMenu;
                 }
-//                if (player2Character.InputManager.GetInput(0).StartButtonDown == 1)
-//                {
-//                    pauseOwner = player2InputManager;
-//                    gameState = GameStates.PauseMenu;
-//                }
+                if (player2Character.InputManager.GetInput(0).StartButtonDown == 1)
+                {
+                    pauseOwner = player2InputManager;
+                    gameState = GameStates.PauseMenu;
+                }
 
                 //Update characters
                 player1Character.Update(player2Character);
@@ -164,8 +167,9 @@ namespace GamePlayScripts
                 }
 
                 //Check to see if an Active Combo ended
-                if (player1Character.CharManager.ComboActive &&
-                    player2Character.CharManager.CurrentState == CharacterManager.CharacterState.Stand)
+                if (player1Character.CharManager.ComboActive
+                    && (player2Character.CharManager.CurrentState == CharacterManager.CharacterState.Stand
+                    || player2Character.CharManager.CurrentState == CharacterManager.CharacterState.Crouch))
                 {
                     player1Character.CharManager.ComboActive = false;
                     player1Character.CharManager.ComboCounter = 0;
