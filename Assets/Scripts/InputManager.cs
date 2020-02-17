@@ -135,6 +135,10 @@ public class InputManager
         CurrentInput.Auxiliary4ButtonDown = Input.GetKeyDown(Auxiliary4Button) ? 1 : 0;
         CurrentInput.StartButtonDown = Input.GetKeyDown(StartButton) ? 1 : 0;
         CurrentInput.SelectButtonDown = Input.GetKeyDown(SelectButton) ? 1 : 0;
+        //Submit and Cancel buttons
+        CurrentInput.SubmitButtonDown = Input.GetKeyDown(SubmitButton);
+        CurrentInput.CancelButtonDown = Input.GetKeyDown(CancelButton);
+        
         
         //Trigger buttons are sometimes assigned by axis
         CurrentInput.Auxiliary3AxisDown = Input.GetAxis(_auxiliaryButton3AxisName);
@@ -152,8 +156,8 @@ public class InputManager
         CurrentInput.StartButtonUp = Input.GetKeyUp(StartButton) ? 1 : 0;
         CurrentInput.SelectButtonUp = Input.GetKeyUp(SelectButton) ? 1 : 0;
         //Submit and Cancel buttons
-        CurrentInput.SubmitButtonUp = Input.GetKeyDown(SubmitButton);
-        CurrentInput.CancelButtonUp = Input.GetKeyDown(CancelButton);
+        CurrentInput.SubmitButtonUp = Input.GetKeyUp(SubmitButton);
+        CurrentInput.CancelButtonUp = Input.GetKeyUp(CancelButton);
         
         
         //showsDebug.Log(CurrentInput.SubmitButtonDown);
@@ -237,13 +241,13 @@ public class InputManager
             SpecialAttackButton = KeyCode.L;
             StartButton = KeyCode.Escape;
             SelectButton = KeyCode.None;
-            Auxiliary1Button = KeyCode.None;;
-            Auxiliary2Button = KeyCode.None;;
-            Auxiliary3Button = KeyCode.None;;
-            Auxiliary4Button = KeyCode.None;;
-            Auxiliary5Button = KeyCode.None;;
-            Auxiliary6Button = KeyCode.None;;
-            Auxiliary7Button = KeyCode.None;;
+            Auxiliary1Button = KeyCode.None;
+            Auxiliary2Button = KeyCode.None;
+            Auxiliary3Button = KeyCode.None;
+            Auxiliary4Button = KeyCode.None;
+            Auxiliary5Button = KeyCode.None;
+            Auxiliary6Button = KeyCode.None;
+            Auxiliary7Button = KeyCode.None;
             Auxiliary8Button = KeyCode.None;
 
             SubmitButton = KeyCode.Return;

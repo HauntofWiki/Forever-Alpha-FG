@@ -28,8 +28,8 @@ namespace GamePlayScripts.CharacterMoves
                 ResetInputDetect();
 
             //Repeated input return till next new input
-            if (LastInput == inputClass.DPadX)
-                return false;
+//            if (LastInput == inputClass.DPadNumPad)
+//                return false;
             //First input
             if (inputClass.DPadX == MovePattern[0] && !PatternMatch[0])
             {

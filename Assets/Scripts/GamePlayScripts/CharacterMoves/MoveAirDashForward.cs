@@ -27,8 +27,8 @@ namespace GamePlayScripts.CharacterMoves
                 ResetInputDetect();
         
             //Unity repeats Axis inputs for several frames, this allows us to not check those
-            if (LastInput == inputClass.DPadNumPad)
-                return false;
+//            if (LastInput == inputClass.DPadNumPad)
+//                return false;
             
             //Check for first forward input
             if (inputClass.DPadX == MovePattern[0] && !PatternMatch[0])
@@ -50,6 +50,7 @@ namespace GamePlayScripts.CharacterMoves
                 return true;
             }
 
+            InputCounter++;
             LastInput = inputClass.DPadNumPad;
             return false;
         }
@@ -115,7 +116,7 @@ namespace GamePlayScripts.CharacterMoves
         
         private void ResetInputDetect()
         {
-            LastInput = -1;
+            //LastInput = -1;
             InputCounter = 0;
             PatternMatch[0] = false;
             PatternMatch[1] = false;

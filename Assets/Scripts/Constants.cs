@@ -30,7 +30,7 @@ public static class Constants
     //Minimum value characters can be on the Y axis
     public const float Floor = 0.0f;
     //A buffer for handling with the positions float value
-    public const float FloorBuffer = 0.1f;
+    public const float FloorBuffer = 0.01f;
     public const float MaxStageX = 8.0f;
     public const float MaxStageY = 100;
     
