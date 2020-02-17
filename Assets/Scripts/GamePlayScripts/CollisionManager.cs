@@ -33,7 +33,7 @@ namespace GamePlayScripts
             
             if (_counter == 0)
             {
-                if (_manager.CurrentState == CharacterManager.CharacterState.HitStun)
+                if (_manager.CurrentState == CharacterManager.CharacterState.StandingHitStun)
                 {
                     _animator.SetFloat("HitStunAmount", 1);
                     _animator.Play("HitStunBlendTree");
@@ -80,7 +80,7 @@ namespace GamePlayScripts
                     case CharacterManager.CharacterState.CrouchingBlockStun:
                         _manager.CurrentState = CharacterManager.CharacterState.Crouch;
                         break;
-                    case CharacterManager.CharacterState.HitStun:
+                    case CharacterManager.CharacterState.StandingHitStun:
                         _manager.CurrentState = CharacterManager.CharacterState.Stand;
                         break;
                     case CharacterManager.CharacterState.CrouchingHitStun:
@@ -124,7 +124,7 @@ namespace GamePlayScripts
 
         public void UpdateHardKnockDown()
         {
-            if (_manager.NewHit)
+            if (_manager.NewHit && _manager.CurrentState != CharacterManager.CharacterState.HardKnockDown)
             {
                 _counter = 0;
             }
@@ -134,9 +134,16 @@ namespace GamePlayScripts
                 _animator.Play("KnockDown");
             }
 
+            if (_counter >= _manager.KnockDownDuration / 2 && _counter < _manager.KnockDownDuration)
+            {
+                //_manager.CurrentState = CharacterManager.CharacterState.WakeUp;
+            }
+
             if (_counter >= _manager.KnockDownDuration)
             {
+                _counter = 0;
                 _manager.CurrentState = CharacterManager.CharacterState.Stand;
+                return;
             }
 
             _counter++;

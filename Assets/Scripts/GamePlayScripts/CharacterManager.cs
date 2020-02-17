@@ -2,6 +2,7 @@
 using GamePlayScripts.CharacterMoves;
 using UnityEngine;
 using UnityEngine.Experimental.PlayerLoop;
+using UnityEngine.Playables;
 
 namespace GamePlayScripts
 {
@@ -25,9 +26,11 @@ namespace GamePlayScripts
         public bool LocalHitBoxActive = false;
         public bool Grounded = false;
         
+        
         //Collision Detection
         private CollisionManager _collisionManager;
         public bool IgnoringPushBox = false;
+        public FrameDataManager.InvincibilityStates Invincibility;
         //Collided checks if an attack has already collided to not trigger further actions
         public bool Collided = false;
         public float Height;
@@ -74,10 +77,9 @@ namespace GamePlayScripts
             Juggle,
             SoftKnockDown,
             HardKnockDown,
-            HitStun,
+            WakeUp,
             StandingHitStun,
             CrouchingHitStun,
-            FloatingHitstun,
             Cinematic,
             None
         }
@@ -126,9 +128,10 @@ namespace GamePlayScripts
 
         public void UpdateCollision()
         {
-            if (CurrentState == CharacterState.HitStun
-                || CurrentState == CharacterState.CrouchingBlockStun
-                || CurrentState == CharacterState.StandingHitStun)
+            if (CurrentState == CharacterState.StandingHitStun
+                || CurrentState == CharacterState.CrouchingHitStun
+                || CurrentState == CharacterState.StandingBlockStun
+                || CurrentState == CharacterState.CrouchingBlockStun)
             {
                 _collisionManager.UpdateHitStun(_frameDataManager.PushBack);
             }
@@ -145,6 +148,7 @@ namespace GamePlayScripts
 
             if (CurrentState == CharacterState.HardKnockDown)
             {
+                Invincibility = FrameDataManager.InvincibilityStates.Full;
                 _collisionManager.UpdateHardKnockDown();
             }
         }

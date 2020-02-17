@@ -280,7 +280,7 @@ namespace GamePlayScripts
 
                 //Check menu state every frame
                 PauseMenu.MenuOptions state = pauseMenu.Update(pauseOwner.CurrentInput);
-                Debug.Log(input.SubmitButtonDown);
+                //Debug.Log(input.SubmitButtonDown);
                 if (input.SubmitButtonDown)
                 {
                     switch (state)
