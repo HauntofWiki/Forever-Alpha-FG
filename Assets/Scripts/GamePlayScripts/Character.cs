@@ -74,11 +74,12 @@ namespace GamePlayScripts
             _characterMoves.Add(new MoveDashForward());
             _characterMoves.Add(new MoveDashBackward());
             _characterMoves.Add(new MoveAirDashForward());
+            _characterMoves.Add(new ForwardThrow());
             _characterMoves.Add(new MoveLightAttack());
             _characterMoves.Add(new MoveMediumAttack());
             _characterMoves.Add(new MoveHeavyAttack());
             _characterMoves.Add(new MoveCrouchHeavyAttack());
-        
+            
             //Initialize moves.
             foreach (var move in _characterMoves)
             {
@@ -92,7 +93,7 @@ namespace GamePlayScripts
             DeterminePlayerSide();
             //Get Inputs
             InputManager.GetInput(CharManager.CharacterOrientation);
-            Debug.Log(_characterObject.transform.name + ", " + InputManager.CurrentInput.DPadX);
+            //Debug.Log(_characterObject.transform.name + ", " + InputManager.CurrentInput.DPadX);
             //Update Moves
             foreach (var move in _characterMoves)
             {
@@ -213,6 +214,7 @@ namespace GamePlayScripts
             
             //Determine is character is grounded
             CharManager.Grounded =_characterObject.transform.position.y < Constants.FloorBuffer;
+            CharManager.DistanceDelta = _characterObject.transform.position.x - _opponent.transform.position.x;
         }
 
         public bool DetectCollisions(CharacterManager opponentManager)
@@ -231,7 +233,7 @@ namespace GamePlayScripts
                 {
                     if (hitBox.Intersects(hurtBox))
                     {
-                        Debug.Log("hit");
+                        //Debug.Log("hit");
                         CharManager.ComboActive = true;
                         CharManager.Collided = true;
                         return true;
@@ -244,6 +246,7 @@ namespace GamePlayScripts
 
         public void ApplyCollision(FrameDataManager manager)
         {
+            Debug.Log("HIT TYPE: " + manager.HitType);
             //Check for block
             if (InputManager.CurrentInput.DPadX < 0)
             {
@@ -308,6 +311,11 @@ namespace GamePlayScripts
                 }
                 //HardKnockDown
                 if (manager.HitType == FrameDataManager.HitTypes.HardKnockDown)
+                {
+                    CharManager.CurrentHealth -= manager.Damage;
+                    CharManager.CurrentState = CharacterManager.CharacterState.HardKnockDown;
+                }
+                if (manager.HitType == FrameDataManager.HitTypes.Throw)
                 {
                     CharManager.CurrentHealth -= manager.Damage;
                     CharManager.CurrentState = CharacterManager.CharacterState.HardKnockDown;

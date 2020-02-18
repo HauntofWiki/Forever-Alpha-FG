@@ -43,6 +43,7 @@ namespace GamePlayScripts.CharacterMoves
         {
             None,
             HitStun,
+            Throw,
             Juggle,
             SoftKnockDown,
             HardKnockDown
@@ -147,7 +148,7 @@ namespace GamePlayScripts.CharacterMoves
         }
 
         //Everything that isn't startup or Active is considered recovery
-        public void SetActionFrames(int startUpFrames, int activeFrames)
+        public void SetActionFrames(int startUpFrames, int activeFrames, bool omitReovery = false)
         {
             for (var i = 0; i < Length; i++)
             {
@@ -155,6 +156,8 @@ namespace GamePlayScripts.CharacterMoves
                     ActionFrameState[i] = ActionFrameStates.Startup;
                 else if (i < (startUpFrames + activeFrames))
                     ActionFrameState[i] = ActionFrameStates.Active;
+                else if (omitReovery)
+                    ActionFrameState[i] = ActionFrameStates.None;
                 else if (i >= (startUpFrames + activeFrames))
                     ActionFrameState[i] = ActionFrameStates.Recovery;
                 else ActionFrameState[i] = ActionFrameStates.None;

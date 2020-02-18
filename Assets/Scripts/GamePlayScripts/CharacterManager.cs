@@ -32,6 +32,7 @@ namespace GamePlayScripts
         public bool Collided = false;
         public float Height;
         public float Push;
+        public float DistanceDelta;
         public bool Cornered;
 
         //Vector3 which is used for moving the Character around;
@@ -79,6 +80,7 @@ namespace GamePlayScripts
             CrouchingHitStun,
             FloatingHitstun,
             Cinematic,
+            Thrown,
             None
         }
 
@@ -97,6 +99,7 @@ namespace GamePlayScripts
             SpecialAttack,
             CrouchSpecialAttack,
             JumpSpecialAttack,
+            Throwing
         }
 
         public AttackStates AttackState;
