@@ -253,6 +253,34 @@ public class InputManager
             SubmitButton = KeyCode.Return;
             CancelButton = KeyCode.Escape;
         }
+        else if (joystickName == "Keyboard2")
+        {
+            _digitalAxisXAccessName = "Horizontal2";
+            _digitalAxisYAccessName = "Vertical2";
+            _analogLeftAxisXName = "None";
+            _analogLeftAxisYName = "None";
+            _analogRightAxisXName = "None";
+            _analogRightAxisYName = "None";
+            _auxiliaryButton3AxisName = "None";
+            _auxiliaryButton4AxisName = "None";
+            LightAttackButton = KeyCode.Keypad4;
+            MediumAttackButton = KeyCode.Keypad5;
+            HeavyAttackButton = KeyCode.Keypad6;
+            SpecialAttackButton = KeyCode.Keypad2;
+            StartButton = KeyCode.End;
+            SelectButton = KeyCode.Home;
+            Auxiliary1Button = KeyCode.None;
+            Auxiliary2Button = KeyCode.None;
+            Auxiliary3Button = KeyCode.None;
+            Auxiliary4Button = KeyCode.None;
+            Auxiliary5Button = KeyCode.None;
+            Auxiliary6Button = KeyCode.None;
+            Auxiliary7Button = KeyCode.None;
+            Auxiliary8Button = KeyCode.None;
+
+            SubmitButton = KeyCode.KeypadEnter;
+            CancelButton = KeyCode.Delete;
+        }
         else
         {
             //Debug.Log("No Controller Connected");

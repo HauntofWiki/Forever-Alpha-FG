@@ -80,7 +80,7 @@ namespace GamePlayScripts
             player2Object = (GameObject) GameObject.Instantiate(characterPrefab);
             player2Object.name = "Player2";
             player2Object.transform.position = new Vector3(3, 0, 0);
-            player2InputManager = new InputManager(0, "none");//(0, Input.GetJoystickNames()[0]); //still hardcoded
+            player2InputManager = new InputManager(0, "Keyboard2");//(0, Input.GetJoystickNames()[0]); //still hardcoded
             player2Character = new Character(player2Object, player2InputManager);
 
             //Set Player 2 Collision Detection Boxes
