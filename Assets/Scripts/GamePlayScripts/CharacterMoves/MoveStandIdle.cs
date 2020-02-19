@@ -32,6 +32,7 @@ namespace GamePlayScripts.CharacterMoves
                 _animator.Play("CrouchStand");
             _manager.CurrentState = CharacterManager.CharacterState.Stand;
             _manager.MoveDirection = new Vector3(0, 0, 0);
+            _manager.Invincibility = FrameDataManager.InvincibilityStates.None;
         }
         
     }

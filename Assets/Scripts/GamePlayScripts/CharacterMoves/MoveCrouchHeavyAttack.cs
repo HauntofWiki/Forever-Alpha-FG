@@ -18,7 +18,7 @@ namespace GamePlayScripts.CharacterMoves
                 MeterGain = 10.0f,
                 PushBack = -3f,
                 HitLevel = FrameDataManager.HitLevels.Low,
-                HitType = FrameDataManager.HitTypes.HardKnockDown
+                HitType = FrameDataManager.HitTypes.HardKnockDown,
             };
             FrameData.SetActionFrames(5, 5);
             FrameData.SetCancellableFrames(5, 34, FrameDataManager.CancellabilityStates.Normal);
