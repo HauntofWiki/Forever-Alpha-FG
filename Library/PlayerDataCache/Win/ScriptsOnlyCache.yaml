@@ -2,33 +2,28 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - GamePlayScripts.CameraScript
-    - GamePlayScripts.GamePlayManager
     Unity.RenderPipelines.Lightweight.Runtime.dll:
     - UnityEngine.Rendering.LWRP.ForwardRendererData
     - UnityEngine.Rendering.LWRP.LightweightRenderPipelineAsset
-    - UnityEngine.Rendering.LWRP.LightweightRenderPipelineEditorResources
-    Unity.Rider.Editor.dll:
-    - Packages.Rider.Editor.RiderScriptEditorData
+    Unity.ShaderGraph.Editor.dll:
+    - UnityEditor.Graphing.GraphObject
+    - UnityEditor.ShaderGraph.Drawing.MaterialGraphEditWindow
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
     UnityEngine.UI.dll:
-    - UnityEngine.EventSystems.EventSystem
-    - UnityEngine.EventSystems.StandaloneInputModule
     - UnityEngine.UI.CanvasScaler
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.Image
     - UnityEngine.UI.Text
   sceneClasses:
-    Assets/Scenes/Game-like Test Scene.unity:
+    Assets/Scenes/Prefab Model Test Scene.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -57,6 +52,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 84
       Script: {instanceID: 0}
+    - Class: 90
+      Script: {instanceID: 0}
     - Class: 91
       Script: {instanceID: 0}
     - Class: 95
@@ -65,22 +62,18 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 108
       Script: {instanceID: 0}
+    - Class: 109
+      Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9822}
+      Script: {instanceID: 9832}
     - Class: 114
-      Script: {instanceID: 10120}
+      Script: {instanceID: 10130}
     - Class: 114
-      Script: {instanceID: 10198}
+      Script: {instanceID: 10208}
     - Class: 114
-      Script: {instanceID: 10880}
+      Script: {instanceID: 12342}
     - Class: 114
-      Script: {instanceID: 12012}
-    - Class: 114
-      Script: {instanceID: 12332}
-    - Class: 114
-      Script: {instanceID: 12960}
-    - Class: 114
-      Script: {instanceID: 13080}
+      Script: {instanceID: 13090}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -88,10 +81,6 @@ ScriptsOnlyBuild:
     - Class: 137
       Script: {instanceID: 0}
     - Class: 157
-      Script: {instanceID: 0}
-    - Class: 198
-      Script: {instanceID: 0}
-    - Class: 199
       Script: {instanceID: 0}
     - Class: 213
       Script: {instanceID: 0}
@@ -710,5 +699,5 @@ ScriptsOnlyBuild:
     className: PlayableTrack
   platform: 5
   scenePathNames:
-  - Assets/Scenes/Game-like Test Scene.unity
+  - Assets/Scenes/Prefab Model Test Scene.unity
   playerPath: C:/Users/Richard/GameDev/Forever Alpha FG/TestBuilds/Forever Alpha FG.exe
