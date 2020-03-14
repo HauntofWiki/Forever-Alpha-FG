@@ -8,7 +8,10 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Game-like Test Scene.unity
     guid: 85aeb80f8c1ee0f43a84d66400a27c0b
+  - enabled: 1
+    path: Assets/Scenes/Prefab Model Test Scene.unity
+    guid: 168e9f1f479c76b438770a8668c69eac
   m_configObjects: {}
