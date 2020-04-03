@@ -114,7 +114,7 @@ MonoBehaviour:
   m_MinSize: {x: 679, y: 472}
   m_MaxSize: {x: 14000, y: 14022}
   vertical: 0
-  controlID: 139
+  controlID: 56
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_MinSize: {x: 404, y: 472}
   m_MaxSize: {x: 10000, y: 14022}
   vertical: 1
-  controlID: 88
+  controlID: 57
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -164,7 +164,7 @@ MonoBehaviour:
   m_MinSize: {x: 404, y: 222}
   m_MaxSize: {x: 8004, y: 4022}
   vertical: 0
-  controlID: 65
+  controlID: 58
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -383,9 +383,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
-      m_LastClickedID: 0
-      m_ExpandedIDs: 74fbffff
+      m_SelectedIDs: 66edffff
+      m_LastClickedID: -4762
+      m_ExpandedIDs: 86edffff7ef0ffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -445,9 +445,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 0.34791827, y: 0.8554702, z: 2.0651531}
+    m_Target: {x: -1.0816212, y: 1.1281903, z: 3.1723108}
     speed: 2
-    m_Value: {x: 0.34791827, y: 0.8554702, z: 2.0651531}
+    m_Value: {x: -1.0816212, y: 1.1281903, z: 3.1723108}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -476,13 +476,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: 0.073200375, y: 0.07643432, z: -0.005966361, w: 0.9944783}
+    m_Target: {x: 0.009356098, y: -0.9854716, z: 0.1610396, w: 0.05521984}
     speed: 2
-    m_Value: {x: -0.073200375, y: -0.07643432, z: 0.005966361, w: -0.9944783}
+    m_Value: {x: 0.00943782, y: -0.9851182, z: 0.16249937, w: 0.055199545}
   m_Size:
-    m_Target: 4.0688066
+    m_Target: 0.445243
     speed: 2
-    m_Value: 3.7688067
+    m_Value: 0.14524299
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -538,7 +538,6 @@ MonoBehaviour:
     m_KeySerializationHelper:
     - {fileID: -159777052542664754, guid: f7ef9998daf9a5740ac83a7e335b83ee, type: 2}
     - {fileID: 4954946105092260887, guid: f7ef9998daf9a5740ac83a7e335b83ee, type: 2}
-    - {fileID: 8773019603022981546, guid: 5489e99864f29f74ebcaa85446ccb755, type: 2}
     m_ValueSerializationHelper:
     - e00: 0.37153068
       e01: 0
@@ -564,22 +563,6 @@ MonoBehaviour:
       e11: 1
       e12: 0
       e13: 181.5
-      e20: 0
-      e21: 0
-      e22: 1
-      e23: 0
-      e30: 0
-      e31: 0
-      e32: 0
-      e33: 1
-    - e00: 0.5119068
-      e01: 0
-      e02: 0
-      e03: 35.042725
-      e10: 0
-      e11: 0.5119068
-      e12: 0
-      e13: 125.72365
       e20: 0
       e21: 0
       e22: 1
@@ -645,20 +628,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets
+    - Assets/Resources/Raw Models
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets
+  - Assets/Resources/Raw Models
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\Richard\GameDev\Forever Alpha FG
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 72.80749}
-    m_SelectedIDs: 48330000
-    m_LastClickedID: 13128
-    m_ExpandedIDs: 0000000048330000fe33000070350000783700007e380000343b00005e3b0000ae3c0000b03c0000dc3c000000ca9a3b
+    scrollPos: {x: 0, y: 132.8075}
+    m_SelectedIDs: 46370000
+    m_LastClickedID: 14150
+    m_ExpandedIDs: 00000000cc3300008e360000c63700003a3900002c3a00001e3c0000423c00003c3d00003e3d0000663d000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -686,7 +669,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000048330000fe33000070350000783700007e380000343b00005e3b0000ae3c0000b03c0000dc3c0000
+    m_ExpandedIDs: 00000000cc3300008e360000c63700003a3900002c3a00001e3c0000423c00003c3d00003e3d0000663d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
